@@ -14731,7 +14731,7 @@ re2js/build/index.js:
 /* ===== dados e utilidades ===== */
 const DEMO=false;
 const FBCFG={"apiKey": "AIzaSyAl0Si4tF5tZbJPzPyXKIfU9ohp-ZNZ5gM", "authDomain": "encontro-com-deus-a4fe5.firebaseapp.com", "projectId": "encontro-com-deus-a4fe5", "storageBucket": "encontro-com-deus-a4fe5.firebasestorage.app", "messagingSenderId": "136131318926", "appId": "1:136131318926:web:4d4e59eacde7af19ab25df"};
-const UIDS={admin:'KSHLCZEzxfaAK3wAMB9bUNwc71u1',cons:'lG2ESjQN8iUMxRlEGm3q2jeEZCk1'};
+const ADMIN_EMAIL='admin@encontro.app',CONS_EMAIL='consolidacao@encontro.app';
 const CLOUD_ON=!!FBCFG;
 let ROLE='admin',DEV='',USERNAME='';
 const LS=DEMO?'encontro-modelo-v5':'encontro-teste-v2';
@@ -14831,7 +14831,7 @@ function seed(N,rand){
 }
 function loadS(){try{const x=localStorage.getItem(LS);return x?JSON.parse(x):null}catch(e){return null}}
 function save(){if(CLOUD_ON){syncPush();return}try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){if(typeof toast==='function')toast('Sem espaço no navegador. Exporte um backup e remova cartas em PDF grandes.')}}
-const emptyS=()=>({v:4,dupOk:[],evento:{nome:'Encontro com Deus',inicio:''},pix:{tipo:'',chave:'',favorecido:'',banco:'',valor:'',obs:''},lastExport:'',p:[],anjos:[],igrejas:[],lideres:[],lotes:[],log:[]});
+const emptyS=()=>({v:4,consAte:0,dupOk:[],evento:{nome:'Encontro com Deus',inicio:''},pix:{tipo:'',chave:'',favorecido:'',banco:'',valor:'',obs:''},lastExport:'',p:[],anjos:[],igrejas:[],lideres:[],lotes:[],log:[]});
 let S=CLOUD_ON?emptyS():loadS();if(!S||S.v!==4)S=DEMO?seed(64):seed(30,true);
 
 /* ===== estado de interface ===== */
@@ -15669,6 +15669,7 @@ ACT.igsv=async()=>{
 function vAjustes(){
  const E=S.evento,A=UI.ask,im=UI.imp;
  return `<div><h1>Ajustes</h1></div>
+ ${accHTML()}
  <div class="card stack"><h2>Encontro</h2><div class="grid2"><label class="lab">Nome<input type="text" id="ev_n" value="${esc(E.nome)}"></label><label class="lab">Data de início (sábado)<input type="date" id="ev_d" value="${esc(E.inicio)}"></label></div>
   <div class="help">Escolha o <b>sábado</b> do encontro. O Painel e a leitura de QR usam essa data (sábado = acolhimento, domingo = presença).${E.inicio&&new Date(E.inicio+'T12:00').getDay()!==6?'<div class="note warn">Esta data não é um sábado.</div>':''}</div><div><button class="btn p" data-act="evsv">Salvar</button></div></div>
  <div class="card stack"><h2>Backup dos dados</h2><div class="help">Os dados ficam só neste navegador, neste computador. Exporte um arquivo para guardar o encontro ou levar para outro computador, e importe depois.${S.lastExport?' Último backup: '+fmtDT(S.lastExport)+'.':' Nenhum backup feito ainda.'}</div>
@@ -15809,14 +15810,14 @@ const COLMAP=[['participantes','p'],['anjos','anjos'],['igrejas','igrejas'],['li
 const ADMIN_COLS=['config','igrejas','lideres'];
 const SYNC={shadow:{},ready:{},pend:{},started:false,online:true,rt:null,err:''};
 const sj=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,c)=>(a[c]=v[c],a),{}):v);
-const cfgOf=()=>({evento:S.evento,pix:S.pix,dupOk:S.dupOk||[],lastExport:S.lastExport||''});
+const cfgOf=()=>({evento:S.evento,pix:S.pix,dupOk:S.dupOk||[],lastExport:S.lastExport||'',consAte:S.consAte||0});
 const allowed=r=>ROLE==='admin'||!['cadastros','ajustes'].includes(r);
 
 /* --- adaptador Firebase --- */
 const FBAD={
  init(cfg){const X=window.FBX;this.app=X.initializeApp(cfg);this.auth=X.getAuth(this.app);
   this.db=X.initializeFirestore(this.app,{localCache:X.persistentLocalCache({tabManager:X.persistentMultipleTabManager()})})},
- onAuth(cb){window.FBX.onAuthStateChanged(this.auth,u=>cb(u?{uid:u.uid}:null))},
+ onAuth(cb){window.FBX.onAuthStateChanged(this.auth,u=>cb(u?{uid:u.uid,email:(u.email||'').toLowerCase()}:null))},
  login(user,pin){return window.FBX.signInWithEmailAndPassword(this.auth,user.trim().toLowerCase()+'@encontro.app',pin)},
  logout(){return window.FBX.signOut(this.auth)},
  listen(name,cb){const X=window.FBX;let q=X.collection(this.db,name);if(name==='log')q=X.query(q,X.orderBy('t','desc'),X.limit(40));
@@ -15833,15 +15834,16 @@ const FBAD={
 const FAKE={
  L:[],get(){try{return JSON.parse(localStorage.getItem('fake-cloud')||'{}')}catch(e){return{}}},put(s){localStorage.setItem('fake-cloud',JSON.stringify(s))},
  init(){addEventListener('storage',e=>{if(e.key==='fake-cloud')this.fire()})},
- onAuth(cb){const u=sessionStorage.getItem('fake-auth');setTimeout(()=>cb(u?{uid:u}:null),20);this.ocb=cb},
- login(user,pin){const m={admin:['111111',UIDS.admin],consolidacao:['222222',UIDS.cons]}[user.trim().toLowerCase()];
-  if(!m||m[0]!==pin)return Promise.reject({code:'auth/invalid-credential'});sessionStorage.setItem('fake-auth',m[1]);setTimeout(()=>this.ocb({uid:m[1]}),10);return Promise.resolve()},
+ onAuth(cb){const u=sessionStorage.getItem('fake-auth');setTimeout(()=>cb(u?{uid:u,email:u}:null),20);this.ocb=cb},
+ login(user,pin){const m={admin:['111111',ADMIN_EMAIL],consolidacao:['222222',CONS_EMAIL]}[user.trim().toLowerCase()];
+  if(!m||m[0]!==pin)return Promise.reject({code:'auth/invalid-credential'});sessionStorage.setItem('fake-auth',m[1]);setTimeout(()=>this.ocb({uid:m[1],email:m[1]}),10);return Promise.resolve()},
  logout(){sessionStorage.removeItem('fake-auth');setTimeout(()=>this.ocb(null),10);return Promise.resolve()},
  listen(name,cb){const l={name,cb};this.L.push(l);setTimeout(()=>this.send(l),15);return()=>{this.L=this.L.filter(x=>x!==l)}},
- send(l){const s=this.get()[l.name]||{};let docs=Object.keys(s).map(id=>({id,data:JSON.parse(JSON.stringify(s[id]))}));
+ closed(){const em=sessionStorage.getItem('fake-auth');if(em===ADMIN_EMAIL)return false;const c=(this.get().config||{}).main;return !(c&&c.consAte>Date.now())},
+ send(l){if(this.closed()){l.cb(null,{error:{code:'permission-denied'}});return}const s=this.get()[l.name]||{};let docs=Object.keys(s).map(id=>({id,data:JSON.parse(JSON.stringify(s[id]))}));
   if(l.name==='log')docs=docs.sort((a,b)=>b.data.t<a.data.t?-1:1).slice(0,40);l.cb(docs,{pending:false,cache:false})},
  fire(){this.L.forEach(l=>this.send(l))},
- async commit(ops){const uid=sessionStorage.getItem('fake-auth'),adm=uid===UIDS.admin;
+ async commit(ops){const adm=sessionStorage.getItem('fake-auth')===ADMIN_EMAIL;if(this.closed())throw{code:'permission-denied'};
   if(!adm&&ops.some(o=>ADMIN_COLS.includes(o.col)||(o.del&&o.col!=='log'&&false)))throw{code:'permission-denied'};
   if(!adm&&ops.some(o=>o.del&&o.col!=='cartas'&&o.col!=='x'))throw{code:'permission-denied'};
   const s=this.get();ops.forEach(o=>{const c=s[o.col]||(s[o.col]={});if(o.del)delete c[o.id];else if(o.fields&&c[o.id])Object.assign(c[o.id],o.fields);else c[o.id]=o.data});this.put(s);setTimeout(()=>this.fire(),5)},
@@ -15871,7 +15873,7 @@ function syncPush(){
 }
 /* --- receber alterações dos outros aparelhos --- */
 function applyCol(col,docs){
- if(col==='config'){const before=SYNC.shadow.config,d=docs.find(x=>x.id==='main');if(d){const c=d.data;if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.dupOk=c.dupOk||[];S.lastExport=c.lastExport||''}SYNC.shadow.config=sj(cfgOf());return before!==SYNC.shadow.config}
+ if(col==='config'){const before=SYNC.shadow.config,d=docs.find(x=>x.id==='main');if(d){const c=d.data;if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.dupOk=c.dupOk||[];S.lastExport=c.lastExport||'';S.consAte=c.consAte||0}SYNC.shadow.config=sj(cfgOf());return before!==SYNC.shadow.config}
  const key=COLMAP.find(c=>c[0]===col)[1],old=SYNC.shadow[col]||{},sh={};
  const arr=docs.map(d=>{sh[d.id]=sj(d.data);return d.data});
  let ch=Object.keys(old).length!==Object.keys(sh).length||Object.keys(sh).some(k=>old[k]!==sh[k]);
@@ -15905,7 +15907,7 @@ function loginHTML(msg,busy){
  let dev='';try{dev=localStorage.getItem(DEVK)||''}catch(e){}
  return `<div class="lbox card stack"><div style="display:flex;gap:12px;align-items:center"><img src="${LOGO}" width="44" height="44" alt=""><div><b style="font-size:20px">Encontro com Deus</b><div class="mut">Consolidação</div></div></div>
  ${busy?`<div class="note info">${esc(busy)}</div>`:`${msg?`<div class="note bad" role="alert">${esc(msg)}</div>`:''}
- <label class="lab">Usuário<input type="text" id="lg_u" autocomplete="username" autocapitalize="none" placeholder="Ex.: consolidacao"></label>
+ <label class="lab">Usuário<input type="text" id="lg_u" autocomplete="username" autocapitalize="none" placeholder="Usuário"></label>
  <label class="lab">PIN<input type="password" id="lg_p" autocomplete="current-password" inputmode="numeric" placeholder="PIN"></label>
  <label class="lab">Nome deste aparelho<input type="text" id="lg_d" value="${esc(dev)}" placeholder="Ex.: Celular 2"></label>
  <button class="btn p big" data-act="login">Entrar</button>`}</div>`;
@@ -15925,7 +15927,7 @@ function startSync(){
  if(SYNC.started)return;SYNC.started=true;S=emptyS();
  const names=COLMAP.map(c=>c[0]).concat(['config']);
  SYNC.unsub=names.map(n=>CLOUD.listen(n,(docs,meta)=>{
-  if(!docs){if(meta.error&&meta.error.code==='permission-denied')toast('Sem permissão para ler '+n+'. Confira as regras do Firestore.');SYNC.ready[n]=true;return}
+  if(!docs){if(meta.error&&meta.error.code==='permission-denied'){if(ROLE==='cons'){if(SYNC.msg)return;SYNC.msg='Acesso da consolidação encerrado. Peça ao administrador para liberar.';CLOUD.logout();return}toast('Sem permissão para ler '+n+'. Confira as regras do Firestore.')}SYNC.ready[n]=true;return}
   SYNC.pend[n]=meta.pending;
   const wasReady=syncReady();
   const ch=applyCol(n,docs);
@@ -15946,13 +15948,26 @@ function boot(){
  try{CLOUD.init(FBCFG)}catch(e){showLogin('Falha ao iniciar a conexão.');return}
  let dev='';try{dev=localStorage.getItem(DEVK)||''}catch(e){}DEV=dev;
  CLOUD.onAuth(u=>{
-  if(!u){stopSync();SYNC.started=false;SYNC.ready={};SYNC.shadow={};ROLE=null;$('#outbtn').hidden=true;S=emptyS();showLogin();return}
-  ROLE=u.uid===UIDS.admin?'admin':u.uid===UIDS.cons?'cons':null;
+  if(!u){stopSync();SYNC.started=false;SYNC.ready={};SYNC.shadow={};ROLE=null;$('#outbtn').hidden=true;S=emptyS();const m=SYNC.msg;SYNC.msg='';showLogin(m);return}
+  ROLE=u.email===ADMIN_EMAIL?'admin':u.email===CONS_EMAIL?'cons':null;
   if(!ROLE){CLOUD.logout();showLogin('Esta conta não tem acesso.');return}
   if(!DEV)DEV=ROLE==='admin'?'Admin':'Aparelho';
   showLogin('','Carregando dados…');startSync();
  });
 }
+
+/* encerra a sessão da consolidação quando a janela de acesso acaba */
+setInterval(()=>{if(CLOUD_ON&&ROLE==='cons'&&syncReady()&&S.consAte&&Date.now()>S.consAte+60000){SYNC.msg='Acesso da consolidação encerrado. Peça ao administrador para liberar.';CLOUD.logout()}},30000);
+ACT.accopen=()=>{const d=+($('#acc_d')||{value:3}).value||3;S.consAte=Date.now()+d*864e5;logAdd('Acesso da consolidação liberado por '+d+' dia(s)');save();toast('Acesso liberado');render()};
+ACT.accclose=()=>{S.consAte=0;logAdd('Acesso da consolidação bloqueado');save();toast('Acesso bloqueado');render()};
+const accHTML=()=>{
+ if(!CLOUD_ON||ROLE!=='admin')return '';
+ const ate=S.consAte||0,on=ate>Date.now();
+ return `<div class="card stack"><h2>Acesso da consolidação</h2>
+ <div class="help">Fora do prazo, o PIN da consolidação não abre nada, mesmo que alguém o saiba. Os celulares são desconectados sozinhos quando o prazo acaba. Libere antes do encontro e o acesso fecha depois.</div>
+ ${on?`<div class="note ok"><b>Liberado até ${esc(fmtDT(new Date(ate).toISOString()))}</b></div>`:'<div class="note warn"><b>Bloqueado.</b> A consolidação não consegue entrar.</div>'}
+ <div class="rowf"><label class="lab" style="flex:1 1 140px">Liberar por<select id="acc_d">${opts([['1','1 dia'],['2','2 dias'],['3','3 dias'],['5','5 dias'],['7','7 dias']],'3')}</select></label><button class="btn p" data-act="accopen">${on?'Renovar prazo':'Liberar acesso'}</button>${on?'<button class="btn d" data-act="accclose">Bloquear agora</button>':''}</div></div>`;
+};
 
 /* ===== roteador e eventos ===== */
 const VIEWS={painel:vPainel,ler:vLer,pessoas:vPessoas,anjos:vAnjos,decisoes:vDecisoes,crachas:vCrachas,relat:vRelat,cadastros:vCadastros,ajustes:vAjustes,mais:vMais};
