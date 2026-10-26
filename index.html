@@ -15680,9 +15680,9 @@ function vAjustes(){
  const E=S.evento,A=UI.ask,im=UI.imp;
  return `<div><h1>Ajustes</h1></div>
  ${accHTML()}
- ${diagHTML()}
  <div class="card stack"><h2>Encontro</h2><div class="grid2"><label class="lab">Nome<input type="text" id="ev_n" value="${esc(E.nome)}"></label><label class="lab">Data de início (sábado)<input type="date" id="ev_d" value="${esc(E.inicio)}"></label></div>
   <div class="help">Escolha o <b>sábado</b> do encontro. O Painel e a leitura de QR usam essa data (sábado = acolhimento, domingo = presença).${E.inicio&&new Date(E.inicio+'T12:00').getDay()!==6?'<div class="note warn">Esta data não é um sábado.</div>':''}</div><div><button class="btn p" data-act="evsv">Salvar</button></div></div>
+ ${diagHTML()}
  <div class="card stack"><h2>Backup dos dados</h2><div class="help">Os dados ficam só neste navegador, neste computador. Exporte um arquivo para guardar o encontro ou levar para outro computador, e importe depois.${S.lastExport?' Último backup: '+fmtDT(S.lastExport)+'.':' Nenhum backup feito ainda.'}</div>
   <div class="rowf"><button class="btn p" data-act="expdata">Exportar dados (.json)</button><label class="btn s">Importar arquivo<input id="impfile" type="file" accept=".json,application/json" class="sr"></label></div>
   ${im?`<div class="note warn"><b>Arquivo lido:</b> ${im.n} participante(s), ${im.a} anjo(s), ${im.i} IDERP(s). Importar substitui tudo o que está neste navegador.</div><div class="rowf"><button class="btn d" data-act="impok">Substituir dados atuais</button><button class="btn s" data-act="impno">Cancelar</button></div>`:''}</div>
