@@ -42,6 +42,7 @@ h3{font-size:15px;font-weight:700}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .mut{color:var(--muted)}
+.gl{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.5}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .num{font-variant-numeric:tabular-nums}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -14831,7 +14832,7 @@ function seed(N,rand){
 }
 function loadS(){try{const x=localStorage.getItem(LS);return x?JSON.parse(x):null}catch(e){return null}}
 function save(){if(CLOUD_ON){syncPush();return}try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){if(typeof toast==='function')toast('Sem espaço no navegador. Exporte um backup e remova cartas em PDF grandes.')}}
-const emptyS=()=>({v:4,consAte:0,dupOk:[],evento:{nome:'Encontro com Deus',inicio:''},pix:{tipo:'',chave:'',favorecido:'',banco:'',valor:'',obs:''},lastExport:'',p:[],anjos:[],igrejas:[],lideres:[],lotes:[],log:[]});
+const emptyS=()=>({v:4,consAte:0,consDe:0,dupOk:[],evento:{nome:'Encontro com Deus',inicio:''},pix:{tipo:'',chave:'',favorecido:'',banco:'',valor:'',obs:''},lastExport:'',p:[],anjos:[],igrejas:[],lideres:[],lotes:[],log:[]});
 let S=CLOUD_ON?emptyS():loadS();if(!S||S.v!==4)S=DEMO?seed(64):seed(30,true);
 
 /* ===== estado de interface ===== */
@@ -14902,6 +14903,7 @@ const NAV=[['painel','Painel','Painel','M3 12l9-8 9 8M5 10v10h14V10',1,1],
  ['relat','Relatórios','Relatórios','M5 20V10M12 20V4M19 20v-7',1,0],
  ['cadastros','Cadastros','Cadastros','M4 5h16v4H4zM4 11h16v4H4zM4 17h16v3H4z',1,0],
  ['ajustes','Ajustes','Ajustes','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.2-.8.2-1.2z',1,0],
+ ['ajuda','Como usar','Ajuda','M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01',1,0],
  ['mais','Mais','Mais','M4 6h16M4 12h16M4 18h16',0,1]];
 const TABS=['painel','ler','pessoas','crachas','mais'];
 const pendCr=()=>S.p.filter(p=>{const s=crState(p);return s==='pend'||s==='old'});
@@ -15682,7 +15684,7 @@ function vAjustes(){
   ${A==='demo'?'<div class="note warn">Isto apaga os dados atuais e carrega os de exemplo.</div><div class="rowf"><button class="btn d" data-act="reset">Sim, carregar exemplo</button><button class="btn s" data-act="ask" data-a="">Cancelar</button></div>':`<div><button class="btn s" data-act="ask" data-a="demo">${DEMO?'Restaurar dados fictícios':'Carregar dados de exemplo'}</button></div>`}</div>`;
 }
 function vMais(){
- const it=[['anjos','Anjos'],['decisoes','Decisões'],['relat','Relatórios'],['cadastros','Cadastros (igrejas, Pix)'],['ajustes','Ajustes e backup']].filter(x=>allowed(x[0]));
+ const it=[['anjos','Anjos'],['decisoes','Decisões'],['relat','Relatórios'],['cadastros','Cadastros (igrejas, Pix)'],['ajustes','Ajustes e backup'],['ajuda','Como usar']].filter(x=>allowed(x[0]));
  return `<div><h1>Mais</h1></div><div class="list">${it.map(x=>`<button class="att" data-act="go" data-r="${x[0]}"><span>${x[1]}</span></button>`).join('')}</div>`;
 }
 ACT.ask=t=>{UI.ask=t.dataset.a;render()};
@@ -15690,13 +15692,81 @@ ACT.evsv=()=>{S.evento={nome:$('#ev_n').value.trim()||'Encontro com Deus',inicio
 ACT.expdata=async()=>{const ok=await saveFile('encontro-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(S));if(ok){S.lastExport=nowISO();save();render()}};
 ACT.impok=()=>{if(!UI.imp)return;S=UI.imp.obj;UI.imp=null;save();toast('Dados importados');go('painel')};
 ACT.impno=()=>{UI.imp=null;render()};
-ACT.newenc=()=>{S.p=[];S.anjos=[];S.lotes=[];S.log=[];S.evento.inicio='';S.lastExport='';UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;save();toast('Novo encontro iniciado');go('painel')};
+ACT.newenc=()=>{S.consAte=0;S.consDe=0;S.p=[];S.anjos=[];S.lotes=[];S.log=[];S.evento.inicio='';S.lastExport='';UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;save();toast('Novo encontro iniciado');go('painel')};
 ACT.vazio=()=>{S=emptyS();save();UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;toast('Tudo apagado');go('painel')};
 ACT.reset=()=>{S=DEMO?seed(64):seed(30,true);save();UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;toast(DEMO?'Dados fictícios restaurados':'Dados de exemplo carregados');go('painel')};
 function readImport(f){
  const r=new FileReader();
  r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||o.v!==4||!Array.isArray(o.p)||!Array.isArray(o.anjos)||!Array.isArray(o.igrejas)||!Array.isArray(o.lideres))throw 0;UI.imp={obj:o,n:o.p.length,a:o.anjos.length,i:o.igrejas.length}}catch(e){UI.imp=null;toast('Arquivo inválido. Use um .json exportado por este app.')}render()};
  r.readAsText(f);
+}
+
+/* ===== como usar ===== */
+ACT.ajtab=t=>{UI.ajuda=t.dataset.t;render()};
+function vAjuda(){
+ const adm=ROLE==='admin'||!CLOUD_ON,t=adm&&UI.ajuda==='adm'?'adm':'cons';
+ const sec=(h,body)=>`<div class="card stack"><h2>${h}</h2>${body}</div>`;
+ const ul=a=>'<ul class="gl">'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+ const ol=a=>'<ol class="gl">'+a.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
+ const cons=
+ sec('Como o acesso funciona',ul([
+  '<b>Um login só para todos os celulares.</b> Todos usam o usuário <b>consolidacao</b> e o mesmo PIN. Não precisa de um PIN por celular.',
+  'Na entrada, cada celular informa o <b>nome do aparelho</b> (ex.: "Portaria 1"). Ele aparece no histórico de quem registrou cada ação.',
+  'O acesso só funciona no <b>prazo liberado pelo administrador</b> (padrão: sexta a domingo). Fora dele, o app desconecta sozinho.',
+  'Todos os aparelhos ficam <b>sincronizados em tempo real</b>: o que um celular registra aparece nos outros e no computador. A etiqueta no topo mostra "Sincronizado", "Enviando…" ou "Offline".',
+  'Sem internet, o app continua anotando e envia tudo quando a conexão voltar.']))+
+ sec('O que a consolidação pode e não pode',ul([
+  '<b>Pode:</b> ler QR, ver e editar participantes, confirmar pagamento, gerenciar anjos, registrar decisões e batismo, gerar crachás e relatórios.',
+  '<b>Não pode:</b> cadastrar igrejas e líderes, mexer em Pix, evento, backup e acesso, nem excluir anjos ou o histórico. Isso é só do administrador.']))+
+ sec('Resumo das telas',ul([
+  '<b>Painel:</b> números gerais do encontro e atalhos.',
+  '<b>Ler QR:</b> a tela principal durante o evento. Escolha o modo (Acolhimento, Domingo, Decisão, Batismo) e leia o QR do crachá ou digite o Nº/ID.',
+  '<b>Participantes:</b> lista com busca e filtros. Abra uma pessoa para ver a ficha, o anjo, o pagamento e editar. Também cria cadastro novo.',
+  '<b>Anjos:</b> lista de anjos com telefone, igreja e participantes de cada um.',
+  '<b>Decisões:</b> quem decidiu (conversão, reconciliação) e quem foi batizado. Só acolhidos.',
+  '<b>Crachás:</b> gera o PDF dos crachás (8 por folha A4) em lotes, só para quem ainda não imprimiu.',
+  '<b>Relatórios:</b> resumo geral, por igreja, listas de conferência, relatório para a liderança e planilhas.']))+
+ sec('Fluxo durante o encontro',ol([
+  '<b>Antes (semana do evento):</b> receber as fichas e os pré-cadastros, conferir o Pix, marcar <b>pagamento confirmado</b> em Participantes. Cadastrar anjo de cada participante.',
+  '<b>Sexta ou sábado cedo:</b> em Crachás, gerar o PDF dos pagos e imprimir. Cada crachá tem o QR único da pessoa.',
+  '<b>Sábado, recepção:</b> em Ler QR, modo <b>Acolhimento</b>. Leia o QR do crachá. A tela mostra o nome, o anjo e o aviso se faltar algo (ex.: pagamento). Confirme: a pessoa passa a ser <b>acolhida</b>. Errou? Na ficha use "Retirar acolhimento".',
+  '<b>Sábado, durante:</b> acompanhe pelo Painel quantos já chegaram. Quem não veio fica sem acolhimento.',
+  '<b>Decisão (escritório):</b> com o crachá recolhido, modo <b>Decisão</b>: leia o QR e registre <b>Conversão</b> ou <b>Reconciliação</b>. Os anjos recebem o contato pelo botão do WhatsApp.',
+  '<b>Domingo:</b> modo <b>Domingo</b> para marcar a presença do dia. Para batismo, modo <b>Batismo</b> (já inclui a decisão).',
+  '<b>Depois:</b> em Relatórios, gere o relatório para a liderança e confira as listas. O administrador encerra o acesso da consolidação.']));
+ const adm_=
+ sec('Seu papel como administrador',ul([
+  'Usuário <b>admin</b> com PIN próprio e forte. Você vê tudo: Igrejas, Ajustes e as ações que a consolidação não tem.',
+  'Só você cria e muda o acesso da consolidação. O PIN dela é criado ou trocado no <b>console do Firebase</b> (Authentication → Usuários → consolidacao → Redefinir senha).']))+
+ sec('Preparar um novo encontro',ol([
+  'Em <b>Ajustes</b>, use "Começar novo encontro" (limpa participantes, anjos e histórico; mantém igrejas, líderes e Pix). Faça backup antes.',
+  'Defina o <b>nome</b> e a <b>data do sábado</b> do encontro.',
+  'Confira <b>Igrejas</b>: pastores, líderes de rede e a carta em PDF de cada uma.',
+  'Confira <b>Pix</b> (chave, valor, favorecido). O app não cobra: só marca pagamento confirmado.',
+  'Em Ajustes, cartão <b>Acesso da consolidação</b>: escolha 2, 3 ou 4 dias e clique em Liberar. Antes do prazo e depois dele a consolidação não entra.',
+  'Se quiser trocar o PIN da consolidação, faça no console do Firebase antes de liberar.']))+
+ sec('Acesso da consolidação (resumo)',ul([
+  '<b>2 dias:</b> sábado e domingo. <b>3 dias (padrão):</b> sexta, sábado e domingo. <b>4 dias:</b> sexta a segunda.',
+  'Os dias saem da data do encontro (sábado). Se mudar a data, libere de novo.',
+  '<b>Bloquear agora</b> encerra na hora e deixa só o administrador.',
+  'O servidor recusa a consolidação fora do prazo e os celulares abertos saem sozinhos.']))+
+ sec('Resumo das telas de administração',ul([
+  '<b>Igrejas:</b> cadastro de igrejas IDERP e de outras denominações, pastores, líderes de rede, líderes e carta para o correio (PDF).',
+  '<b>Pix:</b> dados de pagamento e mensagem pronta para enviar.',
+  '<b>Ajustes:</b> acesso da consolidação, evento, backup (exportar e importar), novo encontro e limpeza.',
+  '<b>Anjos:</b> além do que a consolidação faz, você une anjos duplicados (mesmo telefone) e exclui anjos.',
+  '<b>Relatórios e Participantes:</b> iguais aos da consolidação.']))+
+ sec('Segurança e dados',ul([
+  'Dados com religião são <b>sensíveis pela LGPD</b>. Use só o necessário, com o consentimento do formulário.',
+  'Guarde os dados por até <b>60 dias</b> após o encontro e depois apague (Ajustes → Começar novo encontro).',
+  'Mantenha o cadastro de novos usuários <b>desativado</b> no Firebase e use PINs fortes.',
+  'Faça <b>backup</b> ao fim de cada dia do evento.']))+
+ sec('Fluxo do administrador no encontro',ol([
+  '<b>Semana anterior:</b> libere o acesso (3 dias) e confira os cadastros.',
+  '<b>Durante:</b> acompanhe Painel e Decisões. Resolva dúvidas de pagamento, anjos duplicados e fichas.',
+  '<b>Segunda:</b> exporte o backup e as planilhas, gere o relatório da liderança.',
+  '<b>Depois:</b> confirme que o acesso foi encerrado (ou clique em Bloquear agora).']));
+ return `<div><h1>Como usar</h1></div>${adm?`<div class="rowf"><button class="chip" data-act="ajtab" data-t="cons" aria-pressed="${t==='cons'}">Consolidação</button><button class="chip" data-act="ajtab" data-t="adm" aria-pressed="${t==='adm'}">Administrador</button></div>`:''}${t==='adm'?adm_:cons}`;
 }
 
 /* ===== relatórios e PDFs ===== */
@@ -15810,7 +15880,7 @@ const COLMAP=[['participantes','p'],['anjos','anjos'],['igrejas','igrejas'],['li
 const ADMIN_COLS=['config','igrejas','lideres'];
 const SYNC={shadow:{},ready:{},pend:{},started:false,online:true,rt:null,err:''};
 const sj=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,c)=>(a[c]=v[c],a),{}):v);
-const cfgOf=()=>({evento:S.evento,pix:S.pix,dupOk:S.dupOk||[],lastExport:S.lastExport||'',consAte:S.consAte||0});
+const cfgOf=()=>({evento:S.evento,pix:S.pix,dupOk:S.dupOk||[],lastExport:S.lastExport||'',consAte:S.consAte||0,consDe:S.consDe||0});
 const allowed=r=>ROLE==='admin'||!['cadastros','ajustes'].includes(r);
 
 /* --- adaptador Firebase --- */
@@ -15839,7 +15909,7 @@ const FAKE={
   if(!m||m[0]!==pin)return Promise.reject({code:'auth/invalid-credential'});sessionStorage.setItem('fake-auth',m[1]);setTimeout(()=>this.ocb({uid:m[1],email:m[1]}),10);return Promise.resolve()},
  logout(){sessionStorage.removeItem('fake-auth');setTimeout(()=>this.ocb(null),10);return Promise.resolve()},
  listen(name,cb){const l={name,cb};this.L.push(l);setTimeout(()=>this.send(l),15);return()=>{this.L=this.L.filter(x=>x!==l)}},
- closed(){const em=sessionStorage.getItem('fake-auth');if(em===ADMIN_EMAIL)return false;const c=(this.get().config||{}).main;return !(c&&c.consAte>Date.now())},
+ closed(){const em=sessionStorage.getItem('fake-auth');if(em===ADMIN_EMAIL)return false;const c=(this.get().config||{}).main;return !(c&&c.consAte>Date.now()&&c.consDe<=Date.now())},
  send(l){if(this.closed()){l.cb(null,{error:{code:'permission-denied'}});return}const s=this.get()[l.name]||{};let docs=Object.keys(s).map(id=>({id,data:JSON.parse(JSON.stringify(s[id]))}));
   if(l.name==='log')docs=docs.sort((a,b)=>b.data.t<a.data.t?-1:1).slice(0,40);l.cb(docs,{pending:false,cache:false})},
  fire(){this.L.forEach(l=>this.send(l))},
@@ -15873,7 +15943,7 @@ function syncPush(){
 }
 /* --- receber alterações dos outros aparelhos --- */
 function applyCol(col,docs){
- if(col==='config'){const before=SYNC.shadow.config,d=docs.find(x=>x.id==='main');if(d){const c=d.data;if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.dupOk=c.dupOk||[];S.lastExport=c.lastExport||'';S.consAte=c.consAte||0}SYNC.shadow.config=sj(cfgOf());return before!==SYNC.shadow.config}
+ if(col==='config'){const before=SYNC.shadow.config,d=docs.find(x=>x.id==='main');if(d){const c=d.data;if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.dupOk=c.dupOk||[];S.lastExport=c.lastExport||'';S.consAte=c.consAte||0;S.consDe=c.consDe||0}SYNC.shadow.config=sj(cfgOf());return before!==SYNC.shadow.config}
  const key=COLMAP.find(c=>c[0]===col)[1],old=SYNC.shadow[col]||{},sh={};
  const arr=docs.map(d=>{sh[d.id]=sj(d.data);return d.data});
  let ch=Object.keys(old).length!==Object.keys(sh).length||Object.keys(sh).some(k=>old[k]!==sh[k]);
@@ -15957,20 +16027,38 @@ function boot(){
 }
 
 /* encerra a sessão da consolidação quando a janela de acesso acaba */
-setInterval(()=>{if(CLOUD_ON&&ROLE==='cons'&&syncReady()&&S.consAte&&Date.now()>S.consAte+60000){SYNC.msg='Acesso da consolidação encerrado. Peça ao administrador para liberar.';CLOUD.logout()}},30000);
-ACT.accopen=()=>{const d=+($('#acc_d')||{value:3}).value||3;S.consAte=Date.now()+d*864e5;logAdd('Acesso da consolidação liberado por '+d+' dia(s)');save();toast('Acesso liberado');render()};
-ACT.accclose=()=>{S.consAte=0;logAdd('Acesso da consolidação bloqueado');save();toast('Acesso bloqueado');render()};
+setInterval(()=>{if(CLOUD_ON&&ROLE==='cons'&&syncReady()&&!consOpen(60000)){SYNC.msg='Acesso da consolidação encerrado. Peça ao administrador para liberar.';CLOUD.logout()}},30000);
+const consOpen=(slack)=>{const n=Date.now(),k=slack||0;return !!S.consAte&&n<=S.consAte+k&&n>=(S.consDe||0)-k};
+const DOW=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+function accPlan(dias){
+ const iso=S.evento&&S.evento.inicio;if(!iso)return null;
+ const [y,m,d]=iso.split('-').map(Number),sab=new Date(y,m-1,d);
+ const de=new Date(y,m-1,d-(dias>=3?1:0)),ate=new Date(y,m-1,d+(dias===2?1:dias===3?1:2),23,59,59);
+ return {de:de.getTime(),ate:ate.getTime(),deD:de,ateD:ate};
+}
+const fmtDia=d=>DOW[d.getDay()]+' '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');
+ACT.accopen=()=>{const dias=+($('#acc_d')||{value:3}).value||3,p=accPlan(dias);if(!p){toast('Defina a data do encontro (sábado) antes.');return}
+ S.consDe=p.de;S.consAte=p.ate;logAdd('Acesso da consolidação liberado: '+fmtDia(p.deD)+' a '+fmtDia(p.ateD));save();toast('Acesso liberado');render()};
+ACT.accclose=()=>{S.consAte=0;S.consDe=0;logAdd('Acesso da consolidação bloqueado');save();toast('Acesso bloqueado');render()};
 const accHTML=()=>{
  if(!CLOUD_ON||ROLE!=='admin')return '';
- const ate=S.consAte||0,on=ate>Date.now();
+ const n=Date.now(),ate=S.consAte||0,de=S.consDe||0;
+ const st=!ate?'off':n>ate?'end':n<de?'wait':'on';
+ const rng=ate?fmtDia(new Date(de))+' 00:00 até '+fmtDia(new Date(ate))+' 23:59':'';
+ const box={off:'<div class="note warn"><b>Bloqueado.</b> Só o administrador entra.</div>',
+  end:'<div class="note warn"><b>Encerrado.</b> O prazo acabou ('+esc(rng)+'). Só o administrador entra.</div>',
+  wait:'<div class="note info"><b>Agendado:</b> '+esc(rng)+'. Ainda não começou.</div>',
+  on:'<div class="note ok"><b>Liberado:</b> '+esc(rng)+'.</div>'}[st];
+ const pv=[2,3,4].map(d=>{const p=accPlan(d);return p?'<b>'+d+' dias:</b> '+fmtDia(p.deD)+' a '+fmtDia(p.ateD):''}).filter(Boolean).join(' · ');
  return `<div class="card stack"><h2>Acesso da consolidação</h2>
- <div class="help">Fora do prazo, o PIN da consolidação não abre nada, mesmo que alguém o saiba. Os celulares são desconectados sozinhos quando o prazo acaba. Libere antes do encontro e o acesso fecha depois.</div>
- ${on?`<div class="note ok"><b>Liberado até ${esc(fmtDT(new Date(ate).toISOString()))}</b></div>`:'<div class="note warn"><b>Bloqueado.</b> A consolidação não consegue entrar.</div>'}
- <div class="rowf"><label class="lab" style="flex:1 1 140px">Liberar por<select id="acc_d">${opts([['1','1 dia'],['2','2 dias'],['3','3 dias'],['5','5 dias'],['7','7 dias']],'3')}</select></label><button class="btn p" data-act="accopen">${on?'Renovar prazo':'Liberar acesso'}</button>${on?'<button class="btn d" data-act="accclose">Bloquear agora</button>':''}</div></div>`;
+ <div class="help">Fora do prazo, o PIN da consolidação não abre nada, mesmo que alguém o saiba. Os celulares são desconectados sozinhos quando o prazo acaba. O prazo é calculado pela data do encontro (sábado).</div>
+ ${box}
+ <div class="rowf" style="align-items:flex-end"><label class="lab" style="flex:1 1 200px">Liberar por<select id="acc_d">${opts([['2','2 dias: sábado e domingo'],['3','3 dias: sexta, sábado e domingo (padrão)'],['4','4 dias: sexta a segunda']],'3')}</select></label><button class="btn p" data-act="accopen">${st==='on'||st==='wait'?'Renovar prazo':'Liberar acesso'}</button>${st==='on'||st==='wait'?'<button class="btn d" data-act="accclose">Bloquear agora</button>':''}</div>
+ ${pv?'<div class="help">'+pv+'</div>':'<div class="help">Defina a data do encontro abaixo para ver as datas.</div>'}</div>`;
 };
 
 /* ===== roteador e eventos ===== */
-const VIEWS={painel:vPainel,ler:vLer,pessoas:vPessoas,anjos:vAnjos,decisoes:vDecisoes,crachas:vCrachas,relat:vRelat,cadastros:vCadastros,ajustes:vAjustes,mais:vMais};
+const VIEWS={painel:vPainel,ler:vLer,pessoas:vPessoas,anjos:vAnjos,decisoes:vDecisoes,crachas:vCrachas,relat:vRelat,cadastros:vCadastros,ajustes:vAjustes,ajuda:vAjuda,mais:vMais};
 const LISTS={pessoas:listPessoas,decisoes:listDecisoes,crachas:listCrachas,anjos:listAnjos};
 const FKEY={pessoas:'fp',decisoes:'fd',crachas:'fc',anjos:'fa'};
 ACT.sort=t=>{const f=UI[FKEY[UI.r]],k=t.dataset.k;if(f.sk===k)f.sd*=-1;else{f.sk=k;f.sd=1}render()};
