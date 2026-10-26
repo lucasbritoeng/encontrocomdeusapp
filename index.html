@@ -14732,7 +14732,7 @@ re2js/build/index.js:
 /* ===== dados e utilidades ===== */
 const DEMO=false;
 const FBCFG={"apiKey": "AIzaSyAl0Si4tF5tZbJPzPyXKIfU9ohp-ZNZ5gM", "authDomain": "encontro-com-deus-a4fe5.firebaseapp.com", "projectId": "encontro-com-deus-a4fe5", "storageBucket": "encontro-com-deus-a4fe5.firebasestorage.app", "messagingSenderId": "136131318926", "appId": "1:136131318926:web:4d4e59eacde7af19ab25df"};
-const ADMIN_EMAIL='admin@encontro.app',CONS_EMAIL='consolidacao@encontro.app';
+const ADMIN_EMAIL='admin@encontro.app',CONS_EMAIL='consolidacao@encontro.app',LIDER_EMAIL='lider@encontro.app';
 const CLOUD_ON=!!FBCFG;
 let ROLE='admin',DEV='',USERNAME='';
 const LS=DEMO?'encontro-modelo-v5':'encontro-teste-v2';
@@ -14836,7 +14836,7 @@ const emptyS=()=>({v:4,consAte:0,consDe:0,dupOk:[],evento:{nome:'Encontro com De
 let S=CLOUD_ON?emptyS():loadS();if(!S||S.v!==4)S=DEMO?seed(64):seed(30,true);
 
 /* ===== estado de interface ===== */
-const UI={r:'painel',fp:{tab:'conf',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},fd:{f:'dec',q:'',anjo:'',igreja:'',sk:'mat',sd:1},fc:{f:'pend',q:'',anjo:'',sk:'mat',sd:1},fa:{q:'',sexo:'',igreja:'',sem:false,sk:'nome',sd:1},cadTab:'ig',backTo:null,imp:null,ask:'',cam:false,
+const UI={r:'painel',fp:{tab:'all',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},fd:{f:'dec',q:'',anjo:'',igreja:'',sk:'mat',sd:1},fc:{f:'pend',q:'',anjo:'',sk:'mat',sd:1},fa:{q:'',sexo:'',igreja:'',sem:false,sk:'nome',sd:1},cadTab:'ig',backTo:null,imp:null,ask:'',cam:false,
  sel:new Set(),draft:null,res:null,mode:'acolh',sub:null,sheet:null,last:null,pos:1,resetAsk:false};
 const ACT={};
 
@@ -14917,7 +14917,7 @@ function go(r,patch){
  if(!allowed(r))r='painel';
  UI.r=r;
  if(patch){
-  if(r==='pessoas')UI.fp=Object.assign({tab:'conf',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},patch);
+  if(r==='pessoas')UI.fp=Object.assign({tab:'all',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},patch);
   if(r==='decisoes')UI.fd=Object.assign({f:'dec',q:'',anjo:'',igreja:'',sk:'mat',sd:1},patch);
   if(r==='crachas')UI.fc=Object.assign({f:'pend',q:'',anjo:'',sk:'mat',sd:1},patch);
  }
@@ -15130,7 +15130,7 @@ function listPessoas(){
 }
 function vPessoas(){
  const f=UI.fp,c=k=>S.p.filter(p=>p.status===k).length,pag=c('pg')+c('ac');
- const tabs=[['conf','Confirmados (pagos)',pag],['np','Aguardando pagamento',c('np')],['ds','Desistentes',c('ds')],['all','Todos',S.p.length]];
+ const tabs=[['all','Todos',S.p.length],['conf','Confirmados (pagos)',pag],['np','Aguardando pagamento',c('np')],['ds','Desistentes',c('ds')]];
  const stOpts=f.tab==='conf'?[['','Todos os pagos'],['pg','Pago · ainda não chegou'],['ac','Acolhido (já chegou)']]:f.tab==='all'?[['','Todos os status'],['np','Não pago'],['pg','Pago · ainda não chegou'],['ac','Acolhido (já chegou)'],['ds','Desistente']]:null;
  return `<div class="head"><h1>Participantes</h1><button class="btn p" data-act="newcad">Novo cadastro</button></div>
  <div class="seg" role="tablist">${tabs.map(t=>`<button role="tab" aria-selected="${f.tab===t[0]}" data-act="ptab" data-t="${t[0]}">${t[1]}<span class="n">${t[2]}</span></button>`).join('')}</div>
@@ -15269,7 +15269,9 @@ ACT.anjosave=()=>{const p=person(UI.sheet.id),er=anjoCheck('dt');if(er){const b=
 ACT.nomesave=()=>{const p=person(UI.sheet.id);const v=$('#dnc').value.trim().replace(/\s+/g,' ');const novo=(v&&v!==p.nome)?v:'';if(novo!==p.nomeCracha){p.nomeCracha=novo;p.cv++}UI.sub=null;save();toast('Nome do crachá salvo');render();redet()};
 
 /* ===== cadastro e edição da ficha ===== */
-const liderLabel=l=>{const r=l.redeId&&liderById(l.redeId);return l.tipo==='pastor'?'Pr. '+l.nome+' (pastor titular)':l.tipo==='rede'?'Pr. '+l.nome+' (pastor de rede)':l.nome+' (líder'+(r?' · rede Pr. '+r.nome:'')+')'};
+const redeNm=l=>String((l&&l.rede)||'').replace(/^\s*rede\s+/i,'').trim();
+const redeTxt=l=>redeNm(l)?' · rede '+redeNm(l):' (pastor de rede)';
+const liderLabel=l=>{const r=l.redeId&&liderById(l.redeId);return l.tipo==='pastor'?'Pr. '+l.nome+' (pastor titular)':l.tipo==='rede'?'Pr. '+l.nome+redeTxt(l):l.nome+' (líder'+(r?' · '+('Pr. '+r.nome+redeTxt(r)):'')+')'};
 function liderOptsHTML(igId,sel){
  const o=l=>`<option value="${l.id}" ${l.id===sel?'selected':''}>${esc(liderLabel(l))}</option>`,ord={rede:0,lider:1,pastor:2};
  if(igId)return '<option value="">Nenhum (o pastor titular acompanha)</option>'+S.lideres.filter(l=>l.igId===igId&&l.tipo!=='pastor').sort((a,b)=>ord[a.tipo]-ord[b.tipo]).map(o).join('');
@@ -15603,19 +15605,20 @@ ACT.pixsv=()=>{S.pix={tipo:$('#px_t').value,chave:$('#px_c').value.trim(),favore
 let rk=0;
 function igFormInit(i){
  const out=!!i&&!/^IDERP\s/i.test(i.nome);UI.igf={id:i?i.id:null,outra:out,carta:i&&i.carta?i.carta:null,nome:i?(out?i.nome:i.nome.replace(/^IDERP\s+/i,'')):'',bairro:i?i.bairro:'',end:i?i.end:'',pastor:i&&liderById(i.pastorId)?liderById(i.pastorId).nome:'',
-  redes:i?S.lideres.filter(l=>l.igId===i.id&&l.tipo==='rede').map(l=>({id:l.id,key:l.id,nome:l.nome})):[],
+  redes:i?S.lideres.filter(l=>l.igId===i.id&&l.tipo==='rede').map(l=>({id:l.id,key:l.id,nome:l.nome,rede:l.rede||''})):[],
   lids:i?S.lideres.filter(l=>l.igId===i.id&&l.tipo==='lider').map(l=>({id:l.id,nome:l.nome,rede:l.redeId||''})):[]};
 }
 function igFormSync(){
  const g=UI.igf;if(!g||!$('#ig_n'))return;
  g.nome=$('#ig_n').value;g.bairro=$('#ig_b').value;g.end=$('#ig_e').value;g.pastor=$('#ig_p').value;
  document.querySelectorAll('[data-rd]').forEach(e=>{g.redes[+e.dataset.rd].nome=e.value});
+ document.querySelectorAll('[data-rn]').forEach(e=>{g.redes[+e.dataset.rn].rede=e.value});
  document.querySelectorAll('[data-ln]').forEach(e=>{g.lids[+e.dataset.ln].nome=e.value});
  document.querySelectorAll('[data-lr]').forEach(e=>{g.lids[+e.dataset.lr].rede=e.value});
 }
 function igFormHTML(){
  const g=UI.igf,edit=!!g.id;
- const ropts=sel=>'<option value="">Sem rede</option>'+g.redes.filter(r=>r.nome.trim()).map(r=>`<option value="${r.key}" ${r.key===sel?'selected':''}>Pr. ${esc(cleanName(r.nome))}</option>`).join('');
+ const ropts=sel=>'<option value="">Sem rede</option>'+g.redes.filter(r=>r.nome.trim()).map(r=>`<option value="${r.key}" ${r.key===sel?'selected':''}>Pr. ${esc(cleanName(r.nome))}${redeNm(r)?' · rede '+esc(redeNm(r)):''}</option>`).join('');
  return `<div class="head"><h2>${edit?'Editar igreja':'Nova igreja'}</h2><button class="btn s" data-act="close">Fechar</button></div><div class="stack" id="igf">
  <div id="ierr" hidden class="note bad"></div>
  <div class="lab"><span class="req">Nome da igreja</span><div class="rowf" style="flex-wrap:nowrap">${g.outra?'':'<span class="pref">IDERP</span>'}<input type="text" id="ig_n" value="${esc(g.nome)}" placeholder="${g.outra?'Nome completo da igreja':'Ex.: Central'}"></div></div>
@@ -15624,15 +15627,20 @@ function igFormHTML(){
  <label class="lab"><span class="req">Pastor titular</span><input type="text" id="ig_p" value="${esc(g.pastor)}" placeholder="Primeiro nome do pastor"></label>
  <div class="help" style="margin-top:-6px">O "Pr." aparece sozinho. Uma igreja tem um só pastor titular.</div>
  <div class="card flat stack"><div class="head"><h3>Pastores de rede</h3><button class="btn s" data-act="igaddr">Adicionar</button></div>
-  ${g.redes.map((r,i)=>`<div class="rowf"><input type="text" class="grow" data-rd="${i}" value="${esc(r.nome)}" placeholder="Primeiro nome" aria-label="Pastor de rede ${i+1}" style="flex:1 1 180px;width:auto"><button class="btn d" data-act="igdelr" data-i="${i}">Remover</button></div>`).join('')||'<div class="mut">Nenhum.</div>'}</div>
+  ${g.redes.map((r,i)=>`<div class="rowf"><input type="text" data-rd="${i}" value="${esc(r.nome)}" placeholder="Nome do pastor" aria-label="Pastor de rede ${i+1}" style="flex:1 1 160px;width:auto"><input type="text" data-rn="${i}" value="${esc(r.rede||'')}" placeholder="Rede que lidera (ex.: Vinho Novo 2)" aria-label="Rede do pastor ${i+1}" style="flex:1 1 180px;width:auto"><button class="btn d" data-act="igdelr" data-i="${i}">Remover</button></div>`).join('')||'<div class="mut">Nenhum.</div>'}</div>
  <div class="card flat stack"><div class="head"><h3>Líderes</h3><button class="btn s" data-act="igaddl">Adicionar</button></div>
   ${g.lids.map((l,i)=>`<div class="rowf"><input type="text" data-ln="${i}" value="${esc(l.nome)}" placeholder="Nome do líder" aria-label="Líder ${i+1}" style="flex:2 1 160px;width:auto"><select data-lr="${i}" aria-label="Rede do líder ${i+1}" style="flex:1 1 140px;width:auto">${ropts(l.rede)}</select><button class="btn d" data-act="igdell" data-i="${i}">Remover</button></div>`).join('')||'<div class="mut">Nenhum.</div>'}
   <div class="help">A rede do líder é opcional.</div></div>
  <div class="card flat stack"><h3>Carta para o correio (PDF)</h3><div class="help">A carta com saudações do pastor, para imprimir e entregar aos participantes desta igreja. Fica guardada aqui (até 1,5 MB).</div>
   ${g.carta?`<div class="rowf"><span class="grow"><b>${esc(g.carta.nome)}</b> <span class="mut">· ${Math.round(g.carta.size/1024)} KB</span></span><button class="btn s" data-act="igcartaget">Abrir / baixar</button><button class="btn d" data-act="igcartadel">Remover</button></div>`:''}
   <label class="btn s" style="align-self:flex-start">${g.carta?'Trocar carta':'Enviar carta (PDF)'}<input id="igcarta" type="file" accept="application/pdf,.pdf" class="sr"></label></div>
- <div class="rowf"><button class="btn p big" data-act="igsv">Salvar</button><button class="btn s" data-act="close">Cancelar</button></div></div>`;
+ <div class="rowf"><button class="btn p big" data-act="igsv">Salvar</button><button class="btn s" data-act="close">Cancelar</button>${edit&&!g.askdel?'<button class="btn d" data-act="igdelask">Excluir igreja</button>':''}</div>
+ ${edit&&g.askdel?igDelBox(g.id):''}</div>`;
 }
+function igDelBox(id){const n=S.p.filter(p=>p.ig&&p.ig.id===id).length;return n?`<div class="note warn stack"><b>Não dá para excluir:</b> ${n} participante(s) estão ligados a esta igreja. Mude a igreja deles antes (Participantes → editar ficha).<div><button class="btn s" data-act="igdelno">Entendi</button></div></div>`:`<div class="note warn stack"><b>Excluir esta igreja?</b> Pastor, líderes, redes e a carta em PDF também serão apagados.<div class="rowf"><button class="btn d" data-act="igdelok">Sim, excluir</button><button class="btn s" data-act="igdelno">Cancelar</button></div></div>`}
+ACT.igdelask=()=>{igFormSync();UI.igf.askdel=true;igRedraw()};
+ACT.igdelno=()=>{UI.igf.askdel=false;igRedraw()};
+ACT.igdelok=async()=>{const id=UI.igf.id;if(S.p.some(p=>p.ig&&p.ig.id===id))return;if(CLOUD_ON){try{await CLOUD.delCarta(id)}catch(e){toast('Não foi possível excluir (verifique a conexão).');return}}S.igrejas=S.igrejas.filter(i=>i.id!==id);S.lideres=S.lideres.filter(l=>l.igId!==id);S.anjos.forEach(a=>{if(a.igId===id)a.igId=''});save();closeSheet();toast('Igreja excluída');render()};
 function igRedraw(){const sc=($('.sheet')||{}).scrollTop||0;UI.keep=true;openSheet(igFormHTML());UI.keep=false;const sh=$('.sheet');if(sh)sh.scrollTop=sc}
 function igCarta(f){
  if(f.size>1.5*1024*1024){toast('PDF muito grande (máx. 1,5 MB).');return}
@@ -15660,7 +15668,7 @@ ACT.igsv=async()=>{
  const keep=new Set();
  let tit=liderById(ig.pastorId);if(tit)tit.nome=pastor;else{tit={id:'ld'+uid(),igId,nome:pastor,tipo:'pastor',redeId:''};S.lideres.push(tit);ig.pastorId=tit.id}
  keep.add(tit.id);const map={};
- g.redes.filter(r=>r.nome.trim()).forEach(r=>{let l=r.id&&liderById(r.id);if(l)l.nome=cleanName(r.nome);else{l={id:'ld'+uid(),igId,nome:cleanName(r.nome),tipo:'rede',redeId:''};S.lideres.push(l)}map[r.key]=l.id;keep.add(l.id)});
+ g.redes.filter(r=>r.nome.trim()).forEach(r=>{let l=r.id&&liderById(r.id);if(l){l.nome=cleanName(r.nome);l.rede=redeNm(r)}else{l={id:'ld'+uid(),igId,nome:cleanName(r.nome),tipo:'rede',redeId:'',rede:redeNm(r)};S.lideres.push(l)}map[r.key]=l.id;keep.add(l.id)});
  g.lids.filter(x=>x.nome.trim()).forEach(x=>{let l=x.id&&liderById(x.id);const rid=map[x.rede]||'';if(l){l.nome=x.nome.trim();l.redeId=rid}else{l={id:'ld'+uid(),igId,nome:x.nome.trim(),tipo:'lider',redeId:rid};S.lideres.push(l)}keep.add(l.id)});
  const gone=S.lideres.filter(l=>l.igId===igId&&!keep.has(l.id)).map(l=>l.id);
  if(gone.length){S.lideres=S.lideres.filter(l=>!gone.includes(l.id));S.p.forEach(p=>{if(gone.includes(p.liderId))p.liderId=''})}
@@ -15672,6 +15680,7 @@ function vAjustes(){
  const E=S.evento,A=UI.ask,im=UI.imp;
  return `<div><h1>Ajustes</h1></div>
  ${accHTML()}
+ ${diagHTML()}
  <div class="card stack"><h2>Encontro</h2><div class="grid2"><label class="lab">Nome<input type="text" id="ev_n" value="${esc(E.nome)}"></label><label class="lab">Data de início (sábado)<input type="date" id="ev_d" value="${esc(E.inicio)}"></label></div>
   <div class="help">Escolha o <b>sábado</b> do encontro. O Painel e a leitura de QR usam essa data (sábado = acolhimento, domingo = presença).${E.inicio&&new Date(E.inicio+'T12:00').getDay()!==6?'<div class="note warn">Esta data não é um sábado.</div>':''}</div><div><button class="btn p" data-act="evsv">Salvar</button></div></div>
  <div class="card stack"><h2>Backup dos dados</h2><div class="help">Os dados ficam só neste navegador, neste computador. Exporte um arquivo para guardar o encontro ou levar para outro computador, e importe depois.${S.lastExport?' Último backup: '+fmtDT(S.lastExport)+'.':' Nenhum backup feito ainda.'}</div>
@@ -15711,6 +15720,7 @@ function vAjuda(){
  const cons=
  sec('Como o acesso funciona',ul([
   '<b>Um login só para todos os celulares.</b> Todos usam o usuário <b>consolidacao</b> e o mesmo PIN. Não precisa de um PIN por celular.',
+  'O <b>líder da consolidação</b> tem um login próprio (usuário <b>lider</b>) com as mesmas permissões da consolidação e o mesmo prazo de acesso. Só o administrador mexe nessa conta.',
   'Na entrada, cada celular informa o <b>nome do aparelho</b> (ex.: "Portaria 1"). Ele aparece no histórico de quem registrou cada ação.',
   'O acesso só funciona no <b>prazo liberado pelo administrador</b> (padrão: sexta a domingo). Fora dele, o app desconecta sozinho.',
   'Todos os aparelhos ficam <b>sincronizados em tempo real</b>: o que um celular registra aparece nos outros e no computador. A etiqueta no topo mostra "Sincronizado", "Enviando…" ou "Offline".',
@@ -15737,6 +15747,8 @@ function vAjuda(){
  const adm_=
  sec('Seu papel como administrador',ul([
   'Usuário <b>admin</b> com PIN próprio e forte. Você vê tudo: Igrejas, Ajustes e as ações que a consolidação não tem.',
+  'Contas do app: <b>admin</b> (você), <b>consolidacao</b> (celulares da equipe) e <b>lider</b> (líder da consolidação). O líder e a consolidação não alteram a conta do admin.',
+  'Criar, trocar o PIN ou desativar a conta do líder é feito por você no console do Firebase (Authentication → Usuários). O líder não consegue mexer na conta do admin.',
   'Só você cria e muda o acesso da consolidação. O PIN dela é criado ou trocado no <b>console do Firebase</b> (Authentication → Usuários → consolidacao → Redefinir senha).']))+
  sec('Preparar um novo encontro',ol([
   'Em <b>Ajustes</b>, use "Começar novo encontro" (limpa participantes, anjos e histórico; mantém igrejas, líderes e Pix). Faça backup antes.',
@@ -15905,7 +15917,7 @@ const FAKE={
  L:[],get(){try{return JSON.parse(localStorage.getItem('fake-cloud')||'{}')}catch(e){return{}}},put(s){localStorage.setItem('fake-cloud',JSON.stringify(s))},
  init(){addEventListener('storage',e=>{if(e.key==='fake-cloud')this.fire()})},
  onAuth(cb){const u=sessionStorage.getItem('fake-auth');setTimeout(()=>cb(u?{uid:u,email:u}:null),20);this.ocb=cb},
- login(user,pin){const m={admin:['111111',ADMIN_EMAIL],consolidacao:['222222',CONS_EMAIL]}[user.trim().toLowerCase()];
+ login(user,pin){const m={admin:['111111',ADMIN_EMAIL],consolidacao:['222222',CONS_EMAIL],lider:['333333',LIDER_EMAIL]}[user.trim().toLowerCase()];
   if(!m||m[0]!==pin)return Promise.reject({code:'auth/invalid-credential'});sessionStorage.setItem('fake-auth',m[1]);setTimeout(()=>this.ocb({uid:m[1],email:m[1]}),10);return Promise.resolve()},
  logout(){sessionStorage.removeItem('fake-auth');setTimeout(()=>this.ocb(null),10);return Promise.resolve()},
  listen(name,cb){const l={name,cb};this.L.push(l);setTimeout(()=>this.send(l),15);return()=>{this.L=this.L.filter(x=>x!==l)}},
@@ -15939,7 +15951,7 @@ function syncPush(){
  const send=ROLE==='admin'?ops:ops.filter(o=>!ADMIN_COLS.includes(o.col));
  if(!send.length)return;
  setTag('Enviando…');
- CLOUD.commit(send).then(()=>setTag()).catch(e=>{toast(e&&e.code==='permission-denied'?'Sem permissão para essa alteração.':'Não foi possível enviar. Será tentado de novo ao reconectar.');SYNC.err=(e&&e.code)||'erro';setTag()});
+ CLOUD.commit(send).then(()=>{SYNC.err='';setTag()}).catch(e=>{send.forEach(o=>{if(!o.del&&SYNC.shadow[o.col])delete SYNC.shadow[o.col][o.id]});SYNC.err=((e&&e.code)||'erro')+(e&&e.message?' — '+String(e.message).slice(0,140):'');toast('Falha ao enviar: '+SYNC.err);setTag();clearTimeout(SYNC.rty);SYNC.rty=setTimeout(syncPush,15000)});
 }
 /* --- receber alterações dos outros aparelhos --- */
 function applyCol(col,docs){
@@ -15965,8 +15977,8 @@ function setTag(txt){
  const t=$('#tag');if(!t)return;
  if(!CLOUD_ON){t.textContent=DEMO?'Dados fictícios':'Teste local';return}
  const pend=Object.values(SYNC.pend).some(Boolean),on=navigator.onLine;
- const st=txt||(!on?'Offline':pend?'Enviando…':'Sincronizado');
- t.className='tag '+(st==='Sincronizado'?'sync-ok':st==='Offline'?'sync-off':'sync-wait');
+ const st=txt||(!on?'Offline':SYNC.err?'Falha ao enviar':pend?'Enviando…':'Sincronizado');
+ t.className='tag '+(st==='Sincronizado'?'sync-ok':(st==='Offline'||st==='Falha ao enviar')?'sync-off':'sync-wait');t.title=SYNC.err||'';
  t.innerHTML='● '+esc(st)+(DEV?'<span class="dev"> · '+esc(DEV)+'</span>':'');
 }
 addEventListener('online',()=>setTag());addEventListener('offline',()=>setTag());
@@ -16019,7 +16031,7 @@ function boot(){
  let dev='';try{dev=localStorage.getItem(DEVK)||''}catch(e){}DEV=dev;
  CLOUD.onAuth(u=>{
   if(!u){stopSync();SYNC.started=false;SYNC.ready={};SYNC.shadow={};ROLE=null;$('#outbtn').hidden=true;S=emptyS();const m=SYNC.msg;SYNC.msg='';showLogin(m);return}
-  ROLE=u.email===ADMIN_EMAIL?'admin':u.email===CONS_EMAIL?'cons':null;
+  ROLE=u.email===ADMIN_EMAIL?'admin':(u.email===CONS_EMAIL||u.email===LIDER_EMAIL)?'cons':null;
   if(!ROLE){CLOUD.logout();showLogin('Esta conta não tem acesso.');return}
   if(!DEV)DEV=ROLE==='admin'?'Admin':'Aparelho';
   showLogin('','Carregando dados…');startSync();
@@ -16056,6 +16068,14 @@ const accHTML=()=>{
  <div class="rowf" style="align-items:flex-end"><label class="lab" style="flex:1 1 200px">Liberar por<select id="acc_d">${opts([['2','2 dias: sábado e domingo'],['3','3 dias: sexta, sábado e domingo (padrão)'],['4','4 dias: sexta a segunda']],'3')}</select></label><button class="btn p" data-act="accopen">${st==='on'||st==='wait'?'Renovar prazo':'Liberar acesso'}</button>${st==='on'||st==='wait'?'<button class="btn d" data-act="accclose">Bloquear agora</button>':''}</div>
  ${pv?'<div class="help">'+pv+'</div>':'<div class="help">Defina a data do encontro abaixo para ver as datas.</div>'}</div>`;
 };
+
+ACT.diag=async()=>{
+ const box=$('#diagout');if(!box)return;box.textContent='Testando…';const out=[];
+ const t=async(col,data)=>{const id='diag-'+Date.now().toString(36);try{await CLOUD.commit([{col,id,data}]);await CLOUD.commit([{col,id,del:true}]);out.push(col+': ok')}catch(e){out.push(col+': FALHOU ('+((e&&e.code)||'erro')+')')}};
+ await t('participantes',{id:'x',nome:'teste'});await t('igrejas',{id:'x',nome:'teste'});await t('log',{id:'x',t:nowISO(),m:'teste',by:DEV});
+ box.innerHTML=out.map(esc).join('<br>')+'<br>'+(navigator.onLine?'Internet: ok':'Internet: offline')+'<br>Papel: '+esc(ROLE||'?')+'<br>Participantes na tela: '+S.p.length+', igrejas: '+S.igrejas.length+(SYNC.err?'<br>Último erro: '+esc(SYNC.err):'');
+};
+const diagHTML=()=>!CLOUD_ON||ROLE!=='admin'?'':`<div class="card stack"><h2>Diagnóstico da sincronização</h2><div class="help">Testa se este aparelho consegue gravar na nuvem (cria e apaga um registro de teste).</div><div><button class="btn s" data-act="diag">Testar envio</button></div><div id="diagout" class="help" style="color:var(--fg)"></div></div>`;
 
 /* ===== roteador e eventos ===== */
 const VIEWS={painel:vPainel,ler:vLer,pessoas:vPessoas,anjos:vAnjos,decisoes:vDecisoes,crachas:vCrachas,relat:vRelat,cadastros:vCadastros,ajustes:vAjustes,ajuda:vAjuda,mais:vMais};
