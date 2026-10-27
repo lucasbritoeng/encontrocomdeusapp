@@ -130,6 +130,13 @@ body{overscroll-behavior-y:none}
 .seg{display:flex;gap:4px;padding:4px;background:var(--np-bg);border-radius:14px;overflow-x:auto}
 .seg button{flex:1 0 auto;min-height:44px;border:0;background:none;border-radius:10px;font-weight:700;color:var(--muted);cursor:pointer;padding:0 14px;white-space:nowrap}
 .seg button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.fgs{gap:10px}.fgrp{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;align-items:center}.fl{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+@media (max-width:560px){.fgrp{grid-template-columns:1fr;gap:6px}}
+.lote{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}.lote .mut{font-size:13px}
+@media (min-width:900px){.mini{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.mini>div{padding:14px 16px}.mini h3{font-size:14px;margin-bottom:6px}.mini table td{font-size:15px;padding:5px 0}.rel .tbl{font-size:15px}.rel .tbl td{padding:12px 14px}.rel .tbl th{font-size:12px;padding:10px 14px}.rel h2{font-size:19px}}
+.dia{border-top:1px solid var(--line);padding:8px 0}.dia summary{cursor:pointer;padding:8px 0;font-size:15px}.dia .list{margin-top:6px}
+@media (max-width:560px){.gstack{grid-template-columns:1fr}}
+.seg.sub{margin-top:-4px}.seg .tabds{flex:0 0 auto;font-size:13px;min-height:44px;opacity:.85;margin-left:auto}
 .seg .n{font-size:12px;margin-left:6px;padding:1px 8px;border-radius:999px;background:var(--np-bg);color:var(--np-fg)}
 
 .pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap}
@@ -172,6 +179,22 @@ button.stat{cursor:pointer}
 
 .mode{min-height:52px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:800;font-size:15px;cursor:pointer}
 .mode[aria-pressed="true"]{background:var(--c,var(--head));color:#fff;border-color:transparent}
+.qrg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:700px){.qrg{grid-template-columns:minmax(0,1fr)}.qrg>*{min-width:0}.qrg input,.qrg .btn{max-width:100%;box-sizing:border-box}}
+.cnt2{display:flex;align-items:baseline;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-weight:700}.cnt2 b{font-size:28px}
+#qrpop{position:fixed;inset:0;z-index:80}
+.qrov{position:absolute;inset:0;background:rgba(10,8,8,.6);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.qrcard{background:var(--surface);width:100%;max-width:520px;max-height:92dvh;overflow:auto;border-radius:22px 22px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (min-width:700px){.qrov{align-items:center}.qrcard{border-radius:22px}}
+.qrcard .top2{padding:14px 18px;font-weight:800;font-size:18px}
+.qrcard .bd2{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.qrcard.ok .top2{background:var(--ok-bg);color:var(--ok-fg)}.qrcard.warn .top2{background:var(--warn-bg);color:var(--warn-fg)}.qrcard.bad .top2{background:var(--bad-bg);color:var(--bad-fg)}
+.pbig{border:2px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface2)}
+.pbtn .btn{flex:1 1 140px}
+#flash{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0}
+#flash.go{animation:flashgo .5s ease-out}
+@keyframes flashgo{0%{opacity:.45}100%{opacity:0}}
+.btn.ok{background:var(--ac-bg);color:#fff;border-color:transparent}
 .res{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
 .res .top2{padding:12px 14px;font-weight:800;font-size:17px;display:flex;gap:10px;align-items:center}
 .res .bd2{padding:14px;display:flex;flex-direction:column;gap:10px}
@@ -223,6 +246,7 @@ button.stat{cursor:pointer}
 .badge .bd{display:flex;gap:3cqw;flex:1;min-height:0}
 .badge .l{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:1.3cqw}
 .badge .nm{font-weight:800;font-size:8cqw;line-height:1.02;letter-spacing:-.01em;overflow-wrap:anywhere}
+.badge .ar{font-weight:600;font-size:.78em;color:#44403C}
 .badge .md{font-size:4.4cqw;color:#44403C;line-height:1.1;margin-bottom:1.8cqw;font-weight:600}
 .badge .lb{font-size:2cqw;font-weight:700;letter-spacing:.06em;color:#57534E;margin-top:.8cqw}
 .badge .an{font-weight:800;font-size:4.8cqw;line-height:1.05}
@@ -295,6 +319,8 @@ select:has(option[value=""]:checked){font-weight:500;color:var(--muted);border-c
 <div id="login" hidden></div>
 <div id="sheet" hidden></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="qrpop" hidden></div>
+<div id="flash" aria-hidden="true"></div>
 
 <script>//---------------------------------------------------------------------
 //
@@ -14871,11 +14897,11 @@ function seed(N,rand){
 }
 function loadS(){try{const x=localStorage.getItem(LS);return x?JSON.parse(x):null}catch(e){return null}}
 function save(){if(CLOUD_ON){syncPush();return}try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){if(typeof toast==='function')toast('Sem espaço no navegador. Exporte um backup e remova cartas em PDF grandes.')}}
-const emptyS=()=>({v:4,consAte:0,consDe:0,dupOk:[],evento:{nome:'Encontro com Deus',inicio:''},pix:{tipo:'',chave:'',favorecido:'',banco:'',valor:'',obs:''},lastExport:'',p:[],anjos:[],igrejas:[],lideres:[],lotes:[],log:[]});
+const emptyS=()=>({v:4,consAte:0,consDe:0,liderAte:0,liderDe:0,dupOk:[],evento:{nome:'Encontro com Deus',inicio:''},pix:{tipo:'',chave:'',favorecido:'',banco:'',valor:'',obs:''},lastExport:'',p:[],anjos:[],igrejas:[],lideres:[],lotes:[],log:[]});
 let S=CLOUD_ON?emptyS():loadS();if(!S||S.v!==4)S=DEMO?seed(64):seed(30,true);
 
 /* ===== estado de interface ===== */
-const UI={r:'painel',fp:{tab:'all',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},fd:{f:'dec',q:'',anjo:'',igreja:'',sk:'mat',sd:1},fc:{f:'pend',q:'',anjo:'',sk:'mat',sd:1},fa:{q:'',sexo:'',igreja:'',sem:false,sk:'nome',sd:1},cadTab:'ig',backTo:null,imp:null,ask:'',cam:false,
+const UI={r:'painel',fp:{tab:'all',sub:'sab',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},fd:{f:'dec',q:'',anjo:'',igreja:'',sk:'mat',sd:1},fc:{f:'pend',q:'',anjo:'',sk:'mat',sd:1},fa:{q:'',sexo:'',igreja:'',sem:false,sk:'nome',sd:1},cadTab:'ig',backTo:null,imp:null,ask:'',cam:false,
  sel:new Set(),draft:null,res:null,mode:'acolh',sub:null,sheet:null,last:null,pos:1,resetAsk:false};
 const ACT={};
 
@@ -14886,7 +14912,7 @@ const anjoOf=p=>S.anjos.find(a=>a.id===p.anjoId)||null;
 const igById=id=>S.igrejas.find(i=>i.id===id)||null;
 const liderById=id=>S.lideres.find(l=>l.id===id)||null;
 const liderDisp=l=>(l.tipo==='lider'?'':'Pr. ')+l.nome;
-const liderNome=p=>{const l=liderById(p.liderId);return l?liderDisp(l):''};
+const liderNome=p=>{if(p.ig&&p.ig.tipo==='outra'&&p.ig.pastor)return 'Pr. '+cleanName(p.ig.pastor);const l=liderById(p.liderId);return l?liderDisp(l):''};
 const igLabel=i=>{const l=liderById(i.pastorId);return i.nome+(l?' – '+liderDisp(l):'')};
 const cleanName=s=>String(s||'').replace(/\s+/g,' ').replace(/^\s*(pr\.?|pra\.?|pastor(a)?)\s+/i,'').trim();
 const DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
@@ -14902,10 +14928,13 @@ const igNome=p=>p.ig.tipo==='iderp'?(igById(p.ig.id)||{nome:'IDERP'}).nome:p.ig.
 const aMatch=(p,q)=>{if(!q)return true;const a=anjoOf(p);return !!a&&norm(a.nome).includes(norm(q))};
 const sorter=(cols,f)=>{const c=cols.find(x=>x[0]===f.sk)||cols[0];return(a,b)=>{const x=c[2](a),y=c[2](b);const r=typeof x==='number'?x-y:String(x).localeCompare(String(y),'pt');return(r||a.mat-b.mat)*f.sd}};
 const crState=p=>!isPago(p)?null:(p.cp==null?'pend':(p.cp<p.cv?'old':'ok'));
+const PART=new Set(['da','de','do','das','dos','e','di','du','del','la','le','van','von']);
+/* nome e segundo nome em destaque (partículas ficam com o nome seguinte); o resto vai menor */
+const nameParts=full=>{const w=String(full||'').trim().split(/\s+/).filter(Boolean);if(w.length<=2)return{big:w.join(' '),rest:''};let k=2;while(k<w.length&&PART.has(w[k-1].toLowerCase()))k++;return{big:w.slice(0,k).join(' '),rest:w.slice(k).join(' ')}};
 const splitName=full=>{const w=String(full||'').trim().split(/\s+/).filter(Boolean);if(w.length<=1)return{a:w[0]||'',m:'',z:''};return{a:w[0],m:w.slice(1,-1).join(' '),z:w[w.length-1]}};
 const badgeName=p=>splitName(p.nomeCracha||p.nome);
 const tipoDec=p=>p.evangelico==='nao'?'Conversão':'Reconciliação';
-const orientar=p=>!!(p.dec&&p.batizado==='sim'&&!p.dec.batismo);
+const orientar=p=>!!(p.dec&&p.batizado==='sim'&&p.dec.batismo);
 const encontristas=a=>S.p.filter(p=>p.anjoId===a.id&&p.status!=='ds').length;
 const EVL={sim:'Sim',nao:'Não',afastado:'Afastado'};
 const pill=(c,t)=>`<span class="pill ${c}">${esc(t)}</span>`;
@@ -14936,9 +14965,9 @@ const dateOK=v=>{const m=String(v).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)re
 const NAV=[['painel','Painel','Painel','M3 12l9-8 9 8M5 10v10h14V10',1,1],
  ['ler','Ler QR','Ler QR','M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h3v3h-3zM20 14v6h-6',1,1],
  ['pessoas','Participantes','Pessoas','M16 20v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM20 20v-2a3 3 0 0 0-2-2.8M16 4.2a3 3 0 0 1 0 5.6',1,1],
- ['anjos','Anjos','Anjos','M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2',1,0],
- ['decisoes','Decisões','Decisões','M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z',1,0],
  ['crachas','Crachás','Crachás','M5 3h14v18H5zM9 3v3h6V3M9 12h6M9 16h4',1,1],
+ ['decisoes','Decisões','Decisões','M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.4-7 10-7 10z',1,0],
+ ['anjos','Anjos','Anjos','M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2',1,0],
  ['relat','Relatórios','Relatórios','M5 20V10M12 20V4M19 20v-7',1,0],
  ['cadastros','Cadastros','Cadastros','M4 5h16v4H4zM4 11h16v4H4zM4 17h16v3H4z',1,0],
  ['ajustes','Ajustes','Ajustes','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.2-.8.2-1.2z',1,0],
@@ -14952,15 +14981,16 @@ function drawNav(){
  const pc=pendCr().length;
  $('#side').className='side'+(SMINI?' smin':'');
  $('#side').innerHTML=`<button class="sidetog" data-act="sidetog" aria-label="${SMINI?'Expandir menu':'Recolher menu'}" title="${SMINI?'Expandir menu':'Recolher menu'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${SMINI?'M9 6l6 6-6 6':'M15 6l-6 6 6 6'}"/></svg><span>Recolher</span></button>`+NAV.filter(n=>n[4]&&allowed(n[0])).map(n=>`<button data-act="go" data-r="${n[0]}" title="${n[1]}" ${UI.r===n[0]?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${n[3]}"/></svg><span>${n[1]}</span>${n[0]==='crachas'&&pc?`<span class="cnt">${pc}</span>`:''}</button>`).join('');
- const cn=NAV.find(n=>n[0]===UI.r),sb=$('#sub'),tt=$('#ttl'),m=innerWidth<900&&cn;if(sb)sb.textContent=m?'Encontro com Deus':(ROLE==='admin'?'Administrador':'Consolidação');if(tt)tt.textContent=m?cn[1]:'Encontro com Deus';
+ const cn=NAV.find(n=>n[0]===UI.r),sb=$('#sub'),tt=$('#ttl'),m=innerWidth<900&&cn;if(sb)sb.textContent=m?'Encontro com Deus':(ROLE==='admin'?'Administrador':ROLE==='lider'?'Líder':'Consolidação');if(tt)tt.textContent=m?cn[1]:'Encontro com Deus';
  const cur=TABS.includes(UI.r)?UI.r:'mais';
  $('#tabin').innerHTML=NAV.filter(n=>TABS.includes(n[0])).map(n=>`<button data-act="go" data-r="${n[0]}" ${cur===n[0]?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${n[3]}"/></svg>${n[2]}</button>`).join('');
 }
 function go(r,patch){
+ if(typeof closePop==='function')closePop();
  if(!allowed(r))r='painel';
  UI.r=r;
  if(patch){
-  if(r==='pessoas')UI.fp=Object.assign({tab:'all',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},patch);
+  if(r==='pessoas')UI.fp=Object.assign({tab:'all',sub:'sab',q:'',anjo:'',sexo:'',igreja:'',status:'',cr:'',forma:'',extra:'',sk:'mat',sd:1},patch);
   if(r==='decisoes')UI.fd=Object.assign({f:'dec',q:'',anjo:'',igreja:'',sk:'mat',sd:1},patch);
   if(r==='crachas')UI.fc=Object.assign({f:'pend',q:'',anjo:'',sk:'mat',sd:1},patch);
  }
@@ -14981,6 +15011,7 @@ function vPainel(){
  const semDec=S.p.filter(p=>p.status==='ac'&&!p.dec).length;
  const ori=S.p.filter(p=>p.status==='ac'&&orientar(p)).length;
  const dev=S.p.filter(p=>p.status==='ds'&&p.desist&&p.desist.devol==='pendente').length;
+ const semAC=S.p.filter(p=>p.status==='ac'&&!p.pagoEm).length,sxMis=S.p.filter(p=>p.status!=='ds'&&sexoAviso(p)).length;
  const sevenAnj=S.anjos.filter(a=>encontristas(a)>3).length;
  const att=[
   [semAnjo,'pagos sem anjo',gp('pessoas',{tab:'conf',extra:'semanjo'})],
@@ -14988,6 +15019,8 @@ function vPainel(){
   [crp,'crachás para imprimir',gp('crachas',{f:'pend'})],
   [semDec,'acolhidos ainda sem decisão registrada',gp('decisoes',{f:'sem'})],
   [ori,'já batizados que decidiram: orientar sobre batismo',gp('decisoes',{f:'ori'})],
+  [semAC,'acolhidos sem pagamento confirmado',gp('pessoas',{tab:'ac'})],
+  [sxMis,'participantes com anjo de outro sexo (confira)',gp('pessoas',{tab:'all',extra:'sexoanjo'})],
   [dev,'devoluções a fazer',gp('pessoas',{tab:'ds'})],
   [sevenAnj,'anjos com mais de 3 encontristas',gp('anjos',{})]
  ].filter(a=>a[0]>0);
@@ -14999,7 +15032,7 @@ function vPainel(){
  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
   ${tile(pag,'Confirmados (pagos)','var(--ink)',gp('pessoas',{tab:'conf'}))}
   ${tile(c('pg'),'Pagos aguardando chegar','var(--pg-bd)',gp('pessoas',{tab:'conf',status:'pg'}))}
-  ${tile(ac,'Acolhidos','var(--ac-bg)',gp('pessoas',{tab:'conf',status:'ac'}))}
+  ${tile(ac,'Acolhidos','var(--ac-bg)',gp('pessoas',{tab:'ac'}))}
   ${tile(c('np'),'Aguardando pagamento','#A8A29E',gp('pessoas',{tab:'np'}))}
   ${tile(c('ds'),'Desistentes','#DC2626',gp('pessoas',{tab:'ds'}))}
  </div>
@@ -15012,100 +15045,148 @@ function vPainel(){
 }
 
 /* ===== ler QR ===== */
-const MODES=[['acolh','Acolhimento (sábado)','var(--ac-bg)','Portaria. Marca como acolhido e mostra o anjo.'],
- ['domingo','Domingo','#6D28D9','Marca a presença no domingo.'],
+const MODES=[['acolh','Acolhimento (sábado)','var(--ac-bg)','Portaria. Confirma a chegada e mostra o anjo.'],
+ ['domingo','Domingo','#6D28D9','Confirma a presença no domingo.'],
  ['decisao','Decisão','#1630BE','Escritório, com o crachá recolhido. Registra conversão ou reconciliação.'],
  ['batismo','Batismo','#C2410C','Registra o batismo (inclui a decisão).']];
-function pBlock(p){return `<div><div class="mono mut" style="font-size:13px">${esc(p.id)} | Nº ${pad(p.mat)}</div><div style="font-size:24px;font-weight:800;line-height:1.1">${esc(p.nome)}</div><div class="rowf" style="margin-top:6px">${sxPill(p.sexo)}${stPill(p)}<span class="mut">${esc(igNome(p))}</span></div></div>`}
+const sexoAviso=p=>{const a=anjoOf(p);return a&&a.sexo&&p.sexo&&a.sexo!==p.sexo?(p.sexo==='M'?'Participante homem com anjo mulher.':'Participante mulher com anjo homem.')+' Confira se está certo.':''};
+function pBlock(p,big){return `<div class="${big?'pbig':''}"><div class="mono mut" style="font-size:13px">${esc(p.id)} | Nº ${pad(p.mat)}</div><div style="font-size:${big?30:24}px;font-weight:800;line-height:1.1">${esc(p.nome)}</div><div class="rowf" style="margin-top:6px">${sxPill(p.sexo)}${stPill(p)}<span class="mut">${esc(igNome(p))}</span></div></div>`}
 function anjoBlock(p,emb){
  const a=anjoOf(p);
  if(!a)return '<div class="note warn"><b>Sem anjo cadastrado.</b> Pergunte à pessoa quem a trouxe ou chame o líder mais próximo.</div>';
  let h=`<div class="${emb?'stack':'card flat stack'}" ${emb?'':'style="padding:12px"'}>${emb?'':'<div class="mut" style="font-size:12px;font-weight:700;letter-spacing:.06em">ANJO</div>'}<div style="font-size:20px;font-weight:800">${esc(a.nome)}</div>`;
  if(a.tel)h+=`<div class="rowf"><span class="mono" style="font-size:18px;font-weight:600">${esc(fmtTel(a.tel))}</span><button class="btn s" data-act="copy" data-v="${esc(fmtTel(a.tel))}">Copiar</button></div>
-  <div class="rowf"><a class="btn p" href="${esc(waLink(p,a))}" target="_blank" rel="noopener">Avisar anjo no WhatsApp</a></div>
-  <div class="help">O WhatsApp abre com a mensagem pronta; basta enviar. No sistema final isso pode ser automático.</div>`;
+  <div class="rowf"><a class="btn p" href="${esc(waLink(p,a))}" target="_blank" rel="noopener">Avisar anjo no WhatsApp</a></div>`;
  else h+='<div class="note warn">Anjo sem telefone cadastrado. Adicione em Participantes › anjo.</div>';
  return h+'</div>';
 }
-function resHTML(){
- const R=UI.res;if(!R)return '';
- const p=R.id?person(R.id):null;
- let b='';
+/* registros (acolhimento, domingo, decisão, batismo, pagamento) montados a partir dos dados de cada pessoa */
+function stamp(p,k){p.by=p.by||{};p.by[k]=DEV||''}
+function registros(){
+ const o=[];
+ S.p.forEach(p=>{const by=p.by||{};
+  if(p.pagoEm)o.push({t:p.pagoEm,k:'Pagamento confirmado',p,by:by.pay});
+  if(p.presSab)o.push({t:p.presSab,k:'Acolhimento',p,by:by.presSab});
+  if(p.presDom)o.push({t:p.presDom,k:'Domingo',p,by:by.presDom});
+  if(p.dec&&p.dec.em)o.push({t:p.dec.em,k:tipoDec(p),p,by:by.dec});
+  if(p.dec&&p.dec.batismo)o.push({t:p.dec.batEm||p.dec.em,k:'Batismo',p,by:by.bat});
+ });
+ return o.sort((a,b)=>b.t<a.t?-1:b.t>a.t?1:0);
+}
+function counterHTML(){
+ const c=k=>S.p.filter(p=>p.status===k).length,pag=c('pg')+c('ac'),ac=c('ac'),m=UI.mode;
+ const x={acolh:[ac,pag,'Acolhidos',' de '+pag+' confirmados'],domingo:[S.p.filter(p=>p.presDom).length,ac,'Presentes no domingo',' de '+ac+' acolhidos'],
+  decisao:[S.p.filter(p=>p.dec).length,ac,'Decisões',' de '+ac+' acolhidos'],batismo:[S.p.filter(p=>p.dec&&p.dec.batismo).length,S.p.filter(p=>p.dec).length,'Batismos',' de '+S.p.filter(p=>p.dec).length+' decisões']}[m];
+ return `<div class="cnt2"><b class="num">${x[0]}</b><span>${x[2]}${x[3]}</span></div>`;
+}
+function popHTML(R){
+ const p=R.id?person(R.id):null;let b='';
+ if(p)b+=pBlock(p,true);
  if(R.msg)b+=`<div>${esc(R.msg)}</div>`;
- if(p)b+=pBlock(p);
- if(p&&UI.mode==='acolh'&&R.kind!=='bad')b+=anjoBlock(p);
- if(p&&R.step==='pay')b+=`<label class="lab">Forma de pagamento<select id="fpay">${opts(Object.entries(FORMA),'pix')}</select></label><div class="rowf"><button class="btn p" data-act="payacolh" data-id="${p.id}">Admin autoriza: confirmar pagamento e acolher</button><button class="btn s" data-act="clearres">Cancelar</button></div>`;
- if(p&&R.step==='acolh1')b+=`<div class="rowf"><button class="btn p" data-act="acolhgo" data-id="${p.id}">Acolher agora e continuar</button><button class="btn s" data-act="clearres">Cancelar</button></div>`;
+ if(p){const w=sexoAviso(p);if(w)b+=`<div class="note warn">${esc(w)}</div>`}
+ if(p&&UI.mode==='acolh'&&R.step==='confirm')b+=anjoBlock(p);
+ if(p&&R.step==='pay')b+=`<label class="lab">Forma de pagamento<select id="fpay">${opts(Object.entries(FORMA),'pix')}</select></label>`;
  if(p&&R.step==='dec'){
   b+=`<div class="rowf"><span class="mut">EVANGÉLICO:</span><b>${EVL[p.evangelico]}</b><span class="mut">· sugestão:</span>${pill('dec',tipoDec(p))}</div>`;
-  if(p.batizado==='sim')b+='<div class="note info">Já batizado em igreja <b>EVANGÉLICA</b>: não registrar batismo. Orientar a pessoa.</div>';
-  if(p.dec){b+=`<div class="rowf">Decisão registrada: ${decPills(p)}</div>`;
-   if(!p.dec.batismo)b+=`<button class="btn p" data-act="regbat" data-id="${p.id}">Registrar batismo também</button>`}
-  else b+=`<label class="opt"><input type="checkbox" id="chkbat"> Vai se batizar</label><div class="rowf"><button class="btn p big" data-act="regdec" data-id="${p.id}">Registrar ${tipoDec(p).toLowerCase()}</button><button class="btn s" data-act="clearres">Não decidiu</button></div>`;
+  if(p.batizado==='sim')b+='<div class="note info">Já batizado em igreja <b>EVANGÉLICA</b>. Se quiser se batizar de novo, marque abaixo: a liderança é avisada para conversar em particular.</div>';
+  if(p.dec){b+=`<div class="rowf">Decisão registrada: ${decPills(p)}</div>`}
+  else b+=`<label class="opt"><input type="checkbox" id="chkbat"> Vai se batizar</label>`;
  }
- if(p&&R.kind==='ok'&&UI.last&&UI.last.id===p.id&&R.step!=='dec')b+=`<div><button class="btn s" data-act="undo">Desfazer</button></div>`;
- if(p&&R.note)b+=`<div class="note info">${R.note}</div>`;
- return `<div class="res ${R.kind}" role="status"><div class="top2">${esc(R.title)}</div><div class="bd2">${b}</div></div>`;
+ if(R.note)b+=`<div class="note info">${R.note}</div>`;
+ let btn='';
+ if(R.step==='confirm')btn=`<button class="btn ok big" data-act="qrok" data-id="${p.id}">${esc(R.label)}</button>`;
+ else if(R.step==='pay')btn=`<button class="btn ok big" data-act="payacolh" data-id="${p.id}">${ROLE==='admin'?'Confirmar pagamento e acolher':'Admin autoriza: confirmar pagamento e acolher'}</button>`;
+ else if(R.step==='acolh1')btn=`<button class="btn ok big" data-act="acolhgo" data-id="${p.id}">Acolher agora e continuar</button>`;
+ else if(R.step==='dec'&&!p.dec)btn=`<button class="btn ok big" data-act="regdec" data-id="${p.id}">Registrar ${tipoDec(p).toLowerCase()}</button>`;
+ else if(R.step==='dec'&&p.dec&&!p.dec.batismo)btn=`<button class="btn ok big" data-act="regbat" data-id="${p.id}">Registrar batismo também</button>`;
+ return `<div class="qrcard ${R.kind}" role="dialog" aria-modal="true"><div class="top2">${esc(R.title)}</div><div class="bd2">${b}<div class="rowf pbtn">${btn}<button class="btn s ${btn?'':'big'}" data-act="popclose">${btn?'Cancelar':'Fechar'}</button></div></div></div>`;
+}
+function openPop(R){UI.pop=R;const e=$('#qrpop');e.innerHTML='<div class="qrov">'+popHTML(R)+'</div>';e.hidden=false;document.body.style.overflow='hidden';fb(R.kind==='ok'?'ok':R.kind==='warn'?'warn':'bad')}
+function closePop(){UI.pop=null;const e=$('#qrpop');if(e){e.hidden=true;e.innerHTML=''}document.body.style.overflow=''}
+ACT.popclose=()=>{closePop();render()};
+/* som e cor */
+let AC=null;
+function audioUnlock(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==='suspended')AC.resume()}catch(e){}}
+document.addEventListener('click',audioUnlock,{once:false,capture:true});
+function beep(freqs,dur){if(!AC)return;try{let t=AC.currentTime;freqs.forEach(f=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.25,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dur+.02);t+=dur})}catch(e){}}
+function fb(k){
+ beep(k==='ok'?[880]:k==='done'?[740,1040]:k==='warn'?[440,440]:[220,180],k==='ok'||k==='done'?.12:.16);
+ const f=$('#flash');if(!f)return;f.style.background=k==='ok'||k==='done'?'#15803D':k==='warn'?'#F59E0B':'#DC2626';f.classList.remove('go');void f.offsetWidth;f.classList.add('go');
+}
+function lastBar(){
+ const L=UI.last;if(!L||Date.now()-L.t>180000)return '';
+ return `<div class="card flat rowf" style="justify-content:space-between"><span><b>Última ação:</b> ${esc(L.label)}</span><button class="btn s" data-act="undo">Desfazer</button></div>`;
+}
+function recentHTML(){
+ const lim=Date.now()-2*3600e3,r=registros().filter(x=>new Date(x.t).getTime()>=lim).slice(0,30);
+ return `<div class="card stack"><h2>Últimos registros <span class="mut" style="font-size:13px;font-weight:600">(2 horas)</span></h2>${r.length?`<div class="list">${r.map(x=>`<button class="row" data-act="open" data-id="${x.p.id}" style="grid-template-columns:52px minmax(0,1fr);gap:10px"><span class="mono">${hhmm(x.t)}</span><span><b>${esc(x.p.nome)}</b> <span class="mut">· ${esc(x.k)}${x.by?' · '+esc(x.by):''}</span></span></button>`).join('')}</div>`:'<div class="mut">Nada registrado nas últimas 2 horas.</div>'}</div>`;
 }
 function vLer(){
  const m=MODES.find(x=>x[0]===UI.mode);
- return `<div><h1>Ler QR</h1><div class="mut">Quem lê escolhe o modo antes de ler.</div></div>
+ return `<div><h1>Ler QR</h1></div>
  <div class="grid2 grid-d6" style="grid-template-columns:repeat(2,minmax(0,1fr))">${MODES.map(x=>`<button class="mode" style="--c:${x[2]}" data-act="mode" data-m="${x[0]}" aria-pressed="${UI.mode===x[0]}">${x[1]}</button>`).join('')}</div>
  <div class="help">${m[3]}</div>
- <div class="card stack">
-  <label class="lab" for="scanin">Nº (matrícula) ou ID impresso no crachá</label>
-  <div class="rowf"><input id="scanin" type="text" class="grow" placeholder="Ex.: ENC-7F3K9Q2M ou 23" autocomplete="off" style="flex:1 1 200px;width:auto"><button class="btn p" data-act="scan">Ler</button></div><div id="scanprev" class="help" aria-live="polite">Digite e confira: aparece ID | nome completo antes de confirmar.</div>
-  <div class="rowf"><label class="btn s">Ler foto do QR<input id="scanfile" type="file" accept="image/*" class="sr"></label><button class="btn s" data-act="sim">Simular leitura</button><button class="btn s" data-act="cam">${UI.cam?'Fechar câmera':'Abrir câmera'}</button></div>
+ ${counterHTML()}
+ ${lastBar()}
+ <div class="card stack" style="overflow:hidden">
+  <div class="qrg">
+   <div class="stack"><label class="lab" for="scanin">Digitar Nº (matrícula) ou ID</label>
+    <div class="rowf" style="flex-wrap:nowrap"><input id="scanin" type="text" class="grow" placeholder="Ex.: 23 ou ENC-7F3K9Q2M" autocomplete="off" style="flex:1 1 auto;width:auto;min-width:0"><button class="btn p" data-act="scan">Ler</button></div>
+    <div id="scanprev" class="help" aria-live="polite">Ao digitar, aparece o nome. Depois do Ler, confirme na janela.</div></div>
+   <div class="stack"><span class="lab">Câmera</span><button class="btn ${UI.cam?'s':'p'} big" style="width:100%" data-act="cam">${UI.cam?'Fechar câmera':'Abrir câmera'}</button><div class="help">Leia o QR do crachá. A câmera continua aberta para a próxima leitura.</div></div>
+  </div>
   ${UI.cam?'<div class="finder" style="padding:0;height:auto;min-height:150px"><video id="camv" playsinline muted style="width:100%;max-height:340px;border-radius:14px;display:block"></video></div>':''}
-  <div class="help">Leitor USB ou Bluetooth também funciona: o código é digitado e termina com Enter. A câmera depende do navegador e da permissão.</div>
  </div>
- ${resHTML()}
- <div class="card stack"><h2>Últimos registros</h2>${S.log.length?`<div class="list">${S.log.slice(0,6).map(l=>`<div class="kv"><span class="mono">${hhmm(l.t)}</span><span>${esc(l.m)}</span></div>`).join('')}</div>`:'<div class="mut">Nada registrado ainda.</div>'}</div>`;
+ ${recentHTML()}`;
 }
-function snap(p){UI.last={id:p.id,before:JSON.stringify(p)}}
+function snap(p,label){UI.last={id:p.id,before:JSON.stringify(p),label:label||'',t:Date.now()}}
+function findP(code){return S.p.find(x=>x.id.toLowerCase()===code.toLowerCase())||S.p.find(x=>String(x.mat)===code.replace(/^0+/,''))}
 function scan(code){
  code=String(code||'').trim();if(!code)return;
- const p=S.p.find(x=>x.id.toLowerCase()===code.toLowerCase())||S.p.find(x=>String(x.mat)===code.replace(/^0+/,''));
- if(!p){UI.res={kind:'bad',title:'Crachá não encontrado',msg:'Nenhum participante com "'+code+'". Confira o código ou digite a matrícula.'};return render()}
+ const p=findP(code);
+ if(!p){openPop({kind:'bad',title:'Crachá não encontrado',msg:'Nenhum participante com "'+code+'". Confira o código ou digite a matrícula.'});return}
  const m=UI.mode;let R;
  if(p.status==='ds')R={kind:'bad',title:'Desistente',id:p.id,msg:'Não acolher. Motivo: '+((p.desist&&p.desist.motivo)||'—')+'.'};
  else if(m==='acolh'){
   if(p.status==='np')R={kind:'warn',title:'Pagamento não confirmado',id:p.id,msg:'Pré-cadastro não pago. Só o Administrador autoriza a entrada.',step:'pay'};
   else if(p.status==='ac')R={kind:'warn',title:'Já acolhido às '+hhmm(p.presSab),id:p.id};
-  else{snap(p);p.status='ac';p.presSab=nowISO();logAdd('Acolhido: '+p.nome);save();R={kind:'ok',title:'Acolhido!',id:p.id}}
+  else R={kind:'ok',title:'Confirmar acolhimento',id:p.id,step:'confirm',label:'Confirmar acolhimento'};
  }else if(p.status==='np')R={kind:'warn',title:'Pagamento não confirmado',id:p.id,msg:'Esta pessoa não conta para o encontro.'};
  else if(p.status==='pg')R={kind:'warn',title:'Ainda não foi acolhido',id:p.id,msg:'Passou pela portaria?',step:'acolh1'};
  else if(m==='decisao')R={kind:'ok',title:p.dec?'Decisão já registrada':'Registrar decisão',id:p.id,step:'dec'};
  else if(m==='batismo'){
   if(p.dec&&p.dec.batismo)R={kind:'warn',title:'Batismo já registrado',id:p.id};
-  else{snap(p);p.dec=Object.assign(p.dec||{fez:true,em:nowISO()},{batismo:true});logAdd('Batismo: '+p.nome);save();
-   R={kind:'ok',title:'Batismo registrado',id:p.id,msg:'A decisão fica registrada junto: '+tipoDec(p)+'.',note:p.batizado==='sim'?'Já era batizado em igreja <b>EVANGÉLICA</b>: orientar sobre batismo.':''}}
+  else R={kind:'ok',title:'Confirmar batismo',id:p.id,step:'confirm',label:'Confirmar batismo',msg:'A decisão fica registrada junto: '+tipoDec(p)+'.',note:p.batizado==='sim'?'Já batizado em igreja <b>EVANGÉLICA</b>: a liderança será avisada para orientar em particular.':''};
  }else if(m==='domingo'){
   if(p.presDom)R={kind:'warn',title:'Já registrado às '+hhmm(p.presDom),id:p.id};
-  else{snap(p);p.presDom=nowISO();logAdd('Domingo: '+p.nome);save();R={kind:'ok',title:'Presença de domingo registrada',id:p.id}}
+  else R={kind:'ok',title:'Confirmar presença de domingo',id:p.id,step:'confirm',label:'Confirmar presença'};
  }
- UI.res=R;render();
+ openPop(R);
 }
-ACT.mode=t=>{UI.mode=t.dataset.m;UI.res=null;render()};
-ACT.scan=()=>{const i=$('#scanin');const v=i.value;i.value='';scan(v)};
-ACT.clearres=()=>{UI.res=null;render()};
-ACT.copy=t=>{const v=t.dataset.v;try{navigator.clipboard.writeText(v).then(()=>toast('Copiado'),()=>toast('Selecione e copie o número.'))}catch(e){toast('Selecione e copie o número.')}};
-ACT.sim=()=>{
- const pool={acolh:S.p.filter(p=>p.status==='pg'),decisao:S.p.filter(p=>p.status==='ac'&&!p.dec),batismo:S.p.filter(p=>p.status==='ac'&&!(p.dec&&p.dec.batismo)),domingo:S.p.filter(p=>p.status==='ac'&&!p.presDom)}[UI.mode];
- if(!pool.length)return toast('Ninguém disponível neste modo.');
- scan(pool[Math.floor(Math.random()*pool.length)].id);
+function doneOk(txt){closePop();fb('done');render();toast(txt)}
+ACT.qrok=t=>{
+ const p=person(t.dataset.id);if(!p)return;const m=UI.mode;
+ if(m==='acolh'){snap(p,'Acolhido: '+p.nome);p.status='ac';p.presSab=nowISO();stamp(p,'presSab');logAdd('Acolhido: '+p.nome);save();doneOk('Acolhido: '+p.nome)}
+ else if(m==='domingo'){snap(p,'Domingo: '+p.nome);p.presDom=nowISO();stamp(p,'presDom');logAdd('Domingo: '+p.nome);save();doneOk('Presença registrada: '+p.nome)}
+ else if(m==='batismo'){snap(p,'Batismo: '+p.nome);p.dec=Object.assign(p.dec||{fez:true,em:nowISO()},{batismo:true,batEm:nowISO()});stamp(p,'bat');if(!p.by.dec)stamp(p,'dec');logAdd('Batismo: '+p.nome);save();doneOk('Batismo registrado: '+p.nome)}
 };
-ACT.payacolh=t=>{const p=person(t.dataset.id);snap(p);p.status='ac';p.pagoEm=p.pagoEm||nowISO();p.forma=($('#fpay')||{}).value||'pix';p.presSab=nowISO();logAdd('Pagamento autorizado e acolhido: '+p.nome);save();UI.res={kind:'ok',title:'Acolhido!',id:p.id,msg:'Pagamento confirmado pelo Administrador.'};render()};
-ACT.acolhgo=t=>{const p=person(t.dataset.id);snap(p);p.status='ac';p.presSab=nowISO();logAdd('Acolhido: '+p.nome);save();scan(p.id)};
-ACT.undo=()=>{if(!UI.last)return;const i=S.p.findIndex(x=>x.id===UI.last.id);if(i<0)return;S.p[i]=JSON.parse(UI.last.before);logAdd('Desfeito: '+S.p[i].nome);UI.last=null;UI.res=null;save();toast('Desfeito');render()};
-ACT.regdec=t=>{const p=person(t.dataset.id);const bat=$('#chkbat')&&$('#chkbat').checked;snap(p);p.dec={fez:true,batismo:bat,em:nowISO()};logAdd(tipoDec(p)+(bat?' + batismo':'')+': '+p.nome);save();UI.res={kind:'ok',title:tipoDec(p)+' registrada',id:p.id,note:p.batizado==='sim'?'Já era batizado em igreja <b>EVANGÉLICA</b>: orientar sobre batismo.':''};render()};
-ACT.regbat=t=>{const p=person(t.dataset.id);snap(p);p.dec.batismo=true;logAdd('Batismo: '+p.nome);save();UI.res={kind:'ok',title:'Batismo registrado',id:p.id};render()};
+ACT.mode=t=>{UI.mode=t.dataset.m;closePop();render()};
+ACT.scan=()=>{const i=$('#scanin');const v=i.value;i.value='';scanPrev('');scan(v)};
+ACT.clearres=()=>{closePop();render()};
+ACT.copy=t=>{const v=t.dataset.v;try{navigator.clipboard.writeText(v).then(()=>toast('Copiado'),()=>toast('Selecione e copie o número.'))}catch(e){toast('Selecione e copie o número.')}};
+ACT.payacolh=t=>{
+ if(ROLE!=='admin'){toast('Só o Administrador autoriza.');return}
+ const p=person(t.dataset.id);snap(p,'Pagamento e acolhimento: '+p.nome);p.status='ac';p.pagoEm=p.pagoEm||nowISO();stamp(p,'pay');p.forma=($('#fpay')||{}).value||'pix';p.presSab=nowISO();stamp(p,'presSab');logAdd('Pagamento autorizado e acolhido: '+p.nome);save();doneOk('Acolhido: '+p.nome)};
+ACT.acolhgo=t=>{const p=person(t.dataset.id);snap(p,'Acolhido: '+p.nome);p.status='ac';p.presSab=nowISO();stamp(p,'presSab');logAdd('Acolhido: '+p.nome);save();closePop();scan(p.id)};
+ACT.undo=()=>{if(!UI.last)return;const i=S.p.findIndex(x=>x.id===UI.last.id);if(i<0)return;S.p[i]=JSON.parse(UI.last.before);logAdd('Desfeito: '+S.p[i].nome);UI.last=null;save();toast('Desfeito');render()};
+ACT.regdec=t=>{const p=person(t.dataset.id);const bat=!!($('#chkbat')&&$('#chkbat').checked);snap(p,tipoDec(p)+': '+p.nome);const n=nowISO();p.dec=bat?{fez:true,batismo:true,em:n,batEm:n}:{fez:true,batismo:false,em:n};stamp(p,'dec');if(bat)stamp(p,'bat');logAdd(tipoDec(p)+(bat?' + batismo':'')+': '+p.nome);save();doneOk(tipoDec(p)+' registrada: '+p.nome)};
+ACT.regbat=t=>{const p=person(t.dataset.id);snap(p,'Batismo: '+p.nome);p.dec.batismo=true;p.dec.batEm=nowISO();stamp(p,'bat');logAdd('Batismo: '+p.nome);save();doneOk('Batismo registrado: '+p.nome)};
 
 function scanPrev(v){
  const el=$('#scanprev');if(!el)return;v=String(v||'').trim();
- if(!v){el.className='help';el.textContent='Digite e confira: aparece ID | nome completo antes de confirmar.';return}
- const p=S.p.find(x=>x.id.toLowerCase()===v.toLowerCase())||S.p.find(x=>String(x.mat)===v.replace(/^0+/,''));
- if(p){el.className='note ok';el.textContent=p.id+' | '+p.nome+' (Nº '+pad(p.mat)+')'}
+ if(!v){el.className='help';el.textContent='Ao digitar, aparece o nome. Depois do Ler, confirme na janela.';return}
+ const p=findP(v);
+ if(p){el.className='note ok';el.innerHTML='<b style="font-size:18px">'+esc(p.nome)+'</b><br>'+esc(p.id)+' · Nº '+pad(p.mat)+' · '+esc(igNome(p))}
  else{el.className='help';el.textContent='Nenhum participante com esse código ainda.'}
 }
 
@@ -15132,12 +15213,13 @@ ACT.cam=async()=>{
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('sem câmera');
   camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
   UI.cam=true;render();
- }catch(e){UI.cam=false;toast('Câmera indisponível aqui. Use o campo de código, a foto ou um leitor.')}
+ }catch(e){UI.cam=false;toast('Câmera indisponível aqui. Use o campo de código ou um leitor.')}
 };
 
 /* ===== participantes ===== */
 const opts=(arr,sel)=>arr.map(o=>`<option value="${esc(o[0])}" ${String(sel)===String(o[0])?'selected':''}>${esc(o[1])}</option>`).join('');
 const igopt=()=>[['','Todas as igrejas']].concat(S.igrejas.map(i=>[i.id,i.nome]),[['outra','Outra denominação'],['nenhuma','Sem igreja']]);
+const horaAc=(p,f)=>{const t=(f||UI.fp).sub==='dom'?p.presDom:p.presSab;return t?new Date(t).getTime():9e15};
 const ST_ORD={np:0,pg:1,ac:2,ds:3},CR_ORD={pend:0,old:1,ok:2};
 const COLS_P=[['mat','Nº',p=>p.mat],['nome','Nome',p=>norm(p.nome)],['sx','Sexo',p=>p.sexo],['ig','Igreja',p=>norm(igNome(p))],['anjo','Anjo',p=>{const a=anjoOf(p);return a?norm(a.nome):'~'}],['st','Status',p=>ST_ORD[p.status]],['cr','Crachá',p=>crState(p)?CR_ORD[crState(p)]:9]];
 function headHTML(cols,f,cls,chk){return `<div class="rowhead ${cls||''}">${chk?'<span></span>':''}${cols.map(c=>`<button class="th" data-act="sort" data-k="${c[0]}">${c[1]}${f.sk===c[0]?(f.sd>0?' ▲':' ▼'):''}</button>`).join('')}</div>`}
@@ -15145,9 +15227,10 @@ function sortCtl(cols,f){return `<div class="rowf sortctl"><select data-f="sk" a
 const igMatch=(p,v)=>!v||(v==='outra'?p.ig.tipo==='outra':v==='nenhuma'?p.ig.tipo==='nenhuma':p.ig.id===v);
 const qMatch=(p,q)=>{if(!q)return true;const n=norm(q);return norm(p.nome).includes(n)||String(p.mat)===q.trim().replace(/^0+/,'')||p.id.toLowerCase().includes(n)};
 const formaOn=f=>f.tab==='conf'||(f.tab==='all'&&(f.status==='pg'||f.status==='ac'));
+const colsP=()=>UI.fp.tab==='ac'?COLS_P.map(c=>c[0]==='cr'?['hora',UI.fp.sub==='dom'?'Hora dom.':'Hora acolh.',p=>horaAc(p)]:c):COLS_P;
 function filtP(){
  const f=UI.fp;let a=S.p.slice();
- if(f.tab==='conf')a=a.filter(isPago);else if(f.tab==='np')a=a.filter(p=>p.status==='np');else if(f.tab==='ds')a=a.filter(p=>p.status==='ds');
+ if(f.tab==='conf')a=a.filter(isPago);else if(f.tab==='np')a=a.filter(p=>p.status==='np');else if(f.tab==='ds')a=a.filter(p=>p.status==='ds');else if(f.tab==='ac')a=a.filter(p=>f.sub==='dom'?p.presDom:(p.status==='ac'||p.presSab));
  if(f.status)a=a.filter(p=>p.status===f.status);
  if(f.sexo)a=a.filter(p=>p.sexo===f.sexo);
  a=a.filter(p=>igMatch(p,f.igreja));
@@ -15156,27 +15239,30 @@ function filtP(){
  a=a.filter(p=>aMatch(p,f.anjo));
  if(f.extra==='semanjo')a=a.filter(p=>!p.anjoId);
  if(f.extra==='semtel')a=a.filter(p=>anjoOf(p)&&!anjoOf(p).tel);
+ if(f.extra==='sexoanjo')a=a.filter(p=>sexoAviso(p));
  a=a.filter(p=>qMatch(p,f.q));
- return a.sort(sorter(COLS_P,f));
+ return a.sort(sorter(colsP(),f));
 }
 function rowP(p,chk){
  const a=anjoOf(p),mut=p.status==='np'?' style="color:var(--muted)"':'';
  const sub=`<span class="l1">${sxPill(p.sexo)}<span>${esc(igNome(p))}</span></span><span class="l2"><span class="mono">Nº ${pad(p.mat)}</span> · <span ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?'Anjo '+esc(a.nome):'Sem anjo'}</span>${isPago(p)?` · <span>Crachá ${CRL[crState(p)][0].toLowerCase()}</span>`:''}</span>`;
- const inner=`<span class="mono dk">${pad(p.mat)}</span><span class="nm"${mut}>${esc(p.nome)}</span><span class="dk">${sxPill(p.sexo)}</span><span class="dk">${esc(igNome(p))}</span><span class="dk" ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?esc(a.nome):'Sem anjo'}</span><span class="dk">${stPill(p)}</span><span class="dk">${crPill(p)}</span><span class="mb">${stPill(p)}</span><span class="sub">${sub}</span>`;
+ const inner=`<span class="mono dk">${pad(p.mat)}</span><span class="nm"${mut}>${esc(p.nome)}</span><span class="dk">${sxPill(p.sexo)}</span><span class="dk">${esc(igNome(p))}</span><span class="dk" ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?esc(a.nome):'Sem anjo'}</span><span class="dk">${stPill(p)}</span><span class="dk">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':crPill(p)}</span><span class="mb">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':stPill(p)}</span><span class="sub">${sub}</span>`;
  if(chk)return `<div class="row chk"><input type="checkbox" data-act="sel" data-id="${p.id}" aria-label="Selecionar ${esc(p.nome)}" ${UI.sel.has(p.id)?'checked':''}>${inner}</div>`;
  return `<button class="row" data-act="open" data-id="${p.id}">${inner}</button>`;
 }
 function listPessoas(){
  const a=filtP();
  if(!a.length)return '<div class="card"><div class="stack"><b>Nenhum participante com esses filtros.</b><div><button class="btn s" '+gp('pessoas',{tab:UI.fp.tab})+'>Limpar filtros</button></div></div></div>';
- return `<div class="mut num">${a.length} participante(s)</div>${headHTML(COLS_P,UI.fp)}<div class="list">${a.map(p=>rowP(p)).join('')}</div>`;
+ return `<div class="mut num">${a.length} participante(s)</div>${headHTML(colsP(),UI.fp)}<div class="list">${a.map(p=>rowP(p)).join('')}</div>`;
 }
 function vPessoas(){
  const f=UI.fp,c=k=>S.p.filter(p=>p.status===k).length,pag=c('pg')+c('ac');
- const tabs=[['all','Todos',S.p.length],['conf','Confirmados (pagos)',pag],['np','Aguardando pagamento',c('np')],['ds','Desistentes',c('ds')]];
+ const tabs=[['all','Todos',S.p.length],['conf','Confirmados (pagos)',pag],['np','Aguardando pagamento',c('np')],['ac','Acolhidos',c('ac')],['ds','Desistentes',c('ds')]];
+ const nSab=S.p.filter(p=>p.status==='ac'||p.presSab).length,nDom=S.p.filter(p=>p.presDom).length;
  const stOpts=f.tab==='conf'?[['','Todos os pagos'],['pg','Pago · ainda não chegou'],['ac','Acolhido (já chegou)']]:f.tab==='all'?[['','Todos os status'],['np','Não pago'],['pg','Pago · ainda não chegou'],['ac','Acolhido (já chegou)'],['ds','Desistente']]:null;
  return `<div class="head"><h1>Participantes</h1><button class="btn p" data-act="newcad">Novo cadastro</button></div>
- <div class="seg" role="tablist">${tabs.map(t=>`<button role="tab" aria-selected="${f.tab===t[0]}" data-act="ptab" data-t="${t[0]}">${t[1]}<span class="n">${t[2]}</span></button>`).join('')}</div>
+ <div class="seg" role="tablist">${tabs.map(t=>`<button role="tab" class="${t[0]==='ds'?'tabds':''}" aria-selected="${f.tab===t[0]}" data-act="ptab" data-t="${t[0]}">${t[1]}<span class="n">${t[2]}</span></button>`).join('')}</div>
+${f.tab==='ac'?`<div class="seg sub" role="tablist"><button role="tab" aria-selected="${f.sub!=='dom'}" data-act="psub" data-t="sab">Sábado<span class="n">${nSab}</span></button><button role="tab" aria-selected="${f.sub==='dom'}" data-act="psub" data-t="dom">Domingo<span class="n">${nDom}</span></button></div>`:''}
 ${f.tab==='conf'?'<div class="help">Pago · ainda não chegou: pagou, mas não passou pela portaria. Acolhido: pagou e já foi acolhido no sábado.</div>':''}
  ${f.tab==='np'?'<div class="note info">Pré-cadastros ainda <b>não pagos</b>. Não contam para o encontro e não entram na fila de crachás.</div>':''}
  <div class="card stack">
@@ -15187,12 +15273,13 @@ ${f.tab==='conf'?'<div class="help">Pago · ainda não chegou: pagou, mas não p
    ${stOpts?`<select data-f="status" aria-label="Status" style="flex:1 1 150px;width:auto">${opts(stOpts,f.status)}</select>`:''}
    <select data-f="cr" aria-label="Crachá" style="flex:1 1 140px;width:auto">${opts([['','Qualquer crachá'],['pend','Pendente'],['old','Desatualizado'],['ok','Impresso']],f.cr)}</select>
    ${formaOn(f)?`<select data-f="forma" aria-label="Forma de pagamento" style="flex:1 1 150px;width:auto">${opts([['','Qualquer forma de pagamento'],['pix','Pix'],['cartao','Cartão'],['dinheiro','Dinheiro']],f.forma)}</select>`:''}</div>
-  ${sortCtl(COLS_P,f)}
-  <div class="rowf"><button class="chip" data-act="pextra" data-e="semanjo" aria-pressed="${f.extra==='semanjo'}">Sem anjo</button><button class="chip" data-act="pextra" data-e="semtel" aria-pressed="${f.extra==='semtel'}">Anjo sem telefone</button></div></div>
+  ${sortCtl(colsP(),f)}
+  <div class="rowf"><button class="chip" data-act="pextra" data-e="semanjo" aria-pressed="${f.extra==='semanjo'}">Sem anjo</button><button class="chip" data-act="pextra" data-e="semtel" aria-pressed="${f.extra==='semtel'}">Anjo sem telefone</button><button class="chip" data-act="pextra" data-e="sexoanjo" aria-pressed="${f.extra==='sexoanjo'}">Anjo de outro sexo</button></div></div>
  </div>
  <div id="lst" class="stack">${listPessoas()}</div>`;
 }
-ACT.ptab=t=>{UI.fp.tab=t.dataset.t;UI.fp.status='';UI.fp.forma='';render()};
+ACT.ptab=t=>{const f=UI.fp;f.tab=t.dataset.t;f.status='';f.forma='';if(f.tab==='ac'){f.sk='hora';f.sd=-1}else if(f.sk==='hora'){f.sk='mat';f.sd=1}render()};
+ACT.psub=t=>{UI.fp.sub=t.dataset.t;UI.fp.sk='hora';UI.fp.sd=-1;render()};
 ACT.pextra=t=>{UI.fp.extra=UI.fp.extra===t.dataset.e?'':t.dataset.e;render()};
 
 /* ===== decisões ===== */
@@ -15200,7 +15287,7 @@ const COLS_D=[['mat','Nº',p=>p.mat],['nome','Nome',p=>norm(p.nome)],['ig','Igre
 function filtD(){
  const f=UI.fd;let a=S.p.filter(p=>p.status==='ac');
  const F=f.f;
- if(F==='dec')a=a.filter(p=>p.dec);else if(F==='conv')a=a.filter(p=>p.dec&&tipoDec(p)==='Conversão');
+ if(F==='all'){}else if(F==='dec')a=a.filter(p=>p.dec);else if(F==='conv')a=a.filter(p=>p.dec&&tipoDec(p)==='Conversão');
  else if(F==='rec')a=a.filter(p=>p.dec&&tipoDec(p)==='Reconciliação');else if(F==='bat')a=a.filter(p=>p.dec&&p.dec.batismo);
  else if(F==='cb')a=a.filter(p=>p.dec&&p.dec.batismo&&tipoDec(p)==='Conversão');else if(F==='rb')a=a.filter(p=>p.dec&&p.dec.batismo&&tipoDec(p)==='Reconciliação');
  else if(F==='sem')a=a.filter(p=>!p.dec);else if(F==='ori')a=a.filter(orientar);
@@ -15215,9 +15302,12 @@ function listDecisoes(){
 function vDecisoes(){
  const f=UI.fd,ac=S.p.filter(p=>p.status==='ac');
  const n=fn=>ac.filter(fn).length;
- const chips=[['dec','Com decisão',n(p=>p.dec)],['conv','Conversão (total)',n(p=>p.dec&&tipoDec(p)==='Conversão')],['rec','Reconciliação (total)',n(p=>p.dec&&tipoDec(p)==='Reconciliação')],['bat','Batismo (total)',n(p=>p.dec&&p.dec.batismo)],['cb','Conversão + Batismo',n(p=>p.dec&&p.dec.batismo&&tipoDec(p)==='Conversão')],['rb','Reconciliação + Batismo',n(p=>p.dec&&p.dec.batismo&&tipoDec(p)==='Reconciliação')],['sem','Sem decisão',n(p=>!p.dec)],['ori','Já batizado: orientar',n(orientar)]];
- return `<div class="head"><div><h1>Decisões</h1><div class="mut">Somente acolhidos.</div></div><button class="btn s" data-act="csvdec">Baixar CSV</button></div>
- <div class="rowf">${chips.map(c=>`<button class="chip" data-act="dchip" data-f="${c[0]}" aria-pressed="${f.f===c[0]}">${c[1]} · ${c[2]}</button>`).join('')}</div>
+ const cn=(k,l,v)=>[k,l,v];
+ const G=[['Situação',[['all','Todos',ac.length],['dec','Com decisão',n(p=>p.dec)],['sem','Sem decisão',n(p=>!p.dec)]]],
+  ['Tipo',[['conv','Conversão',n(p=>p.dec&&tipoDec(p)==='Conversão')],['rec','Reconciliação',n(p=>p.dec&&tipoDec(p)==='Reconciliação')],['bat','Batismo',n(p=>p.dec&&p.dec.batismo)]]],
+  ['Combinados',[['cb','Conversão + Batismo',n(p=>p.dec&&p.dec.batismo&&tipoDec(p)==='Conversão')],['rb','Reconciliação + Batismo',n(p=>p.dec&&p.dec.batismo&&tipoDec(p)==='Reconciliação')],['ori','Já batizado (orientar)',n(orientar)]]]];
+ return `<div class="head"><div><h1>Decisões</h1><div class="mut">Somente acolhidos.</div></div>${canRel()?'<button class="btn s" data-act="csvdec">Baixar CSV</button>':''}</div>
+ <div class="card stack fgs">${G.map(g=>`<div class="fgrp"><span class="fl">${g[0]}</span><div class="rowf">${g[1].map(c=>`<button class="chip" data-act="dchip" data-f="${c[0]}" aria-pressed="${f.f===c[0]}">${c[1]} · ${c[2]}</button>`).join('')}</div></div>`).join('')}</div>
  <div class="card stack"><div class="grid2"><input type="search" data-f="q" placeholder="Buscar: nome, Nº ou ID" value="${esc(f.q)}" aria-label="Buscar"><input type="search" data-f="anjo" placeholder="Anjo (nome)" value="${esc(f.anjo)}" aria-label="Filtrar por anjo"></div><select data-f="igreja" aria-label="Igreja">${opts(igopt(),f.igreja)}</select>${sortCtl(COLS_D,f)}</div><div class="help">Quem teve mais de uma decisão (ex.: conversão + batismo) aparece uma vez só, com as duas etiquetas. Os filtros "Conversão + Batismo" e "Reconciliação + Batismo" separam esses casos.</div>
  <div id="lst" class="stack">${listDecisoes()}</div>`;
 }
@@ -15235,7 +15325,7 @@ function sxRadios(name,cur){return `<div class="opts"><label class="opt sxm"><in
 function anjoFields(p,pre){
  const a=p&&anjoOf(p);
  return `<label class="lab">Anjo (nome)<input type="text" id="${pre}an" data-m="${a?'1':''}" data-g="anjo" list="dl-anjos" value="${esc(a?a.nome:'')}" autocomplete="off" placeholder="Digite para buscar ou cadastrar"></label>
- <div class="grid2"><label class="lab">Telefone do anjo (opcional)<input type="tel" id="${pre}at" data-g="anjotel" data-mask="tel" value="${esc(a?fmtTel(a.tel):'')}" inputmode="tel" placeholder="(73) 99999-9999"></label>
+ <div class="grid2 gstack"><label class="lab">Telefone do anjo (opcional)<input type="tel" id="${pre}at" data-g="anjotel" data-mask="tel" value="${esc(a?fmtTel(a.tel):'')}" inputmode="tel" placeholder="(73) 99999-9999"></label>
  <label class="lab">IDERP do anjo (opcional)<select id="${pre}ai">${igSelOpts(a?a.igId:'')}</select></label></div>
  <fieldset><legend>Sexo do anjo (obrigatório se o anjo for novo)</legend><div id="${pre}asx">${sxRadios(pre+'as',a?a.sexo:'')}</div></fieldset>
  <div id="${pre}aw" class="help">Com o telefone, a Consolidação avisa o anjo na chegada para ele buscar a pessoa.</div>
@@ -15247,7 +15337,7 @@ function anjoInput(el){
  if(a){el.dataset.m='1';t.value=fmtTel(a.tel);$('#'+pre+'ai').value=a.igId||'';document.querySelectorAll('input[name='+pre+'as]').forEach(r=>{r.checked=r.value===a.sexo});const n=encontristas(a);w.className='note '+(n>=3?'warn':'info');w.textContent='Anjo já cadastrado, acompanha '+n+' encontrista(s).'+(n>=3?' O recomendado é no máximo 3.':'')}
  else if(el.value.trim()){document.querySelectorAll('input[name='+pre+'as]').forEach(r=>{if(el.dataset.m==='1')r.checked=false});el.dataset.m='';w.className='note info';w.textContent='Anjo novo: será cadastrado ao salvar. Informe o sexo.'}
  else{w.className='help';w.textContent='Com o telefone, a Consolidação avisa o anjo na chegada para ele buscar a pessoa.'}
- anjoCheckTel(pre);
+ anjoCheckTel(pre);if(pre==='ca')cadSexoCheck();
 }
 function anjoCheckTel(pre){
  const box=$('#'+pre+'ad');if(!box)return;
@@ -15291,6 +15381,7 @@ function detHTML(p){
  const sfNome=sub==='nome'?`<div class="stack" style="border-top:1px solid var(--line);padding-top:12px"><label class="lab">Nome no crachá<input type="text" id="dnc" value="${esc(p.nomeCracha||p.nome)}"></label><div class="help">O QR continua o mesmo. O crachá fica marcado como desatualizado até reimprimir.</div><div class="rowf"><button class="btn p" data-act="nomesave">Salvar</button><button class="btn s" data-act="subopen" data-s="">Voltar</button></div></div>`:'';
  return `<div class="head">${UI.backTo?'<button class="btn s" data-act="backanjo">← Voltar ao anjo</button>':'<h2>Participante</h2>'}<button class="btn s" data-act="close">Fechar</button></div>
  <div class="stack"><div><div class="mono mut" style="font-size:13px">${esc(p.id)} | Nº ${pad(p.mat)}</div><div style="font-size:26px;font-weight:800;line-height:1.1">${esc(p.nome)}</div></div><div class="rowf">${sxPill(p.sexo)}${stPill(p)}${crPill(p)}${decPills(p)}</div>
+ ${sexoAviso(p)?`<div class="note warn">${esc(sexoAviso(p))}</div>`:''}
  ${top.length?`<div class="rowf">${top.join('')}</div>`:''}
  ${sfPay}${sfUn}
  <div class="card stack"><div class="head"><h3>Anjo</h3><button class="btn g" data-act="subopen" data-s="anjo">${a?'Trocar / editar':'Adicionar'}</button></div>${anjoBlock(p,true)}${sfAnjo}</div>
@@ -15304,8 +15395,8 @@ function openDet(id){UI.sheet={t:'det',id};const p=person(id);if(!p)return;UI.ke
 function redet(){if(UI.sheet&&UI.sheet.t==='det')openDet(UI.sheet.id)}
 ACT.open=t=>{UI.sub=null;UI.backTo=null;openDet(t.dataset.id)};
 ACT.subopen=t=>{UI.sub=t.dataset.s||null;redet()};
-ACT.paysave=()=>{const p=person(UI.sheet.id);const f=document.querySelector('input[name=fp]:checked');p.status='pg';p.pagoEm=nowISO();p.forma=f?f.value:'pix';UI.sub=null;logAdd('Pagamento confirmado ('+FORMA[p.forma]+'): '+p.nome);save();toast('Pagamento confirmado');render();redet()};
-ACT.acolhman=()=>{const p=person(UI.sheet.id);p.status='ac';p.presSab=nowISO();logAdd('Acolhido: '+p.nome);save();render();redet()};
+ACT.paysave=()=>{const p=person(UI.sheet.id);const f=document.querySelector('input[name=fp]:checked');p.status='pg';p.pagoEm=nowISO();stamp(p,'pay');p.forma=f?f.value:'pix';UI.sub=null;logAdd('Pagamento confirmado ('+FORMA[p.forma]+'): '+p.nome);save();toast('Pagamento confirmado');render();redet()};
+ACT.acolhman=()=>{const p=person(UI.sheet.id);p.status='ac';p.presSab=nowISO();stamp(p,'presSab');logAdd('Acolhido: '+p.nome);save();render();redet()};
 ACT.dessave=()=>{const p=person(UI.sheet.id);p.desist={motivo:$('#dmot').value,obs:$('#dobs').value.trim(),devol:$('#ddev')?$('#ddev').value:'nao_pago',em:nowISO()};p.status='ds';logAdd('Desistência: '+p.nome);UI.sub=null;save();toast('Desistência registrada');render();redet()};
 ACT.unacsave=()=>{const p=person(UI.sheet.id);p.status='pg';p.presSab=null;(p.hist=p.hist||[]).push({em:nowISO(),txt:'Acolhimento retirado'});logAdd('Acolhimento retirado: '+p.nome);UI.sub=null;save();toast('Acolhimento retirado');render();redet()};
 ACT.react=()=>{const p=person(UI.sheet.id);p.status=p.pagoEm?(p.presSab?'ac':'pg'):'np';p.desist=null;logAdd('Reativado: '+p.nome);save();render();redet()};
@@ -15323,10 +15414,31 @@ function liderOptsHTML(igId,sel){
 }
 function liderBlock(tipo,igId,sel){
  if(tipo==='iderp'&&igById(igId)){const h=liderOptsHTML(igId,sel);return{html:h,hidden:!/value="[^"]+"/.test(h),label:'Líder de rede (opcional)'}}
- if(tipo==='outra')return{html:liderOptsHTML('',sel),hidden:false,label:'Pastor/líder'};
+ if(tipo==='outra')return{html:'<option value="">—</option>',hidden:true,label:'Pastor/líder'};
  return{html:'<option value="">—</option>',hidden:true,label:'Pastor/líder'};
 }
 function setLider(){const b=liderBlock($('#ci').value,$('#cii').value,'');$('#cl').innerHTML=b.html;$('#cllab').textContent=b.label;$('#clw').hidden=b.hidden}
+/* igrejas de outras denominações já digitadas (sem repetir; pastor mais recente) */
+function outrasIgrejas(){
+ const m=new Map();
+ S.p.filter(p=>p.ig&&p.ig.tipo==='outra'&&p.ig.texto).forEach(p=>{const k=norm(p.ig.texto).replace(/\s+/g,' ');const o=m.get(k);if(!o)m.set(k,{nome:p.ig.texto.trim(),pastor:p.ig.pastor||'',n:1});else{o.n++;if(!o.pastor&&p.ig.pastor)o.pastor=p.ig.pastor}});
+ return [...m.values()].sort((a,b)=>b.n-a.n||a.nome.localeCompare(b.nome,'pt'));
+}
+const lev=(a,b)=>{const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]};
+function outraCheck(fin){
+ const el=$('#cot'),h=$('#cohint');if(!el||!h)return;const v=norm(el.value).replace(/\s+/g,' ');h.innerHTML='';if(v.length<3)return;
+ const L=outrasIgrejas(),ex=L.find(o=>norm(o.nome).replace(/\s+/g,' ')===v);
+ if(ex){if(el.value!==ex.nome)el.value=ex.nome;const pp=$('#cop');if(pp&&!pp.value&&ex.pastor)pp.value=ex.pastor;h.innerHTML='<div class="help">Igreja já cadastrada'+(ex.pastor?'. Pastor preenchido: confira.':'.')+'</div>';return}
+ if(!fin)return;
+ const c=L.filter(o=>{const n=norm(o.nome).replace(/\s+/g,' ');return n.startsWith(v)||v.startsWith(n)||n.includes(v)||lev(n,v)<=Math.max(2,Math.floor(v.length*.2))}).slice(0,3);
+ if(c.length)h.innerHTML='<div class="note warn stack"><b>Será a mesma igreja?</b>'+c.map(o=>'<button type="button" class="btn s" data-act="outrause" data-n="'+esc(o.nome)+'" data-p="'+esc(o.pastor)+'">Usar: '+esc(o.nome)+(o.pastor?' · Pr. '+esc(cleanName(o.pastor)):'')+'</button>').join('')+'</div>';
+}
+ACT.outrause=t=>{$('#cot').value=t.dataset.n;const pp=$('#cop');if(pp&&t.dataset.p)pp.value=t.dataset.p;$('#cohint').innerHTML='';};
+function cadSexoCheck(){
+ const b=$('#casx');if(!b)return;const g=n=>{const e=document.querySelector('input[name='+n+']:checked');return e?e.value:''};
+ const ps=g('cs'),as=g('caas');const w=ps&&as&&ps!==as?(ps==='M'?'Participante homem com anjo mulher.':'Participante mulher com anjo homem.')+' Confira se está certo (não bloqueia).':'';
+ b.hidden=!w;b.textContent=w;
+}
 function cadHTML(p){
  const ed=!!p,v=k=>esc(ed?(p[k]||''):''),tipo=ed?p.ig.tipo:'',nasc=ed&&p.nasc?fmtD(p.nasc):'';
  const lsel=ed&&tipo==='iderp'?(igById(p.ig.id)&&p.liderId===igById(p.ig.id).pastorId?'':p.liderId):(ed?p.liderId:'');
@@ -15343,18 +15455,21 @@ function cadHTML(p){
   <div class="grid2"><label class="lab">Bairro<input type="text" id="cbai" value="${v('bairro')}"></label><label class="lab">Complemento (opcional)<input type="text" id="ccom" placeholder="Apto, bloco, referência" value="${v('compl')}"></label></div>
   <label class="lab"><span class="req">Igreja que frequenta</span><select id="ci" data-g="igtipo">${opts([['','Selecione…'],['iderp','IDERP'],['outra','Outra denominação'],['nenhuma','Não frequento igreja']],tipo)}</select></label>
   <label class="lab" id="ciw" ${tipo==='iderp'?'':'hidden'}>Qual IDERP?<select id="cii" data-g="igid">${igSelOpts(ed?p.ig.id:'')}</select></label>
-  <label class="lab" id="cow" ${tipo==='outra'?'':'hidden'}>Qual igreja?<input type="text" id="cot" placeholder="Nome da igreja" value="${esc(ed?p.ig.texto:'')}"></label>
+  <div class="stack" id="cow" ${tipo==='outra'?'':'hidden'}><label class="lab">Qual igreja?<input type="text" id="cot" data-g="outraig" list="dl-outras" autocomplete="off" placeholder="Digite o nome da igreja" value="${esc(ed?p.ig.texto:'')}"></label><div id="cohint"></div>
+   <label class="lab">Pastor / líder (opcional)<input type="text" id="cop" placeholder="Nome do pastor ou líder" value="${esc(ed&&p.ig.pastor?p.ig.pastor:'')}"></label>
+   <datalist id="dl-outras">${outrasIgrejas().map(o=>`<option value="${esc(o.nome)}">`).join('')}</datalist></div>
   <label class="lab" id="clw" ${lb.hidden?'hidden':''}><span id="cllab">${lb.label}</span><select id="cl">${lb.html}</select></label>
   <fieldset><legend class="req">Você é <span class="big-word">EVANGÉLICO</span>?</legend><div class="opts"><label class="opt"><input type="radio" name="ce" value="sim" ${ck(ed&&p.evangelico,'sim')}> Sim</label><label class="opt"><input type="radio" name="ce" value="nao" ${ck(ed&&p.evangelico,'nao')}> Não</label><label class="opt"><input type="radio" name="ce" value="afastado" ${ck(ed&&p.evangelico,'afastado')}> Afastado</label></div></fieldset>
   <fieldset><legend class="req">Já foi batizado em igreja <span class="big-word">EVANGÉLICA</span>?</legend><div class="opts"><label class="opt"><input type="radio" name="cb" value="sim" ${ck(ed&&p.batizado,'sim')}> Sim</label><label class="opt"><input type="radio" name="cb" value="nao" ${ck(ed&&p.batizado,'nao')}> Não</label></div></fieldset>
   <label class="lab">Convidado por (opcional)<input type="text" id="cconv" value="${v('convidado')}"></label>
   ${anjoFields(ed?p:null,'ca')}
+  <div id="casx" class="note warn" hidden></div>
   ${ed?'':`<label class="lab">Pagamento<select id="cforma">${opts([['','Ainda não pago (padrão)'],['pix','Pix · já confirmado pelo financeiro'],['cartao','Cartão · já confirmado pelo financeiro'],['dinheiro','Dinheiro · já confirmado pelo financeiro']],'')}</select></label><div class="help" style="margin-top:-6px">Só escolha Pix, cartão ou dinheiro se o financeiro já confirmou o pagamento.</div>`}
   <div class="rowf"><button class="btn p big" data-act="savecad">${ed?'Salvar alterações':'Salvar cadastro'}</button><button class="btn s" data-act="close">Cancelar</button></div>
  </div>`;
 }
 ACT.newcad=()=>{UI.sheet={t:'cad'};openSheet(cadHTML(null))};
-ACT.editcad=()=>{const p=person(UI.sheet.id);UI.sheet={t:'edit',id:p.id};openSheet(cadHTML(p))};
+ACT.editcad=()=>{const p=person(UI.sheet.id);UI.sheet={t:'edit',id:p.id};openSheet(cadHTML(p));cadSexoCheck()};
 function dupCheck(){
  const b=$('#cdup'),n=norm($('#cn').value);if(n.length<5){b.hidden=true;return}
  const self=UI.sheet&&UI.sheet.t==='edit'?UI.sheet.id:null;
@@ -15381,9 +15496,9 @@ function saveCad(){
  const nm=v('cnas').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
  const anjoId=anjoCommit('ca');
  const g=igById(v('cii'));
- const liderId=tipo==='iderp'?(v('cl')||(g?g.pastorId:'')):tipo==='outra'?v('cl'):'';
+ const liderId=tipo==='iderp'?(v('cl')||(g?g.pastorId:'')):'';
  const f={nome,sexo,nasc:nm?nm[3]+'-'+nm[2]+'-'+nm[1]:'',cel:digits(v('ccel')),rua:v('crua'),num:v('cnum'),bairro:v('cbai'),compl:v('ccom'),
-  ig:{tipo,id:tipo==='iderp'?v('cii'):'',texto:tipo==='outra'?v('cot'):''},evangelico:ev,batizado:bt,convidado:v('cconv'),anjoId,liderId};
+  ig:{tipo,id:tipo==='iderp'?v('cii'):'',texto:tipo==='outra'?v('cot'):'',pastor:tipo==='outra'?v('cop'):''},evangelico:ev,batizado:bt,convidado:v('cconv'),anjoId,liderId};
  if(edit){
   const sig=p=>p.nome+'|'+p.anjoId+'|'+igNome(p);const before=sig(edit);
   Object.assign(edit,f);if(sig(edit)!==before)edit.cv++;
@@ -15407,9 +15522,9 @@ function qrSVG(text){
  return `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR do crachá"><path d="${d}" fill="#0A0808"/></svg>`;
 }
 function badgeHTML(p){
- const n=badgeName(p),a=anjoOf(p);
+ const np=nameParts(p.nomeCracha||p.nome),a=anjoOf(p);
  return `<div class="bwrap"><div class="badge"><div class="hd"><img src="${LOGO}" alt=""><div><div class="t1">Encontro com Deus</div><div class="t2">IDERP · Teixeira de Freitas</div></div></div><div class="rule"></div>
- <div class="bd"><div class="l"><div class="nm">${esc(n.a)}${n.z?' '+esc(n.z):''}</div>${n.m?`<div class="md">${esc(n.m)}</div>`:''}<div class="lb">ANJO</div><div class="an">${a?esc(a.nome):'—'}</div><div class="lb">IGREJA</div><div class="ig">${esc(igNome(p))}</div></div>
+ <div class="bd"><div class="l"><div class="nm">${esc(np.big)}</div>${np.rest?`<div class="md">${esc(np.rest)}</div>`:''}<div class="lb">ANJO</div><div class="an">${a?(()=>{const q=nameParts(a.nome);return esc(q.big)+(q.rest?' <span class="ar">'+esc(q.rest)+'</span>':'')})():'—'}</div><div class="lb">IGREJA</div><div class="ig">${esc(igNome(p))}</div></div>
  <div class="r"><div class="qr">${qrSVG(p.id)}</div><div class="mt">Nº ${pad(p.mat)}</div><div class="mt2">${esc(p.id)}</div></div></div></div></div>`;
 }
 
@@ -15442,14 +15557,14 @@ async function makePDF(ids,start,label){
    doc.setTextColor(10,8,8);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Encontro com Deus',bx+16,by+8.8);
    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(87,83,78);doc.text('IDERP · Teixeira de Freitas',bx+16,by+12.6);
    doc.setFillColor(194,65,12);doc.rect(bx+4,by+16,W-8,.6,'F');
-   const n=badgeName(p),full=n.a+(n.z?' '+n.z:'');
+   const np=nameParts(p.nomeCracha||p.nome),full=np.big;
    doc.setTextColor(10,8,8);doc.setFont('helvetica','bold');
    const sz=fit(doc,full,62,30,15);
    if(doc.getTextWidth(full)>62){const parts=doc.splitTextToSize(full,62);doc.setFontSize(15);doc.text(parts.slice(0,2),bx+4,by+27)}
    else doc.text(full,bx+4,by+26+sz*0.1);
-   if(n.m){doc.setFont('helvetica','normal');doc.setFontSize(11);doc.setTextColor(87,83,78);doc.text(doc.splitTextToSize(n.m,62)[0],bx+4,by+35)}
+   if(np.rest){doc.setFont('helvetica','normal');doc.setFontSize(11);doc.setTextColor(87,83,78);doc.text(doc.splitTextToSize(np.rest,62)[0],bx+4,by+35)}
    doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(87,83,78);doc.text('ANJO',bx+4,by+44.5);
-   const a=anjoOf(p),an=a?a.nome:'—';doc.setTextColor(10,8,8);fit(doc,an,62,15,9);doc.text(an,bx+4,by+50.5);
+   const a=anjoOf(p);doc.setTextColor(10,8,8);if(a){const q=nameParts(a.nome);let pt=15;const wd=()=>{doc.setFont('helvetica','bold');doc.setFontSize(pt);const w1=doc.getTextWidth(q.big+(q.rest?' ':''));doc.setFont('helvetica','normal');doc.setFontSize(pt*.78);return w1+doc.getTextWidth(q.rest)};while(wd()>62&&pt>9)pt-=.5;wd();const w1=(()=>{doc.setFont('helvetica','bold');doc.setFontSize(pt);return doc.getTextWidth(q.big+(q.rest?' ':''))})();doc.setFont('helvetica','bold');doc.setFontSize(pt);doc.text(q.big,bx+4,by+50.5);if(q.rest){doc.setFont('helvetica','normal');doc.setFontSize(pt*.78);doc.setTextColor(87,83,78);if(w1+doc.getTextWidth(q.rest)<=62)doc.text(q.rest,bx+4+w1,by+50.5);else doc.text(q.rest,bx+4,by+54.4)}}else{doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('—',bx+4,by+50.5)}doc.setTextColor(10,8,8);
    doc.setFontSize(6.5);doc.setTextColor(87,83,78);doc.text('IGREJA',bx+4,by+57.5);
    const ig=igNome(p);doc.setTextColor(10,8,8);fit(doc,ig,62,12,7);doc.text(ig,bx+4,by+63);
    const q=qrMat(p.id),nm=q.getModuleCount(),qs=25,qx=bx+W-4-qs,qy=by+22,cell=qs/nm;
@@ -15474,7 +15589,7 @@ function filtC(){
 function listCrachas(){
  const a=filtC();
  if(!a.length)return '<div class="card">Nenhum crachá neste filtro.</div>';
- return `${headHTML(COLS_P,UI.fc,'chk',true)}<div class="list">${a.map(p=>rowP(p,true)).join('')}</div>`;
+ const pr=canPrint();return `${headHTML(COLS_P,UI.fc,pr?'chk':'',pr)}<div class="list">${a.map(p=>rowP(p,pr)).join('')}</div>`;
 }
 function draftHTML(){
  const D=UI.draft;if(!D)return '';
@@ -15490,17 +15605,18 @@ function vCrachas(){
  const pag=S.p.filter(isPago),cnt=k=>pag.filter(p=>crState(p)===k).length;
  const pend=cnt('pend')+cnt('old'),f=UI.fc;
  const sel=[...UI.sel].filter(id=>{const p=person(id);return p&&isPago(p)});
+ const pr=canPrint();
  const chips=[['pend','A imprimir · '+pend],['old','Desatualizados · '+cnt('old')],['ok','Impressos · '+cnt('ok')],['all','Todos os pagos · '+pag.length]];
  return `<div><h1>Crachás</h1><div class="mut">Só quem pagou entra na fila. O QR nunca muda.</div></div>
- ${draftHTML()}
+ ${pr?draftHTML():''}
  <div class="card stack"><div class="grid3"><div class="stat"><span class="v">${cnt('pend')}</span><span class="l">Pendentes</span></div><div class="stat"><span class="v">${cnt('old')}</span><span class="l">Desatualizados</span></div><div class="stat"><span class="v">${cnt('ok')}</span><span class="l">Impressos</span></div></div>
-  <div class="rowf"><label class="lab" style="flex:0 0 auto">Começar na posição<select id="pos" data-act="setpos" style="width:auto">${opts([1,2,3,4,5,6,7,8].map(n=>[n,n+'ª']),UI.pos)}</select></label></div>
+  ${pr?`<div class="rowf"><label class="lab" style="flex:0 0 auto">Começar na posição<select id="pos" data-act="setpos" style="width:auto">${opts([1,2,3,4,5,6,7,8].map(n=>[n,n+'ª']),UI.pos)}</select></label></div>
   <div class="rowf"><button class="btn p big" data-act="genpend" ${pend?'':'disabled'}>Gerar PDF dos pendentes (${pend})</button><button class="btn s big" data-act="gensel" ${sel.length?'':'disabled'}>Gerar PDF dos selecionados (${sel.length})</button></div>
-  <div class="help">Exemplo: na sexta à noite imprime os 40; no sábado de manhã o filtro já mostra só os novos. Nada é repetido.</div></div>
+  <div class="help">Exemplo: na sexta à noite imprime os 40; no sábado de manhã o filtro já mostra só os novos. Nada é repetido.</div>`:'<div class="note info">Só o administrador e o líder imprimem crachás. Aqui você acompanha quem já foi impresso.</div>'}</div>
  <div class="rowf">${chips.map(c=>`<button class="chip" data-act="cchip" data-f="${c[0]}" aria-pressed="${f.f===c[0]}">${c[1]}</button>`).join('')}</div>
- <div class="card stack"><div class="grid2"><input type="search" data-f="q" placeholder="Buscar: nome, Nº ou ID" value="${esc(f.q)}" aria-label="Buscar"><input type="search" data-f="anjo" placeholder="Anjo (nome)" value="${esc(f.anjo)}" aria-label="Filtrar por anjo"></div>${sortCtl(COLS_P,f)}<div class="rowf"><button class="btn s" data-act="selvis">Selecionar visíveis</button><button class="btn s" data-act="selclr">Limpar seleção</button></div></div>
+ <div class="card stack"><div class="grid2"><input type="search" data-f="q" placeholder="Buscar: nome, Nº ou ID" value="${esc(f.q)}" aria-label="Buscar"><input type="search" data-f="anjo" placeholder="Anjo (nome)" value="${esc(f.anjo)}" aria-label="Filtrar por anjo"></div>${sortCtl(COLS_P,f)}${pr?'<div class="rowf"><button class="btn s" data-act="selvis">Selecionar visíveis</button><button class="btn s" data-act="selclr">Limpar seleção</button></div>':''}</div>
  <div id="lst" class="stack">${listCrachas()}</div>
- <div class="card stack"><h2>Lotes impressos</h2>${S.lotes.length?`<div class="list">${S.lotes.slice().reverse().map(l=>`<div class="row" style="cursor:default"><div class="nm">Lote ${l.n} · ${l.tipo}</div><div class="rowf"><button class="btn s" data-act="relote" data-n="${l.n}">Reimprimir</button></div><div class="sub">${l.ids.length} crachás · ${fmtDT(l.at)} · ${esc(l.user)}</div></div>`).join('')}</div>`:'<div class="mut">Nenhum lote ainda.</div>'}</div>`;
+ <div class="card stack"><h2>Lotes impressos</h2>${S.lotes.length?`<div class="list">${S.lotes.slice().reverse().map(l=>`<div class="lote"><div><b>Lote ${l.n} · ${esc(l.tipo)}</b><div class="mut">${fmtDT(l.at)} · ${l.ids.length} crachá(s) impresso(s) · ${esc(l.user||'')}</div></div>${pr?`<button class="btn s" data-act="relote" data-n="${l.n}">Reimprimir</button>`:''}</div>`).join('')}</div>`:'<div class="mut">Nenhum lote ainda.</div>'}</div>`;
 }
 async function startDraft(ids,tipo,label){
  UI.draft={ids,tipo,label,start:UI.pos,n:nextLote()};
@@ -15514,13 +15630,13 @@ async function runPDF(){
  render();
 }
 ACT.setpos=t=>{UI.pos=+t.value};
-ACT.genpend=()=>startDraft(pendCr().map(p=>p.id),'Novo','Lote '+nextLote());
-ACT.gensel=()=>startDraft([...UI.sel].filter(id=>{const p=person(id);return p&&isPago(p)}),'Seleção','Lote '+nextLote()+' (seleção)');
+ACT.genpend=()=>!canPrint()?toast('Só administrador e líder imprimem.'):startDraft(pendCr().map(p=>p.id),'Novo','Lote '+nextLote());
+ACT.gensel=()=>!canPrint()?toast('Só administrador e líder imprimem.'):startDraft([...UI.sel].filter(id=>{const p=person(id);return p&&isPago(p)}),'Seleção','Lote '+nextLote()+' (seleção)');
 ACT.relote=t=>{const l=S.lotes.find(x=>x.n===+t.dataset.n);if(l)startDraft(l.ids.slice(),'Reimpressão','Reimpressão do lote '+l.n)};
 ACT.dregen=()=>runPDF();
 ACT.dcancel=()=>{UI.draft=null;render()};
 ACT.dconfirm=()=>{
- const D=UI.draft;if(!D)return;
+ const D=UI.draft;if(!D||!canPrint())return;
  const ids=D.ids.filter(id=>person(id));ids.forEach(id=>{const p=person(id);p.cp=p.cv});
  S.lotes.push({id:'l'+Date.now(),n:D.n,at:nowISO(),user:DEV||'Lucas',tipo:D.tipo,ids});
  logAdd('Lote '+D.n+' impresso ('+ids.length+')');UI.draft=null;UI.sel.clear();save();toast('Lote '+D.n+' marcado como impresso');render();
@@ -15737,7 +15853,7 @@ function vAjustes(){
   ${A==='demo'?'<div class="note warn">Isto apaga os dados atuais e carrega os de exemplo.</div><div class="rowf"><button class="btn d" data-act="reset">Sim, carregar exemplo</button><button class="btn s" data-act="ask" data-a="">Cancelar</button></div>':`<div><button class="btn s" data-act="ask" data-a="demo">${DEMO?'Restaurar dados fictícios':'Carregar dados de exemplo'}</button></div>`}</div>`;
 }
 function vMais(){
- const it=[['anjos','Anjos'],['decisoes','Decisões'],['relat','Relatórios'],['cadastros','Cadastros (igrejas, Pix)'],['ajustes','Ajustes e backup'],['ajuda','Como usar']].filter(x=>allowed(x[0]));
+ const it=[['decisoes','Decisões'],['anjos','Anjos'],['relat','Relatórios'],['cadastros','Cadastros (igrejas, Pix)'],['ajustes','Ajustes e backup'],['ajuda','Como usar']].filter(x=>allowed(x[0]));
  return `<div><h1>Mais</h1></div><div class="list">${it.map(x=>`<button class="att" data-act="go" data-r="${x[0]}"><span>${x[1]}</span></button>`).join('')}</div>`;
 }
 ACT.ask=t=>{UI.ask=t.dataset.a;render()};
@@ -15745,7 +15861,7 @@ ACT.evsv=()=>{S.evento={nome:$('#ev_n').value.trim()||'Encontro com Deus',inicio
 ACT.expdata=async()=>{const ok=await saveFile('encontro-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(S));if(ok){S.lastExport=nowISO();save();render()}};
 ACT.impok=()=>{if(!UI.imp)return;S=UI.imp.obj;UI.imp=null;save();toast('Dados importados');go('painel')};
 ACT.impno=()=>{UI.imp=null;render()};
-ACT.newenc=()=>{S.consAte=0;S.consDe=0;S.p=[];S.anjos=[];S.lotes=[];S.log=[];S.evento.inicio='';S.lastExport='';UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;save();toast('Novo encontro iniciado');go('painel')};
+ACT.newenc=()=>{S.consAte=0;S.consDe=0;S.liderAte=0;S.liderDe=0;S.p=[];S.anjos=[];S.lotes=[];S.log=[];S.evento.inicio='';S.lastExport='';UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;save();toast('Novo encontro iniciado');go('painel')};
 ACT.vazio=()=>{S=emptyS();save();UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;toast('Tudo apagado');go('painel')};
 ACT.reset=()=>{S=DEMO?seed(64):seed(30,true);save();UI.ask='';UI.sel.clear();UI.draft=null;UI.res=null;UI.last=null;toast(DEMO?'Dados fictícios restaurados':'Dados de exemplo carregados');go('painel')};
 function readImport(f){
@@ -15764,25 +15880,25 @@ function vAjuda(){
  const cons=
  sec('Como o acesso funciona',ul([
   '<b>Um login só para todos os celulares.</b> Todos usam o usuário <b>consolidacao</b> e o mesmo PIN. Não precisa de um PIN por celular.',
-  'O <b>líder da consolidação</b> tem um login próprio (usuário <b>lider</b>) com as mesmas permissões da consolidação e o mesmo prazo de acesso. Só o administrador mexe nessa conta.',
+  'O <b>líder da consolidação</b> tem um login próprio (usuário <b>lider</b>). Faz tudo que a consolidação faz e também <b>imprime crachás</b> e tira os <b>relatórios completos</b>. O prazo dele é maior: da segunda-feira antes do encontro até 30 dias depois. Só o administrador mexe nessa conta.',
   'Na entrada, cada celular informa o <b>nome do aparelho</b> (ex.: "Portaria 1"). Ele aparece no histórico de quem registrou cada ação.',
   'O acesso só funciona no <b>prazo liberado pelo administrador</b> (padrão: sexta a domingo). Fora dele, o app desconecta sozinho.',
   'Todos os aparelhos ficam <b>sincronizados em tempo real</b>: o que um celular registra aparece nos outros e no computador. A etiqueta no topo mostra "Sincronizado", "Enviando…" ou "Offline".',
   'Sem internet, o app continua anotando e envia tudo quando a conexão voltar.']))+
  sec('O que a consolidação pode e não pode',ul([
-  '<b>Pode:</b> ler QR, ver e editar participantes, confirmar pagamento, gerenciar anjos, registrar decisões e batismo, gerar crachás e relatórios.',
-  '<b>Não pode:</b> cadastrar igrejas e líderes, mexer em Pix, evento, backup e acesso, nem excluir anjos ou o histórico. Isso é só do administrador.']))+
+  '<b>Pode:</b> ler QR, ver e editar participantes, confirmar pagamento, gerenciar anjos, registrar decisões e batismo, ver quais crachás já foram impressos e ver o resumo dos relatórios.',
+  '<b>Não pode:</b> imprimir crachás, gerar listas de conferência, relatório para a liderança e planilhas (isso é do líder e do administrador). Também não mexe em igrejas, Pix, evento, backup e acesso, nem exclui anjos.']))+
  sec('Resumo das telas',ul([
   '<b>Painel:</b> números gerais do encontro e atalhos.',
-  '<b>Ler QR:</b> a tela principal durante o evento. Escolha o modo (Acolhimento, Domingo, Decisão, Batismo) e leia o QR do crachá ou digite o Nº/ID.',
-  '<b>Participantes:</b> lista com busca e filtros. Abra uma pessoa para ver a ficha, o anjo, o pagamento e editar. Também cria cadastro novo.',
+  '<b>Ler QR:</b> a tela principal durante o evento. Escolha o modo (Acolhimento, Domingo, Decisão, Batismo), abra a câmera ou digite o Nº/ID. Abre uma janela com os dados da pessoa: <b>confira e confirme</b>. A câmera continua aberta para a próxima leitura. Toca um som e a tela pisca (verde = ok, amarelo = atenção, vermelho = erro). "Desfazer" corrige a última ação.',
+  '<b>Participantes:</b> abas Todos, Confirmados, Aguardando, <b>Acolhidos</b> (sub-abas Sábado e Domingo, ordenados pela hora) e Desistentes. Abra uma pessoa para ver a ficha, o anjo, o pagamento e editar. Também cria cadastro novo.',
   '<b>Anjos:</b> lista de anjos com telefone, igreja e participantes de cada um.',
   '<b>Decisões:</b> quem decidiu (conversão, reconciliação) e quem foi batizado. Só acolhidos.',
-  '<b>Crachás:</b> gera o PDF dos crachás (8 por folha A4) em lotes, só para quem ainda não imprimiu.',
-  '<b>Relatórios:</b> resumo geral, por igreja, listas de conferência, relatório para a liderança e planilhas.']))+
+  '<b>Crachás:</b> o administrador e o líder geram o PDF (8 por folha A4) em lotes, só de quem ainda não imprimiu. A consolidação só vê quais já foram impressos.',
+  '<b>Relatórios:</b> resumo geral, por igreja e registros por dia (todos veem). Listas de conferência, relatório para a liderança e planilhas: só líder e administrador.']))+
  sec('Fluxo durante o encontro',ol([
   '<b>Antes (semana do evento):</b> receber as fichas e os pré-cadastros, conferir o Pix, marcar <b>pagamento confirmado</b> em Participantes. Cadastrar anjo de cada participante.',
-  '<b>Sexta ou sábado cedo:</b> em Crachás, gerar o PDF dos pagos e imprimir. Cada crachá tem o QR único da pessoa.',
+  '<b>Sexta ou sábado cedo:</b> o administrador ou o líder gera em Crachás o PDF dos pagos e imprime. Cada crachá tem o QR único da pessoa.',
   '<b>Sábado, recepção:</b> em Ler QR, modo <b>Acolhimento</b>. Leia o QR do crachá. A tela mostra o nome, o anjo e o aviso se faltar algo (ex.: pagamento). Confirme: a pessoa passa a ser <b>acolhida</b>. Errou? Na ficha use "Retirar acolhimento".',
   '<b>Sábado, durante:</b> acompanhe pelo Painel quantos já chegaram. Quem não veio fica sem acolhimento.',
   '<b>Decisão (escritório):</b> com o crachá recolhido, modo <b>Decisão</b>: leia o QR e registre <b>Conversão</b> ou <b>Reconciliação</b>. Os anjos recebem o contato pelo botão do WhatsApp.',
@@ -15791,7 +15907,7 @@ function vAjuda(){
  const adm_=
  sec('Seu papel como administrador',ul([
   'Usuário <b>admin</b> com PIN próprio e forte. Você vê tudo: Igrejas, Ajustes e as ações que a consolidação não tem.',
-  'Contas do app: <b>admin</b> (você), <b>consolidacao</b> (celulares da equipe) e <b>lider</b> (líder da consolidação). O líder e a consolidação não alteram a conta do admin.',
+  'Contas do app: <b>admin</b> (você), <b>consolidacao</b> (celulares da equipe) e <b>lider</b> (líder da consolidação, com crachás e relatórios completos). O líder e a consolidação não alteram a conta do admin.',
   'Criar, trocar o PIN ou desativar a conta do líder é feito por você no console do Firebase (Authentication → Usuários). O líder não consegue mexer na conta do admin.',
   'Só você cria e muda o acesso da consolidação. O PIN dela é criado ou trocado no <b>console do Firebase</b> (Authentication → Usuários → consolidacao → Redefinir senha).']))+
  sec('Preparar um novo encontro',ol([
@@ -15804,6 +15920,7 @@ function vAjuda(){
  sec('Acesso da consolidação (resumo)',ul([
   '<b>2 dias:</b> sábado e domingo. <b>3 dias (padrão):</b> sexta, sábado e domingo. <b>4 dias:</b> sexta a segunda.',
   'Os dias saem da data do encontro (sábado). Se mudar a data, libere de novo.',
+  '<b>Líder:</b> libere em Ajustes → "Acesso do líder". O prazo vai da segunda antes do encontro até 30 dias depois do domingo. Depois disso ele perde o acesso até você liberar de novo.',
   '<b>Bloquear agora</b> encerra na hora e deixa só o administrador.',
   'O servidor recusa a consolidação fora do prazo e os celulares abertos saem sozinhos.']))+
  sec('Resumo das telas de administração',ul([
@@ -15842,17 +15959,28 @@ function porIderp(){
  const m={};S.p.forEach(p=>{const k=ig_key(p),o=m[k]||(m[k]={k,g:p.ig.tipo==='iderp'?0:p.ig.tipo==='outra'?1:2,cad:0,pg:0,ac:0,dec:0,bat:0});o.cad++;if(isPago(p)){o.pg++;if(p.status==='ac')o.ac++;if(p.dec){o.dec++;if(p.dec.batismo)o.bat++}}});
  return Object.values(m).sort((a,b)=>a.g-b.g||b.pg-a.pg||a.k.localeCompare(b.k,'pt'));
 }
+const DIASN=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+function diasHTML(){
+ const rs=registros().slice().reverse(),g={};
+ rs.forEach(r=>{const d=new Date(r.t),k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');(g[k]=g[k]||[]).push(r)});
+ const ks=Object.keys(g).sort();
+ if(!ks.length)return '<div class="mut">Nenhum registro ainda.</div>';
+ return ks.map((k,i)=>{const d=new Date(k+'T12:00'),n=g[k].length,cnt={};g[k].forEach(r=>{cnt[r.k]=(cnt[r.k]||0)+1});
+  return `<details class="dia" ${i===ks.length-1?'open':''}><summary><b>${DIASN[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}</b><span class="mut"> · ${n} registro(s) · ${Object.entries(cnt).map(e=>e[1]+' '+e[0].toLowerCase()).join(', ')}</span></summary><div class="list">${g[k].map(x=>`<button class="row" data-act="open" data-id="${x.p.id}" style="grid-template-columns:52px minmax(0,1fr);gap:10px"><span class="mono">${hhmm(x.t)}</span><span><b>${esc(x.p.nome)}</b> <span class="mut">· ${esc(x.k)}${x.by?' · '+esc(x.by):''}</span></span></button>`).join('')}</div></details>`}).join('');
+}
 function vRelat(){
- const sc=secoes(),rows=porIderp();
- return `<div><h1>Relatórios</h1><div class="mut">Listas para a portaria, relatório para a liderança e exportações.</div></div>
- <div class="card stack"><h2>Resumo geral</h2><div class="mini">${sc.map(s=>`<div><h3>${s[0]}</h3><table class="tbl"><tbody>${s[1].map(r=>`<tr><td>${r[0]}</td><td class="r"><b>${r[1]}</b></td></tr>`).join('')}</tbody></table></div>`).join('')}</div></div>
+ const sc=secoes(),rows=porIderp(),adm=canRel();
+ return `<div><h1>Relatórios</h1><div class="mut">${adm?'Resumo, listas para a portaria, relatório para a liderança e exportações.':'Resumo do encontro (somente visualização).'}</div></div>
+ <div class="rel stack"><div class="card stack"><h2>Resumo geral</h2><div class="mini">${sc.map(s=>`<div><h3>${s[0]}</h3><table class="tbl"><tbody>${s[1].map(r=>`<tr><td>${r[0]}</td><td class="r"><b>${r[1]}</b></td></tr>`).join('')}</tbody></table></div>`).join('')}</div></div>
  <div class="card stack"><h2>Por igreja</h2>${[[0,'IDERP – pastor'],[1,'Outras denominações'],[2,'Sem igreja']].map(G=>{const rs=rows.filter(o=>o.g===G[0]);return rs.length?`<div class="sec">${G[1]}</div><div class="scroll"><table class="tbl" style="table-layout:fixed"><colgroup><col style="width:34%"><col><col><col><col><col></colgroup><thead><tr><th>${G[0]===0?'IDERP – pastor':G[0]===1?'Igreja':'Grupo'}</th><th class="r" title="Cadastros">Cad.</th><th class="r">Pagos</th><th class="r" title="Acolhidos">Acolh.</th><th class="r" title="Decisões">Decis.</th><th class="r" title="Batismos">Bat.</th></tr></thead><tbody>${rs.map(o=>`<tr><td>${esc(o.k)}</td><td class="r">${o.cad}</td><td class="r">${o.pg}</td><td class="r">${o.ac}</td><td class="r">${o.dec}</td><td class="r">${o.bat}</td></tr>`).join('')}</tbody></table></div>`:''}).join('')||'<div class="mut">Sem dados ainda.</div>'}</div>
+ ${adm?`
  <div class="card stack"><h2>Listas de conferência (PDF)</h2><div class="help">Todos os pagos, com total, homens e mulheres. Mulheres e homens em folhas separadas, em ordem alfabética: duas filas na entrada. Serve para a portaria do sábado, para a chegada do domingo e para saber os nomes exatos do momento dos presentes. Se alguém desistir no domingo, marque no app e gere de novo.</div>
   <div class="rowf"><button class="btn p" data-act="pdfconf" data-k="sab">Sábado · portaria</button><button class="btn p" data-act="pdfconf" data-k="dom">Domingo · presença e presentes</button></div></div>
  <div class="card stack"><h2>Relatório para a liderança (PDF)</h2>
   <div class="rowf"><button class="btn s" data-act="pdfgeral">Relatório geral</button></div>
-  <div class="rowf"><select id="rl_ig" aria-label="IDERP" style="flex:1 1 240px;width:auto">${opts([['all','Todas as IDERPs (uma por página)']].concat(S.igrejas.map(i=>[i.id,igLabel(i)])),'all')}</select><button class="btn s" data-act="pdfig">PDF por IDERP</button></div></div>
- <div class="card stack"><h2>Exportar planilhas</h2><div class="rowf"><button class="btn s" data-act="csvpart">Participantes (CSV)</button><button class="btn s" data-act="csvdec">Decisões (CSV)</button></div></div>`;
+  <div class="stack"><select id="rl_ig" aria-label="Igreja" style="width:100%">${opts([['all','Todas as igrejas (uma por página)']].concat(S.igrejas.map(i=>[i.id,igLabel(i)])),'all')}</select><div><button class="btn s" data-act="pdfig">PDF por igreja</button></div></div></div>
+ <div class="card stack"><h2>Exportar planilhas</h2><div class="rowf"><button class="btn s" data-act="csvpart">Participantes (CSV)</button><button class="btn s" data-act="csvdec">Decisões (CSV)</button></div></div>`:''}
+ <div class="card stack"><h2>Registros por dia</h2><div class="help">Toque em um registro para abrir a ficha da pessoa.</div>${diasHTML()}</div></div>`;
 }
 
 /* --- PDF: utilidades --- */
@@ -15936,7 +16064,7 @@ const COLMAP=[['participantes','p'],['anjos','anjos'],['igrejas','igrejas'],['li
 const ADMIN_COLS=['config','igrejas','lideres'];
 const SYNC={shadow:{},ready:{},pend:{},started:false,online:true,rt:null,err:''};
 const sj=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,c)=>(a[c]=v[c],a),{}):v);
-const cfgOf=()=>({evento:S.evento,pix:S.pix,dupOk:S.dupOk||[],lastExport:S.lastExport||'',consAte:S.consAte||0,consDe:S.consDe||0});
+const cfgOf=()=>({evento:S.evento,pix:S.pix,dupOk:S.dupOk||[],lastExport:S.lastExport||'',consAte:S.consAte||0,consDe:S.consDe||0,liderAte:S.liderAte||0,liderDe:S.liderDe||0});
 const allowed=r=>ROLE==='admin'||!['cadastros','ajustes'].includes(r);
 
 /* --- adaptador Firebase --- */
@@ -15965,7 +16093,7 @@ const FAKE={
   if(!m||m[0]!==pin)return Promise.reject({code:'auth/invalid-credential'});sessionStorage.setItem('fake-auth',m[1]);setTimeout(()=>this.ocb({uid:m[1],email:m[1]}),10);return Promise.resolve()},
  logout(){sessionStorage.removeItem('fake-auth');setTimeout(()=>this.ocb(null),10);return Promise.resolve()},
  listen(name,cb){const l={name,cb};this.L.push(l);setTimeout(()=>this.send(l),15);return()=>{this.L=this.L.filter(x=>x!==l)}},
- closed(){const em=sessionStorage.getItem('fake-auth');if(em===ADMIN_EMAIL)return false;const c=(this.get().config||{}).main;return !(c&&c.consAte>Date.now()&&c.consDe<=Date.now())},
+ closed(){const em=sessionStorage.getItem('fake-auth');if(em===ADMIN_EMAIL)return false;const c=(this.get().config||{}).main||{},L=em===LIDER_EMAIL,a=L?c.liderAte:c.consAte,d=L?c.liderDe:c.consDe;return !(a>Date.now()&&d<=Date.now())},
  send(l){if(this.closed()){l.cb(null,{error:{code:'permission-denied'}});return}const s=this.get()[l.name]||{};let docs=Object.keys(s).map(id=>({id,data:JSON.parse(JSON.stringify(s[id]))}));
   if(l.name==='log')docs=docs.sort((a,b)=>b.data.t<a.data.t?-1:1).slice(0,40);l.cb(docs,{pending:false,cache:false})},
  fire(){this.L.forEach(l=>this.send(l))},
@@ -15999,7 +16127,7 @@ function syncPush(){
 }
 /* --- receber alterações dos outros aparelhos --- */
 function applyCol(col,docs){
- if(col==='config'){const before=SYNC.shadow.config,d=docs.find(x=>x.id==='main');if(d){const c=d.data;if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.dupOk=c.dupOk||[];S.lastExport=c.lastExport||'';S.consAte=c.consAte||0;S.consDe=c.consDe||0}SYNC.shadow.config=sj(cfgOf());return before!==SYNC.shadow.config}
+ if(col==='config'){const before=SYNC.shadow.config,d=docs.find(x=>x.id==='main');if(d){const c=d.data;if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.dupOk=c.dupOk||[];S.lastExport=c.lastExport||'';S.consAte=c.consAte||0;S.consDe=c.consDe||0;S.liderAte=c.liderAte||0;S.liderDe=c.liderDe||0}SYNC.shadow.config=sj(cfgOf());return before!==SYNC.shadow.config}
  const key=COLMAP.find(c=>c[0]===col)[1],old=SYNC.shadow[col]||{},sh={};
  const arr=docs.map(d=>{sh[d.id]=sj(d.data);return d.data});
  let ch=Object.keys(old).length!==Object.keys(sh).length||Object.keys(sh).some(k=>old[k]!==sh[k]);
@@ -16053,7 +16181,7 @@ function startSync(){
  if(SYNC.started)return;SYNC.started=true;S=emptyS();
  const names=COLMAP.map(c=>c[0]).concat(['config']);
  SYNC.unsub=names.map(n=>CLOUD.listen(n,(docs,meta)=>{
-  if(!docs){if(meta.error&&meta.error.code==='permission-denied'){if(ROLE==='cons'){if(SYNC.msg)return;SYNC.msg='Acesso da consolidação encerrado. Peça ao administrador para liberar.';CLOUD.logout();return}toast('Sem permissão para ler '+n+'. Confira as regras do Firestore.')}SYNC.ready[n]=true;return}
+  if(!docs){if(meta.error&&meta.error.code==='permission-denied'){if(ROLE!=='admin'){if(SYNC.msg)return;SYNC.msg='Acesso encerrado. Peça ao administrador para liberar.';CLOUD.logout();return}toast('Sem permissão para ler '+n+'. Confira as regras do Firestore.')}SYNC.ready[n]=true;return}
   SYNC.pend[n]=meta.pending;
   const wasReady=syncReady();
   const ch=applyCol(n,docs);
@@ -16075,7 +16203,7 @@ function boot(){
  let dev='';try{dev=localStorage.getItem(DEVK)||''}catch(e){}DEV=dev;
  CLOUD.onAuth(u=>{
   if(!u){stopSync();SYNC.started=false;SYNC.ready={};SYNC.shadow={};ROLE=null;$('#outbtn').hidden=true;S=emptyS();const m=SYNC.msg;SYNC.msg='';showLogin(m);return}
-  ROLE=u.email===ADMIN_EMAIL?'admin':(u.email===CONS_EMAIL||u.email===LIDER_EMAIL)?'cons':null;
+  ROLE=u.email===ADMIN_EMAIL?'admin':u.email===LIDER_EMAIL?'lider':u.email===CONS_EMAIL?'cons':null;
   if(!ROLE){CLOUD.logout();showLogin('Esta conta não tem acesso.');return}
   if(!DEV)DEV=ROLE==='admin'?'Admin':'Aparelho';
   showLogin('','Carregando dados…');startSync();
@@ -16083,8 +16211,10 @@ function boot(){
 }
 
 /* encerra a sessão da consolidação quando a janela de acesso acaba */
-setInterval(()=>{if(CLOUD_ON&&ROLE==='cons'&&syncReady()&&!consOpen(60000)){SYNC.msg='Acesso da consolidação encerrado. Peça ao administrador para liberar.';CLOUD.logout()}},30000);
-const consOpen=(slack)=>{const n=Date.now(),k=slack||0;return !!S.consAte&&n<=S.consAte+k&&n>=(S.consDe||0)-k};
+setInterval(()=>{if(CLOUD_ON&&(ROLE==='cons'||ROLE==='lider')&&syncReady()&&!consOpen(60000)){SYNC.msg='Acesso encerrado. Peça ao administrador para liberar.';CLOUD.logout()}},30000);
+const consOpen=(slack)=>{const n=Date.now(),k=slack||0,L=ROLE==='lider',a=L?S.liderAte:S.consAte,d=(L?S.liderDe:S.consDe)||0;return !!a&&n<=a+k&&n>=d-k};
+const canPrint=()=>ROLE==='admin'||ROLE==='lider';
+const canRel=canPrint;
 const DOW=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
 function accPlan(dias){
  const iso=S.evento&&S.evento.inicio;if(!iso)return null;
@@ -16095,24 +16225,32 @@ function accPlan(dias){
 const fmtDia=d=>DOW[d.getDay()]+' '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');
 ACT.accopen=()=>{const dias=+($('#acc_d')||{value:3}).value||3,p=accPlan(dias);if(!p){toast('Defina a data do encontro (sábado) antes.');return}
  S.consDe=p.de;S.consAte=p.ate;logAdd('Acesso da consolidação liberado: '+fmtDia(p.deD)+' a '+fmtDia(p.ateD));save();toast('Acesso liberado');render()};
+function liderPlan(){
+ const iso=S.evento&&S.evento.inicio;if(!iso)return null;
+ const [y,m,d]=iso.split('-').map(Number),de=new Date(y,m-1,d-5),fim=new Date(y,m-1,d+1),ate=new Date(y,m-1,d+1+30,23,59,59);
+ return {de:de.getTime(),ate:ate.getTime(),deD:de,fimD:fim,ateD:ate};
+}
+ACT.lidopen=()=>{const p=liderPlan();if(!p){toast('Defina a data do encontro (sábado) antes.');return}S.liderDe=p.de;S.liderAte=p.ate;logAdd('Acesso do líder liberado: '+fmtDia(p.deD)+' a '+fmtDia(p.ateD));save();toast('Acesso do líder liberado');render()};
+ACT.lidclose=()=>{S.liderAte=0;S.liderDe=0;logAdd('Acesso do líder bloqueado');save();toast('Acesso do líder bloqueado');render()};
 ACT.accclose=()=>{S.consAte=0;S.consDe=0;logAdd('Acesso da consolidação bloqueado');save();toast('Acesso bloqueado');render()};
+const accBox=(de,ate)=>{const n=Date.now(),st=!ate?'off':n>ate?'end':n<de?'wait':'on',rng=ate?fmtDia(new Date(de))+' 00:00 até '+fmtDia(new Date(ate))+' 23:59':'';
+ return {st,html:{off:'<div class="note warn"><b>Bloqueado.</b> Não consegue entrar.</div>',end:'<div class="note warn"><b>Encerrado.</b> O prazo acabou ('+esc(rng)+').</div>',wait:'<div class="note info"><b>Agendado:</b> '+esc(rng)+'. Ainda não começou.</div>',on:'<div class="note ok"><b>Liberado:</b> '+esc(rng)+'.</div>'}[st]}};
 const accHTML=()=>{
  if(!CLOUD_ON||ROLE!=='admin')return '';
- const n=Date.now(),ate=S.consAte||0,de=S.consDe||0;
- const st=!ate?'off':n>ate?'end':n<de?'wait':'on';
- const rng=ate?fmtDia(new Date(de))+' 00:00 até '+fmtDia(new Date(ate))+' 23:59':'';
- const box={off:'<div class="note warn"><b>Bloqueado.</b> Só o administrador entra.</div>',
-  end:'<div class="note warn"><b>Encerrado.</b> O prazo acabou ('+esc(rng)+'). Só o administrador entra.</div>',
-  wait:'<div class="note info"><b>Agendado:</b> '+esc(rng)+'. Ainda não começou.</div>',
-  on:'<div class="note ok"><b>Liberado:</b> '+esc(rng)+'.</div>'}[st];
+ const c=accBox(S.consDe||0,S.consAte||0),l=accBox(S.liderDe||0,S.liderAte||0),act=c.st==='on'||c.st==='wait',lact=l.st==='on'||l.st==='wait';
  const pv=[2,3,4].map(d=>{const p=accPlan(d);return p?'<b>'+d+' dias:</b> '+fmtDia(p.deD)+' a '+fmtDia(p.ateD):''}).filter(Boolean).join(' · ');
- return `<div class="card stack"><h2>Acesso da consolidação</h2>
+ const lp=liderPlan();
+ return `<div class="card stack"><h2>Acesso da consolidação (equipe)</h2>
  <div class="help">Fora do prazo, o PIN da consolidação não abre nada, mesmo que alguém o saiba. Os celulares são desconectados sozinhos quando o prazo acaba. O prazo é calculado pela data do encontro (sábado).</div>
- ${box}
- <div class="rowf" style="align-items:flex-end"><label class="lab" style="flex:1 1 200px">Liberar por<select id="acc_d">${opts([['2','2 dias: sábado e domingo'],['3','3 dias: sexta, sábado e domingo (padrão)'],['4','4 dias: sexta a segunda']],'3')}</select></label><button class="btn p" data-act="accopen">${st==='on'||st==='wait'?'Renovar prazo':'Liberar acesso'}</button>${st==='on'||st==='wait'?'<button class="btn d" data-act="accclose">Bloquear agora</button>':''}</div>
- ${pv?'<div class="help">'+pv+'</div>':'<div class="help">Defina a data do encontro abaixo para ver as datas.</div>'}</div>`;
+ ${c.html}
+ <div class="rowf" style="align-items:flex-end"><label class="lab" style="flex:1 1 200px">Liberar por<select id="acc_d">${opts([['2','2 dias: sábado e domingo'],['3','3 dias: sexta, sábado e domingo (padrão)'],['4','4 dias: sexta a segunda']],'3')}</select></label><button class="btn p" data-act="accopen">${act?'Renovar prazo':'Liberar acesso'}</button>${act?'<button class="btn d" data-act="accclose">Bloquear agora</button>':''}</div>
+ ${pv?'<div class="help">'+pv+'</div>':'<div class="help">Defina a data do encontro abaixo para ver as datas.</div>'}</div>
+ <div class="card stack"><h2>Acesso do líder da consolidação</h2>
+ <div class="help">Conta própria (usuário <b>lider</b>). Vê tudo do encontro, imprime crachás e tira os relatórios. Prazo: da segunda-feira antes do encontro até 30 dias depois do domingo.</div>
+ ${l.html}
+ <div class="rowf"><button class="btn p" data-act="lidopen">${lact?'Renovar prazo':'Liberar líder'}</button>${lact?'<button class="btn d" data-act="lidclose">Bloquear agora</button>':''}</div>
+ ${lp?'<div class="help">Liberação: <b>'+fmtDia(lp.deD)+'</b> até <b>'+fmtDia(lp.ateD)+'</b></div>':'<div class="help">Defina a data do encontro abaixo para ver as datas.</div>'}</div>`;
 };
-
 ACT.diag=async()=>{
  const box=$('#diagout');if(!box)return;box.textContent='Testando…';const out=[];
  const t=async(col,data)=>{const id='diag-'+Date.now().toString(36);try{await CLOUD.commit([{col,id,data}]);await CLOUD.commit([{col,id,del:true}]);out.push(col+': ok')}catch(e){out.push(col+': FALHOU ('+((e&&e.code)||'erro')+')')}};
@@ -16122,6 +16260,8 @@ ACT.diag=async()=>{
 const diagHTML=()=>!CLOUD_ON||ROLE!=='admin'?'':`<div class="card stack"><h2>Diagnóstico da sincronização</h2><div class="help">Testa se este aparelho consegue gravar na nuvem (cria e apaga um registro de teste).</div><div><button class="btn s" data-act="diag">Testar envio</button></div><div id="diagout" class="help" style="color:var(--ink)"></div></div>`;
 
 if(CLOUD_ON&&'serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+
+['pdfconf','pdfgeral','pdfig','csvpart','csvdec','genpend','gensel','relote'].forEach(k=>{const f=ACT[k];if(f)ACT[k]=function(){if(!canRel()){toast('Só administrador e líder.');return}return f.apply(this,arguments)}});
 
 /* ===== roteador e eventos ===== */
 const VIEWS={painel:vPainel,ler:vLer,pessoas:vPessoas,anjos:vAnjos,decisoes:vDecisoes,crachas:vCrachas,relat:vRelat,cadastros:vCadastros,ajustes:vAjustes,ajuda:vAjuda,mais:vMais};
@@ -16155,6 +16295,7 @@ document.addEventListener('input',e=>{
  if(t.dataset.g==='anjotel')anjoCheckTel(t.id.slice(0,-2));
  if(t.dataset.g==='dup')dupCheck();
  if(t.dataset.g==='anjo')anjoInput(t);
+ if(t.dataset.g==='outraig')outraCheck(false);
 });
 document.addEventListener('change',e=>{
  const t=e.target;
@@ -16162,10 +16303,11 @@ document.addEventListener('change',e=>{
  if(t.id==='igcarta'&&t.files&&t.files[0]){igCarta(t.files[0]);t.value='';return}
  if(t.dataset.g==='igoutra'){igFormSync();UI.igf.outra=t.checked;igRedraw();return}
  if(t.dataset.mask){const m=mask[t.dataset.mask](t.value);if(m!==t.value)t.value=m}
+ if(t.name==='cs'||t.name==='caas'){cadSexoCheck();return}
+ if(t.dataset.g==='outraig'){outraCheck(true);return}
  if(t.dataset.g==='igtipo'){const v=t.value;$('#ciw').hidden=v!=='iderp';$('#cow').hidden=v!=='outra';setLider();return}
  if(t.dataset.g==='igid'){setLider();return}
  if(t.dataset.act==='setpos'){ACT.setpos(t);return}
- if(t.id==='scanfile'&&t.files&&t.files[0])decodeFile(t.files[0]);
  if(t.id==='impfile'&&t.files&&t.files[0]){readImport(t.files[0]);t.value=''}
 });
 document.addEventListener('keydown',e=>{
@@ -16173,16 +16315,6 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Enter'&&(e.target.id==='lg_p'||e.target.id==='lg_u')){e.preventDefault();ACT.login()}
  if(e.key==='Escape'&&!$('#sheet').hidden)closeSheet();
 });
-async function decodeFile(f){
- try{
-  const bmp=await createImageBitmap(f),k=Math.min(1,1400/Math.max(bmp.width,bmp.height));
-  const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
-  const x=c.getContext('2d');x.drawImage(bmp,0,0,c.width,c.height);
-  const d=x.getImageData(0,0,c.width,c.height),r=jsQR(d.data,d.width,d.height);
-  if(r&&r.data)scan(r.data);else toast('Não encontrei QR na foto.');
- }catch(e){toast('Não consegui ler a foto.')}
- const i=$('#scanfile');if(i)i.value='';
-}
 boot();
 
 </script>
