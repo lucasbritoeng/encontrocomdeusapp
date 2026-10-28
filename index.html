@@ -133,7 +133,6 @@ body{overscroll-behavior-y:none}
 .fgs{gap:10px}.fgrp{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;align-items:center}.fl{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
 @media (max-width:560px){.fgrp{grid-template-columns:1fr;gap:6px}}
 .lote{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}.lote .mut{font-size:13px}
-@media (min-width:900px){.mini{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.mini>div{padding:14px 16px}.mini h3{font-size:14px;margin-bottom:6px}.mini table td{font-size:15px;padding:5px 0}.rel .tbl{font-size:15px}.rel .tbl td{padding:12px 14px}.rel .tbl th{font-size:12px;padding:10px 14px}.rel h2{font-size:19px}}
 .dia{border-top:1px solid var(--line);padding:8px 0}.dia summary{cursor:pointer;padding:8px 0;font-size:15px}.dia .list{margin-top:6px}
 @media (max-width:560px){.gstack{grid-template-columns:1fr}}
 .seg.sub{margin-top:-4px}.seg .tabds{flex:0 0 auto;font-size:13px;min-height:44px;opacity:.85;margin-left:auto}
@@ -170,7 +169,19 @@ legend{padding:0;margin-bottom:8px;font-size:13px;font-weight:700;color:var(--mu
 
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:2px;text-align:left;width:100%}
 .stat .v{font-size:30px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
-.stat .l{font-size:13px;color:var(--muted);font-weight:600}
+.stat{min-width:0;overflow:hidden}
+.stat .l{font-size:13px;color:var(--muted);font-weight:600;overflow-wrap:anywhere}
+.stat .sb{font-size:11.5px;color:var(--muted);line-height:1.25;margin-top:2px}
+.pnl6{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pnl6 .stat{padding:10px 8px 10px 10px}.pnl6 .stat .v{font-size:26px}.pnl6 .stat .l{font-size:12px;line-height:1.2}.pnl6 .stat .sb{font-size:10.5px}
+@media (min-width:900px){.pnl6{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.pnl6 .stat{padding:14px}.pnl6 .stat .v{font-size:32px}.pnl6 .stat .l{font-size:13.5px}.pnl6 .stat .sb{font-size:12px}}
+@media (max-width:899px){.grid3 .stat{padding:10px 8px}.grid3 .stat .l{font-size:11px;letter-spacing:-.2px}.grid3 .stat .v{font-size:26px}}
+.sortctl select,.sortctl .btn{height:50px;min-height:50px;box-sizing:border-box}
+.wx{color:var(--warn-fg);font-weight:800;font-size:.95em;cursor:help}
+.tbl tr.lk{cursor:pointer}.tbl tr.lk:hover td{background:var(--surface2)}.chev{color:var(--muted);font-weight:700;margin-left:4px}
+.lid{display:grid;gap:12px}.lid select{width:100%}
+@media (min-width:900px){.lid{grid-template-columns:auto minmax(0,1fr) auto;align-items:center}.lid .btn{white-space:nowrap}}
+@media (min-width:701px){.qrg .camb{background:var(--surface);border-color:var(--line);color:var(--ink);min-height:50px}.qrg .lerb{min-height:54px;padding:0 32px;font-size:17px}.qrg #scanin{min-height:54px;font-size:17px}}
 button.stat{cursor:pointer}
 .bar{height:10px;border-radius:999px;background:var(--np-bg);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--ac-bg);border-radius:999px}
@@ -304,6 +315,7 @@ select:has(option[value=""]:checked){font-weight:500;color:var(--muted);border-c
 .tag.outb{border:0;cursor:pointer;margin-left:8px;font:inherit}
 @media (max-width:560px){#tag .dev{display:none}.tag.outb{margin-left:4px}}
 .top .t b{white-space:nowrap}
+@media (min-width:900px){.mini{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch!important}.mini>div{padding:20px 24px}.mini h3{font-size:17px;margin-bottom:10px}.mini table td{font-size:17px;padding:9px 0}.rel .tbl{font-size:17px}.rel .tbl td{padding:14px 16px}.rel .tbl th{font-size:13px;padding:12px 16px}.rel h2{font-size:24px}.rel .help,.rel .mut{font-size:15px}.rel .card{padding:24px 28px}}
 </style>
 
 <header class="top"><div class="in">
@@ -15024,19 +15036,20 @@ function vPainel(){
   [dev,'devoluções a fazer',gp('pessoas',{tab:'ds'})],
   [sevenAnj,'anjos com mais de 3 encontristas',gp('anjos',{})]
  ].filter(a=>a[0]>0);
- const tile=(n,l,col,act)=>`<button class="stat" ${act} style="border-left:6px solid ${col}"><span class="v">${n}</span><span class="l">${l}</span></button>`;
+ const tile=(n,l,col,act,sub)=>`<button class="stat" ${act} style="border-left:6px solid ${col}"><span class="v">${n}</span><span class="l">${l}</span>${sub?`<span class="sb">${sub}</span>`:''}</button>`;
  return `<div class="head"><div><h1>Painel</h1><div class="mut">${esc(S.evento.nome)} · ${esc(dayInfo().txt)}</div></div><button class="btn p" data-act="newcad">Novo cadastro</button></div>
  ${S.igrejas.length?'':ROLE!=='admin'?`<div class="note warn">Nenhuma igreja cadastrada ainda. Peça ao administrador.</div>`:`<div class="note warn"><b>Comece pelos cadastros.</b> Cadastre as igrejas (com pastor) e o Pix da igreja em <button class="btn g" data-act="go" data-r="cadastros" style="min-height:0;padding:0">Cadastros</button>. Depois use Novo cadastro.</div>`}
  ${!CLOUD_ON&&S.p.length&&(!S.lastExport||Date.now()-new Date(S.lastExport)>864e5)?`<div class="note warn"><b>Faça um backup.</b> Os dados ficam só neste navegador. Em <button class="btn g" data-act="go" data-r="ajustes" style="min-height:0;padding:0">Ajustes</button>, exporte o arquivo e guarde.</div>`:''}
  <div class="note info"><b>Só pagos contam para o encontro.</b> Pré-cadastro não pago fica na lista de espera até o financeiro confirmar.</div>
- <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
-  ${tile(pag,'Confirmados (pagos)','var(--ink)',gp('pessoas',{tab:'conf'}))}
-  ${tile(c('pg'),'Pagos aguardando chegar','var(--pg-bd)',gp('pessoas',{tab:'conf',status:'pg'}))}
-  ${tile(ac,'Acolhidos','var(--ac-bg)',gp('pessoas',{tab:'ac'}))}
-  ${tile(c('np'),'Aguardando pagamento','#A8A29E',gp('pessoas',{tab:'np'}))}
-  ${tile(c('ds'),'Desistentes','#DC2626',gp('pessoas',{tab:'ds'}))}
+ <div class="pnl6">
+  ${tile(S.p.length-c('ds'),'Cadastros','var(--ink)',gp('pessoas',{tab:'all'}),pag+' pagos · '+c('np')+' não pagos')}
+  ${tile(pag,'Confirmados (pagos)','var(--pg-bd)',gp('pessoas',{tab:'conf'}),S.p.filter(p=>isPago(p)&&p.sexo==='M').length+' homens · '+S.p.filter(p=>isPago(p)&&p.sexo==='F').length+' mulheres')}
+  ${tile(c('np'),'Aguardando pagamento','#A8A29E',gp('pessoas',{tab:'np'}),'ainda não pagaram')}
+  ${tile(ac,'Acolhidos','var(--ac-bg)',gp('pessoas',{tab:'ac'}),'chegaram no sábado')}
+  ${tile(S.anjos.length,'Anjos cadastrados','#7C3AED',gp('anjos',{}),S.anjos.filter(a=>a.sexo==='M').length+' homens · '+S.anjos.filter(a=>a.sexo==='F').length+' mulheres')}
+  ${tile(c('ds'),'Desistentes','#DC2626',gp('pessoas',{tab:'ds'}),'cancelaram')}
  </div>
- <div class="card stack"><div class="head"><h2>Chegada</h2><b class="num">${ac} de ${pag} (${pct}%)</b></div><div class="bar" role="img" aria-label="${pct}% dos pagos já chegaram"><i style="width:${pct}%"></i></div></div>
+ <div class="card stack"><div class="head"><h2>Chegada</h2><b class="num">${ac} de ${pag} (${pct}%) · ${c('pg')} pagos aguardando chegar</b></div><div class="bar" role="img" aria-label="${pct}% dos pagos já chegaram"><i style="width:${pct}%"></i></div></div>
  <div class="card stack"><h2>Decisões</h2><div class="grid3">
   <button class="stat" ${gp('decisoes',{f:'conv'})}><span class="v">${conv}</span><span class="l">Conversões</span></button>
   <button class="stat" ${gp('decisoes',{f:'rec'})}><span class="v">${rec}</span><span class="l">Reconciliações</span></button>
@@ -15049,6 +15062,7 @@ const MODES=[['acolh','Acolhimento (sábado)','var(--ac-bg)','Portaria. Confirma
  ['domingo','Domingo','#6D28D9','Confirma a presença no domingo.'],
  ['decisao','Decisão','#1630BE','Escritório, com o crachá recolhido. Registra conversão ou reconciliação.'],
  ['batismo','Batismo','#C2410C','Registra o batismo (inclui a decisão).']];
+const sexoAvisoH=p=>{const a=anjoOf(p);return a&&a.sexo&&p.sexo&&a.sexo!==p.sexo?(p.sexo==='M'?'Participante <u>homem</u> com anjo <u>mulher</u>.':'Participante <u>mulher</u> com anjo <u>homem</u>.')+' Confira se está certo.':''};
 const sexoAviso=p=>{const a=anjoOf(p);return a&&a.sexo&&p.sexo&&a.sexo!==p.sexo?(p.sexo==='M'?'Participante homem com anjo mulher.':'Participante mulher com anjo homem.')+' Confira se está certo.':''};
 function pBlock(p,big){return `<div class="${big?'pbig':''}"><div class="mono mut" style="font-size:13px">${esc(p.id)} | Nº ${pad(p.mat)}</div><div style="font-size:${big?30:24}px;font-weight:800;line-height:1.1">${esc(p.nome)}</div><div class="rowf" style="margin-top:6px">${sxPill(p.sexo)}${stPill(p)}<span class="mut">${esc(igNome(p))}</span></div></div>`}
 function anjoBlock(p,emb){
@@ -15083,11 +15097,11 @@ function popHTML(R){
  const p=R.id?person(R.id):null;let b='';
  if(p)b+=pBlock(p,true);
  if(R.msg)b+=`<div>${esc(R.msg)}</div>`;
- if(p){const w=sexoAviso(p);if(w)b+=`<div class="note warn">${esc(w)}</div>`}
+ if(p){const w=sexoAviso(p);if(w)b+=`<div class="note warn">${sexoAvisoH(p)}</div>`}
  if(p&&UI.mode==='acolh'&&R.step==='confirm')b+=anjoBlock(p);
  if(p&&R.step==='pay')b+=`<label class="lab">Forma de pagamento<select id="fpay">${opts(Object.entries(FORMA),'pix')}</select></label>`;
  if(p&&R.step==='dec'){
-  b+=`<div class="rowf"><span class="mut">EVANGÉLICO:</span><b>${EVL[p.evangelico]}</b><span class="mut">· sugestão:</span>${pill('dec',tipoDec(p))}</div>`;
+  b+=`<div class="rowf" style="flex-wrap:nowrap;gap:6px;white-space:nowrap;font-size:.92em"><span class="mut">EVANGÉLICO:</span><b>${EVL[p.evangelico]}</b><span class="mut">· sugestão:</span>${pill('dec',tipoDec(p))}</div>`;
   if(p.batizado==='sim')b+='<div class="note info">Já batizado em igreja <b>EVANGÉLICA</b>. Se quiser se batizar de novo, marque abaixo: a liderança é avisada para conversar em particular.</div>';
   if(p.dec){b+=`<div class="rowf">Decisão registrada: ${decPills(p)}</div>`}
   else b+=`<label class="opt"><input type="checkbox" id="chkbat"> Vai se batizar</label>`;
@@ -15095,7 +15109,8 @@ function popHTML(R){
  if(R.note)b+=`<div class="note info">${R.note}</div>`;
  let btn='';
  if(R.step==='confirm')btn=`<button class="btn ok big" data-act="qrok" data-id="${p.id}">${esc(R.label)}</button>`;
- else if(R.step==='pay')btn=`<button class="btn ok big" data-act="payacolh" data-id="${p.id}">${ROLE==='admin'?'Confirmar pagamento e acolher':'Admin autoriza: confirmar pagamento e acolher'}</button>`;
+ else if(R.step==='pay'&&!canPay())btn='';
+ else if(R.step==='pay')btn=`<button class="btn ok big" data-act="payacolh" data-id="${p.id}">Confirmar pagamento e acolher</button>`;
  else if(R.step==='acolh1')btn=`<button class="btn ok big" data-act="acolhgo" data-id="${p.id}">Acolher agora e continuar</button>`;
  else if(R.step==='dec'&&!p.dec)btn=`<button class="btn ok big" data-act="regdec" data-id="${p.id}">Registrar ${tipoDec(p).toLowerCase()}</button>`;
  else if(R.step==='dec'&&p.dec&&!p.dec.batismo)btn=`<button class="btn ok big" data-act="regbat" data-id="${p.id}">Registrar batismo também</button>`;
@@ -15131,9 +15146,9 @@ function vLer(){
  <div class="card stack" style="overflow:hidden">
   <div class="qrg">
    <div class="stack"><label class="lab" for="scanin">Digitar Nº (matrícula) ou ID</label>
-    <div class="rowf" style="flex-wrap:nowrap"><input id="scanin" type="text" class="grow" placeholder="Ex.: 23 ou ENC-7F3K9Q2M" autocomplete="off" style="flex:1 1 auto;width:auto;min-width:0"><button class="btn p" data-act="scan">Ler</button></div>
+    <div class="rowf" style="flex-wrap:nowrap"><input id="scanin" type="text" class="grow" placeholder="Ex.: 23 ou ENC-7F3K9Q2M" autocomplete="off" style="flex:1 1 auto;width:auto;min-width:0"><button class="btn p lerb" data-act="scan">Ler</button></div>
     <div id="scanprev" class="help" aria-live="polite">Ao digitar, aparece o nome. Depois do Ler, confirme na janela.</div></div>
-   <div class="stack"><span class="lab">Câmera</span><button class="btn ${UI.cam?'s':'p'} big" style="width:100%" data-act="cam">${UI.cam?'Fechar câmera':'Abrir câmera'}</button><div class="help">Leia o QR do crachá. A câmera continua aberta para a próxima leitura.</div></div>
+   <div class="stack"><span class="lab">Câmera</span><button class="btn camb ${UI.cam?'s':'p'} big" style="width:100%" data-act="cam">${UI.cam?'Fechar câmera':'Abrir câmera'}</button><div class="help">Leia o QR do crachá. A câmera continua aberta para a próxima leitura.</div></div>
   </div>
   ${UI.cam?'<div class="finder" style="padding:0;height:auto;min-height:150px"><video id="camv" playsinline muted style="width:100%;max-height:340px;border-radius:14px;display:block"></video></div>':''}
  </div>
@@ -15148,7 +15163,7 @@ function scan(code){
  const m=UI.mode;let R;
  if(p.status==='ds')R={kind:'bad',title:'Desistente',id:p.id,msg:'Não acolher. Motivo: '+((p.desist&&p.desist.motivo)||'—')+'.'};
  else if(m==='acolh'){
-  if(p.status==='np')R={kind:'warn',title:'Pagamento não confirmado',id:p.id,msg:'Pré-cadastro não pago. Só o Administrador autoriza a entrada.',step:'pay'};
+  if(p.status==='np')R={kind:'warn',title:'Pagamento não confirmado',id:p.id,msg:'Pré-cadastro não pago. Só o Administrador ou o Líder confirmam o pagamento.',step:'pay'};
   else if(p.status==='ac')R={kind:'warn',title:'Já acolhido às '+hhmm(p.presSab),id:p.id};
   else R={kind:'ok',title:'Confirmar acolhimento',id:p.id,step:'confirm',label:'Confirmar acolhimento'};
  }else if(p.status==='np')R={kind:'warn',title:'Pagamento não confirmado',id:p.id,msg:'Esta pessoa não conta para o encontro.'};
@@ -15175,7 +15190,7 @@ ACT.scan=()=>{const i=$('#scanin');const v=i.value;i.value='';scanPrev('');scan(
 ACT.clearres=()=>{closePop();render()};
 ACT.copy=t=>{const v=t.dataset.v;try{navigator.clipboard.writeText(v).then(()=>toast('Copiado'),()=>toast('Selecione e copie o número.'))}catch(e){toast('Selecione e copie o número.')}};
 ACT.payacolh=t=>{
- if(ROLE!=='admin'){toast('Só o Administrador autoriza.');return}
+ if(!canPay()){toast('Só o Administrador ou o Líder confirmam pagamento.');return}
  const p=person(t.dataset.id);snap(p,'Pagamento e acolhimento: '+p.nome);p.status='ac';p.pagoEm=p.pagoEm||nowISO();stamp(p,'pay');p.forma=($('#fpay')||{}).value||'pix';p.presSab=nowISO();stamp(p,'presSab');logAdd('Pagamento autorizado e acolhido: '+p.nome);save();doneOk('Acolhido: '+p.nome)};
 ACT.acolhgo=t=>{const p=person(t.dataset.id);snap(p,'Acolhido: '+p.nome);p.status='ac';p.presSab=nowISO();stamp(p,'presSab');logAdd('Acolhido: '+p.nome);save();closePop();scan(p.id)};
 ACT.undo=()=>{if(!UI.last)return;const i=S.p.findIndex(x=>x.id===UI.last.id);if(i<0)return;S.p[i]=JSON.parse(UI.last.before);logAdd('Desfeito: '+S.p[i].nome);UI.last=null;save();toast('Desfeito');render()};
@@ -15246,7 +15261,7 @@ function filtP(){
 function rowP(p,chk){
  const a=anjoOf(p),mut=p.status==='np'?' style="color:var(--muted)"':'';
  const sub=`<span class="l1">${sxPill(p.sexo)}<span>${esc(igNome(p))}</span></span><span class="l2"><span class="mono">Nº ${pad(p.mat)}</span> · <span ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?'Anjo '+esc(a.nome):'Sem anjo'}</span>${isPago(p)?` · <span>Crachá ${CRL[crState(p)][0].toLowerCase()}</span>`:''}</span>`;
- const inner=`<span class="mono dk">${pad(p.mat)}</span><span class="nm"${mut}>${esc(p.nome)}</span><span class="dk">${sxPill(p.sexo)}</span><span class="dk">${esc(igNome(p))}</span><span class="dk" ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?esc(a.nome):'Sem anjo'}</span><span class="dk">${stPill(p)}</span><span class="dk">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':crPill(p)}</span><span class="mb">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':stPill(p)}</span><span class="sub">${sub}</span>`;
+ const inner=`<span class="mono dk">${pad(p.mat)}</span><span class="nm"${mut}>${esc(p.nome)}${p.status!=='ds'&&sexoAviso(p)?' <span class="wx" title="Anjo de outro sexo" aria-label="Aviso: anjo de outro sexo">⚠</span>':''}</span><span class="dk">${sxPill(p.sexo)}</span><span class="dk">${esc(igNome(p))}</span><span class="dk" ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?esc(a.nome):'Sem anjo'}</span><span class="dk">${stPill(p)}</span><span class="dk">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':crPill(p)}</span><span class="mb">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':stPill(p)}</span><span class="sub">${sub}</span>`;
  if(chk)return `<div class="row chk"><input type="checkbox" data-act="sel" data-id="${p.id}" aria-label="Selecionar ${esc(p.nome)}" ${UI.sel.has(p.id)?'checked':''}>${inner}</div>`;
  return `<button class="row" data-act="open" data-id="${p.id}">${inner}</button>`;
 }
@@ -15361,7 +15376,7 @@ function anjoCommit(pre){
 }
 function detHTML(p){
  const a=anjoOf(p),d=p.desist,sub=UI.sub,top=[];
- if(p.status==='np')top.push('<button class="btn ok" data-act="subopen" data-s="pay">Confirmar pagamento</button>');
+ if(p.status==='np'&&canPay())top.push('<button class="btn ok" data-act="subopen" data-s="pay">Confirmar pagamento</button>');
  if(p.status==='np'&&S.pix.chave&&p.cel)top.push(`<a class="btn s" href="${esc(pixLink(p.cel))}" target="_blank" rel="noopener">Enviar Pix pelo WhatsApp</a>`);
  if(p.status==='pg')top.push('<button class="btn ok" data-act="acolhman">Acolher manualmente</button>');
  if(p.status==='ac')top.push('<button class="btn s" data-act="subopen" data-s="unac">Retirar acolhimento</button>');
@@ -15381,7 +15396,7 @@ function detHTML(p){
  const sfNome=sub==='nome'?`<div class="stack" style="border-top:1px solid var(--line);padding-top:12px"><label class="lab">Nome no crachá<input type="text" id="dnc" value="${esc(p.nomeCracha||p.nome)}"></label><div class="help">O QR continua o mesmo. O crachá fica marcado como desatualizado até reimprimir.</div><div class="rowf"><button class="btn p" data-act="nomesave">Salvar</button><button class="btn s" data-act="subopen" data-s="">Voltar</button></div></div>`:'';
  return `<div class="head">${UI.backTo?'<button class="btn s" data-act="backanjo">← Voltar ao anjo</button>':'<h2>Participante</h2>'}<button class="btn s" data-act="close">Fechar</button></div>
  <div class="stack"><div><div class="mono mut" style="font-size:13px">${esc(p.id)} | Nº ${pad(p.mat)}</div><div style="font-size:26px;font-weight:800;line-height:1.1">${esc(p.nome)}</div></div><div class="rowf">${sxPill(p.sexo)}${stPill(p)}${crPill(p)}${decPills(p)}</div>
- ${sexoAviso(p)?`<div class="note warn">${esc(sexoAviso(p))}</div>`:''}
+ ${sexoAviso(p)?`<div class="note warn">${sexoAvisoH(p)}</div>`:''}
  ${top.length?`<div class="rowf">${top.join('')}</div>`:''}
  ${sfPay}${sfUn}
  <div class="card stack"><div class="head"><h3>Anjo</h3><button class="btn g" data-act="subopen" data-s="anjo">${a?'Trocar / editar':'Adicionar'}</button></div>${anjoBlock(p,true)}${sfAnjo}</div>
@@ -15395,7 +15410,7 @@ function openDet(id){UI.sheet={t:'det',id};const p=person(id);if(!p)return;UI.ke
 function redet(){if(UI.sheet&&UI.sheet.t==='det')openDet(UI.sheet.id)}
 ACT.open=t=>{UI.sub=null;UI.backTo=null;openDet(t.dataset.id)};
 ACT.subopen=t=>{UI.sub=t.dataset.s||null;redet()};
-ACT.paysave=()=>{const p=person(UI.sheet.id);const f=document.querySelector('input[name=fp]:checked');p.status='pg';p.pagoEm=nowISO();stamp(p,'pay');p.forma=f?f.value:'pix';UI.sub=null;logAdd('Pagamento confirmado ('+FORMA[p.forma]+'): '+p.nome);save();toast('Pagamento confirmado');render();redet()};
+ACT.paysave=()=>{if(!canPay()){toast('Só o Administrador ou o Líder confirmam pagamento.');return}const p=person(UI.sheet.id);const f=document.querySelector('input[name=fp]:checked');p.status='pg';p.pagoEm=nowISO();stamp(p,'pay');p.forma=f?f.value:'pix';UI.sub=null;logAdd('Pagamento confirmado ('+FORMA[p.forma]+'): '+p.nome);save();toast('Pagamento confirmado');render();redet()};
 ACT.acolhman=()=>{const p=person(UI.sheet.id);p.status='ac';p.presSab=nowISO();stamp(p,'presSab');logAdd('Acolhido: '+p.nome);save();render();redet()};
 ACT.dessave=()=>{const p=person(UI.sheet.id);p.desist={motivo:$('#dmot').value,obs:$('#dobs').value.trim(),devol:$('#ddev')?$('#ddev').value:'nao_pago',em:nowISO()};p.status='ds';logAdd('Desistência: '+p.nome);UI.sub=null;save();toast('Desistência registrada');render();redet()};
 ACT.unacsave=()=>{const p=person(UI.sheet.id);p.status='pg';p.presSab=null;(p.hist=p.hist||[]).push({em:nowISO(),txt:'Acolhimento retirado'});logAdd('Acolhimento retirado: '+p.nome);UI.sub=null;save();toast('Acolhimento retirado');render();redet()};
@@ -15839,9 +15854,9 @@ ACT.igsv=async()=>{
 function vAjustes(){
  const E=S.evento,A=UI.ask,im=UI.imp;
  return `<div><h1>Ajustes</h1></div>
- ${accHTML()}
  <div class="card stack"><h2>Encontro</h2><div class="grid2"><label class="lab">Nome<input type="text" id="ev_n" value="${esc(E.nome)}"></label><label class="lab">Data de início (sábado)<input type="date" id="ev_d" value="${esc(E.inicio)}"></label></div>
   <div class="help">Escolha o <b>sábado</b> do encontro. O Painel e a leitura de QR usam essa data (sábado = acolhimento, domingo = presença).${E.inicio&&new Date(E.inicio+'T12:00').getDay()!==6?'<div class="note warn">Esta data não é um sábado.</div>':''}</div><div><button class="btn p" data-act="evsv">Salvar</button></div></div>
+ ${accHTML()}
  ${diagHTML()}
  <div class="card stack"><h2>Backup dos dados</h2><div class="help">Os dados ficam só neste navegador, neste computador. Exporte um arquivo para guardar o encontro ou levar para outro computador, e importe depois.${S.lastExport?' Último backup: '+fmtDT(S.lastExport)+'.':' Nenhum backup feito ainda.'}</div>
   <div class="rowf"><button class="btn p" data-act="expdata">Exportar dados (.json)</button><label class="btn s">Importar arquivo<input id="impfile" type="file" accept=".json,application/json" class="sr"></label></div>
@@ -15886,8 +15901,8 @@ function vAjuda(){
   'Todos os aparelhos ficam <b>sincronizados em tempo real</b>: o que um celular registra aparece nos outros e no computador. A etiqueta no topo mostra "Sincronizado", "Enviando…" ou "Offline".',
   'Sem internet, o app continua anotando e envia tudo quando a conexão voltar.']))+
  sec('O que a consolidação pode e não pode',ul([
-  '<b>Pode:</b> ler QR, ver e editar participantes, confirmar pagamento, gerenciar anjos, registrar decisões e batismo, ver quais crachás já foram impressos e ver o resumo dos relatórios.',
-  '<b>Não pode:</b> imprimir crachás, gerar listas de conferência, relatório para a liderança e planilhas (isso é do líder e do administrador). Também não mexe em igrejas, Pix, evento, backup e acesso, nem exclui anjos.']))+
+  '<b>Pode:</b> ler QR, ver e editar participantes, gerenciar anjos, registrar decisões e batismo, ver quais crachás já foram impressos e ver o resumo dos relatórios.',
+  '<b>Não pode:</b> confirmar pagamento (só o administrador e o líder; a consolidação avisa o financeiro), imprimir crachás, gerar listas de conferência, relatório para a liderança e planilhas (isso é do líder e do administrador). Também não mexe em igrejas, Pix, evento, backup e acesso, nem exclui anjos.']))+
  sec('Resumo das telas',ul([
   '<b>Painel:</b> números gerais do encontro e atalhos.',
   '<b>Ler QR:</b> a tela principal durante o evento. Escolha o modo (Acolhimento, Domingo, Decisão, Batismo), abra a câmera ou digite o Nº/ID. Abre uma janela com os dados da pessoa: <b>confira e confirme</b>. A câmera continua aberta para a próxima leitura. Toca um som e a tela pisca (verde = ok, amarelo = atenção, vermelho = erro). "Desfazer" corrige a última ação.',
@@ -15949,14 +15964,14 @@ function secoes(){
  const pg=S.p.filter(isPago),c=k=>S.p.filter(p=>p.status===k).length,H=a=>a.filter(p=>p.sexo==='M').length;
  const dec=pg.filter(p=>p.dec),conv=dec.filter(p=>tipoDec(p)==='Conversão'),rec=dec.filter(p=>tipoDec(p)==='Reconciliação');
  return [
-  ['Cadastros',[['Pré-cadastros (total)',S.p.length],['Homens',H(S.p)],['Mulheres',S.p.length-H(S.p)],['Desistentes',c('ds')]]],
-  ['Pagamentos',[['Confirmados (pagos)',pg.length],['Pagos: homens',H(pg)],['Pagos: mulheres',pg.length-H(pg)],['Aguardando pagamento',c('np')],['Pix',pg.filter(p=>p.forma==='pix').length],['Cartão',pg.filter(p=>p.forma==='cartao').length],['Dinheiro',pg.filter(p=>p.forma==='dinheiro').length],['Devoluções a fazer',S.p.filter(p=>p.status==='ds'&&p.desist&&p.desist.devol==='pendente').length]]],
-  ['Acolhimentos',[['Sábado: acolhidos',S.p.filter(p=>p.presSab&&isPago(p)).length],['Pagos que ainda não chegaram',c('pg')],['Domingo: presentes',S.p.filter(p=>p.presDom).length]]],
-  ['Decisões',[['Total de decisões',dec.length],['Conversões',conv.length],['Reconciliações',rec.length],['Batismos',dec.filter(p=>p.dec.batismo).length],['Conversão + Batismo',conv.filter(p=>p.dec.batismo).length],['Reconciliação + Batismo',rec.filter(p=>p.dec.batismo).length]]]
+  ['Cadastros',[['Pré-cadastros (total)',S.p.length,gp('pessoas',{tab:'all'})],['Homens',H(S.p),gp('pessoas',{tab:'all',sexo:'M'})],['Mulheres',S.p.length-H(S.p),gp('pessoas',{tab:'all',sexo:'F'})],['Desistentes',c('ds'),gp('pessoas',{tab:'ds'})]]],
+  ['Pagamentos',[['Confirmados (pagos)',pg.length,gp('pessoas',{tab:'conf'})],['Pagos: homens',H(pg),gp('pessoas',{tab:'conf',sexo:'M'})],['Pagos: mulheres',pg.length-H(pg),gp('pessoas',{tab:'conf',sexo:'F'})],['Aguardando pagamento',c('np'),gp('pessoas',{tab:'np'})],['Pix',pg.filter(p=>p.forma==='pix').length,gp('pessoas',{tab:'conf',forma:'pix'})],['Cartão',pg.filter(p=>p.forma==='cartao').length,gp('pessoas',{tab:'conf',forma:'cartao'})],['Dinheiro',pg.filter(p=>p.forma==='dinheiro').length,gp('pessoas',{tab:'conf',forma:'dinheiro'})],['Devoluções a fazer',S.p.filter(p=>p.status==='ds'&&p.desist&&p.desist.devol==='pendente').length,gp('pessoas',{tab:'ds'})]]],
+  ['Acolhimentos',[['Sábado: acolhidos',S.p.filter(p=>p.presSab&&isPago(p)).length,gp('pessoas',{tab:'ac',sub:'sab'})],['Pagos que ainda não chegaram',c('pg'),gp('pessoas',{tab:'conf',status:'pg'})],['Domingo: presentes',S.p.filter(p=>p.presDom).length,gp('pessoas',{tab:'ac',sub:'dom'})]]],
+  ['Decisões',[['Total de decisões',dec.length,gp('decisoes',{f:'dec'})],['Acolhidos sem decisão registrada',S.p.filter(p=>p.status==='ac'&&!p.dec).length,gp('decisoes',{f:'sem'})],['Conversões',conv.length,gp('decisoes',{f:'conv'})],['Reconciliações',rec.length,gp('decisoes',{f:'rec'})],['Batismos',dec.filter(p=>p.dec.batismo).length,gp('decisoes',{f:'bat'})],['Conversão + Batismo',conv.filter(p=>p.dec.batismo).length,gp('decisoes',{f:'cb'})],['Reconciliação + Batismo',rec.filter(p=>p.dec.batismo).length,gp('decisoes',{f:'rb'})]]]
  ];
 }
 function porIderp(){
- const m={};S.p.forEach(p=>{const k=ig_key(p),o=m[k]||(m[k]={k,g:p.ig.tipo==='iderp'?0:p.ig.tipo==='outra'?1:2,cad:0,pg:0,ac:0,dec:0,bat:0});o.cad++;if(isPago(p)){o.pg++;if(p.status==='ac')o.ac++;if(p.dec){o.dec++;if(p.dec.batismo)o.bat++}}});
+ const m={};S.p.forEach(p=>{const k=ig_key(p),o=m[k]||(m[k]={v:p.ig.tipo==='iderp'?p.ig.id:p.ig.tipo==='outra'?'outra':'nenhuma',k,g:p.ig.tipo==='iderp'?0:p.ig.tipo==='outra'?1:2,cad:0,pg:0,ac:0,dec:0,bat:0});o.cad++;if(isPago(p)){o.pg++;if(p.status==='ac')o.ac++;if(p.dec){o.dec++;if(p.dec.batismo)o.bat++}}});
  return Object.values(m).sort((a,b)=>a.g-b.g||b.pg-a.pg||a.k.localeCompare(b.k,'pt'));
 }
 const DIASN=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
@@ -15971,14 +15986,13 @@ function diasHTML(){
 function vRelat(){
  const sc=secoes(),rows=porIderp(),adm=canRel();
  return `<div><h1>Relatórios</h1><div class="mut">${adm?'Resumo, listas para a portaria, relatório para a liderança e exportações.':'Resumo do encontro (somente visualização).'}</div></div>
- <div class="rel stack"><div class="card stack"><h2>Resumo geral</h2><div class="mini">${sc.map(s=>`<div><h3>${s[0]}</h3><table class="tbl"><tbody>${s[1].map(r=>`<tr><td>${r[0]}</td><td class="r"><b>${r[1]}</b></td></tr>`).join('')}</tbody></table></div>`).join('')}</div></div>
- <div class="card stack"><h2>Por igreja</h2>${[[0,'IDERP – pastor'],[1,'Outras denominações'],[2,'Sem igreja']].map(G=>{const rs=rows.filter(o=>o.g===G[0]);return rs.length?`<div class="sec">${G[1]}</div><div class="scroll"><table class="tbl" style="table-layout:fixed"><colgroup><col style="width:34%"><col><col><col><col><col></colgroup><thead><tr><th>${G[0]===0?'IDERP – pastor':G[0]===1?'Igreja':'Grupo'}</th><th class="r" title="Cadastros">Cad.</th><th class="r">Pagos</th><th class="r" title="Acolhidos">Acolh.</th><th class="r" title="Decisões">Decis.</th><th class="r" title="Batismos">Bat.</th></tr></thead><tbody>${rs.map(o=>`<tr><td>${esc(o.k)}</td><td class="r">${o.cad}</td><td class="r">${o.pg}</td><td class="r">${o.ac}</td><td class="r">${o.dec}</td><td class="r">${o.bat}</td></tr>`).join('')}</tbody></table></div>`:''}).join('')||'<div class="mut">Sem dados ainda.</div>'}</div>
+ <div class="rel stack"><div class="card stack"><h2>Resumo geral</h2><div class="help">Toque em uma linha para abrir a lista correspondente.</div><div class="mini">${sc.map(s=>`<div><h3>${s[0]}</h3><table class="tbl"><tbody>${s[1].map(r=>`<tr class="lk" ${r[2]}><td>${r[0]}</td><td class="r"><b>${r[1]}</b> <span class="chev">›</span></td></tr>`).join('')}</tbody></table></div>`).join('')}</div></div>
+ <div class="card stack"><h2>Por igreja</h2>${[[0,'IDERP – pastor'],[1,'Outras denominações'],[2,'Sem igreja']].map(G=>{const rs=rows.filter(o=>o.g===G[0]);return rs.length?`<div class="sec">${G[1]}</div><div class="scroll"><table class="tbl" style="table-layout:fixed"><colgroup><col style="width:34%"><col><col><col><col><col></colgroup><thead><tr><th>${G[0]===0?'IDERP – pastor':G[0]===1?'Igreja':'Grupo'}</th><th class="r" title="Cadastros">Cad.</th><th class="r">Pagos</th><th class="r" title="Acolhidos">Acolh.</th><th class="r" title="Decisões">Decis.</th><th class="r" title="Batismos">Bat.</th></tr></thead><tbody>${rs.map(o=>`<tr class="lk" ${gp('pessoas',{tab:'all',igreja:o.v})}><td>${esc(o.k)}</td><td class="r">${o.cad}</td><td class="r">${o.pg}</td><td class="r">${o.ac}</td><td class="r">${o.dec}</td><td class="r">${o.bat}</td></tr>`).join('')}</tbody></table></div>`:''}).join('')||'<div class="mut">Sem dados ainda.</div>'}</div>
  ${adm?`
  <div class="card stack"><h2>Listas de conferência (PDF)</h2><div class="help">Todos os pagos, com total, homens e mulheres. Mulheres e homens em folhas separadas, em ordem alfabética: duas filas na entrada. Serve para a portaria do sábado, para a chegada do domingo e para saber os nomes exatos do momento dos presentes. Se alguém desistir no domingo, marque no app e gere de novo.</div>
   <div class="rowf"><button class="btn p" data-act="pdfconf" data-k="sab">Sábado · portaria</button><button class="btn p" data-act="pdfconf" data-k="dom">Domingo · presença e presentes</button></div></div>
  <div class="card stack"><h2>Relatório para a liderança (PDF)</h2>
-  <div class="rowf"><button class="btn s" data-act="pdfgeral">Relatório geral</button></div>
-  <div class="stack"><select id="rl_ig" aria-label="Igreja" style="width:100%">${opts([['all','Todas as igrejas (uma por página)']].concat(S.igrejas.map(i=>[i.id,igLabel(i)])),'all')}</select><div><button class="btn s" data-act="pdfig">PDF por igreja</button></div></div></div>
+  <div class="lid"><button class="btn s" data-act="pdfgeral">Relatório geral</button><select id="rl_ig" aria-label="Igreja">${opts([['all','Todas as igrejas (uma por página)']].concat(S.igrejas.map(i=>[i.id,igLabel(i)])),'all')}</select><button class="btn s" data-act="pdfig">PDF por igreja</button></div></div></div>
  <div class="card stack"><h2>Exportar planilhas</h2><div class="rowf"><button class="btn s" data-act="csvpart">Participantes (CSV)</button><button class="btn s" data-act="csvdec">Decisões (CSV)</button></div></div>`:''}
  <div class="card stack"><h2>Registros por dia</h2><div class="help">Toque em um registro para abrir a ficha da pessoa.</div>${diasHTML()}</div></div>`;
 }
@@ -16214,6 +16228,7 @@ function boot(){
 setInterval(()=>{if(CLOUD_ON&&(ROLE==='cons'||ROLE==='lider')&&syncReady()&&!consOpen(60000)){SYNC.msg='Acesso encerrado. Peça ao administrador para liberar.';CLOUD.logout()}},30000);
 const consOpen=(slack)=>{const n=Date.now(),k=slack||0,L=ROLE==='lider',a=L?S.liderAte:S.consAte,d=(L?S.liderDe:S.consDe)||0;return !!a&&n<=a+k&&n>=d-k};
 const canPrint=()=>ROLE==='admin'||ROLE==='lider';
+const canPay=canPrint;
 const canRel=canPrint;
 const DOW=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
 function accPlan(dias){
