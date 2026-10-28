@@ -177,7 +177,7 @@ legend{padding:0;margin-bottom:8px;font-size:13px;font-weight:700;color:var(--mu
 @media (min-width:900px){.pnl6{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.pnl6 .stat{padding:14px}.pnl6 .stat .v{font-size:32px}.pnl6 .stat .l{font-size:13.5px}.pnl6 .stat .sb{font-size:12px}}
 @media (max-width:899px){.grid3 .stat{padding:10px 8px}.grid3 .stat .l{font-size:11px;letter-spacing:-.2px}.grid3 .stat .v{font-size:26px}}
 .sortctl select,.sortctl .btn{height:50px;min-height:50px;box-sizing:border-box}
-.wx{color:var(--warn-fg);font-weight:800;font-size:.95em;cursor:help}
+.wx{color:#EA580C;font-weight:800;font-size:1.05em;cursor:help;text-shadow:0 0 0 #EA580C}.nw{white-space:nowrap}.row .dk .wx{margin-left:4px}@media (min-width:900px){.row .nm .wxm{display:none}}@media (max-width:899px){.row .dk .wx{display:none}}
 .tbl tr.lk{cursor:pointer}.tbl tr.lk:hover td{background:var(--surface2)}.chev{color:var(--muted);font-weight:700;margin-left:4px}
 .lid{display:grid;gap:12px}.lid select{width:100%}
 @media (min-width:900px){.lid{grid-template-columns:auto minmax(0,1fr) auto;align-items:center}.lid .btn{white-space:nowrap}}
@@ -222,11 +222,11 @@ button.stat{cursor:pointer}
 .row.chk{grid-template-columns:auto minmax(0,1fr) auto;cursor:default}
 .row.chk input{width:22px;height:22px;accent-color:var(--accent)}
 @media (min-width:900px){
-  .row{grid-template-columns:64px minmax(0,2.3fr) 84px minmax(0,1.5fr) minmax(0,1fr) 150px 110px;gap:12px}
+  .row{grid-template-columns:64px minmax(0,2.3fr) 104px minmax(0,1.5fr) minmax(0,1fr) 150px 110px;gap:12px}
   .row .sub{display:none}.row .dk{display:block}.row .mb{display:none}
-  .rowhead{display:grid;grid-template-columns:64px minmax(0,2.3fr) 84px minmax(0,1.5fr) minmax(0,1fr) 150px 110px;gap:12px;padding:0 14px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em}
-  .row.chk{grid-template-columns:32px 64px minmax(0,2.3fr) 84px minmax(0,1.5fr) minmax(0,1fr) 150px 110px}
-  .rowhead.chk{grid-template-columns:32px 64px minmax(0,2.3fr) 84px minmax(0,1.5fr) minmax(0,1fr) 150px 110px}
+  .rowhead{display:grid;grid-template-columns:64px minmax(0,2.3fr) 104px minmax(0,1.5fr) minmax(0,1fr) 150px 110px;gap:12px;padding:0 14px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em}
+  .row.chk{grid-template-columns:32px 64px minmax(0,2.3fr) 104px minmax(0,1.5fr) minmax(0,1fr) 150px 110px}
+  .rowhead.chk{grid-template-columns:32px 64px minmax(0,2.3fr) 104px minmax(0,1.5fr) minmax(0,1fr) 150px 110px}
   .row.dec2,.rowhead.dec2{grid-template-columns:64px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) 180px 70px}
 }
 .tbl{width:100%;border-collapse:collapse;font-size:14px}
@@ -316,6 +316,18 @@ select:has(option[value=""]:checked){font-weight:500;color:var(--muted);border-c
 @media (max-width:560px){#tag .dev{display:none}.tag.outb{margin-left:4px}}
 .top .t b{white-space:nowrap}
 @media (min-width:900px){.mini{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch!important}.mini>div{padding:20px 24px}.mini h3{font-size:17px;margin-bottom:10px}.mini table td{font-size:17px;padding:9px 0}.rel .tbl{font-size:17px}.rel .tbl td{padding:14px 16px}.rel .tbl th{font-size:13px;padding:12px 16px}.rel h2{font-size:24px}.rel .help,.rel .mut{font-size:15px}.rel .card{padding:24px 28px}}
+
+.seg .t-all[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.seg .t-conf[aria-selected="true"]{background:var(--pg-bg);color:var(--pg-fg);box-shadow:inset 0 0 0 2px var(--pg-bd)}
+.seg .t-np[aria-selected="true"]{background:#78716C;color:#fff}
+.seg .t-ac[aria-selected="true"]{background:var(--ac-bg);color:var(--ac-fg)}
+.seg .t-ds[aria-selected="true"]{background:#DC2626;color:#fff}
+.seg .t-all[aria-selected="true"] .n,.seg .t-np[aria-selected="true"] .n,.seg .t-ac[aria-selected="true"] .n,.seg .t-ds[aria-selected="true"] .n{background:rgba(255,255,255,.25);color:inherit}
+.tbl td.r{white-space:nowrap}.tbl td.r .chev{display:inline}
+.hm{display:none}
+@media (min-width:900px){.hm{display:grid;grid-template-columns:1fr 1fr;gap:18px}.hm>span{display:flex;justify-content:space-between;cursor:pointer;white-space:nowrap}.mbo{display:none}}
+@media (max-width:899px){.dko{display:none}}
+@media (max-width:699px){.rel .mini{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <header class="top"><div class="in">
@@ -14947,6 +14959,7 @@ const splitName=full=>{const w=String(full||'').trim().split(/\s+/).filter(Boole
 const badgeName=p=>splitName(p.nomeCracha||p.nome);
 const tipoDec=p=>p.evangelico==='nao'?'Conversão':'Reconciliação';
 const orientar=p=>!!(p.dec&&p.batizado==='sim'&&p.dec.batismo);
+const sxOutros=a=>S.p.filter(p=>p.anjoId===a.id&&p.status!=='ds'&&p.sexo&&a.sexo&&p.sexo!==a.sexo);
 const encontristas=a=>S.p.filter(p=>p.anjoId===a.id&&p.status!=='ds').length;
 const EVL={sim:'Sim',nao:'Não',afastado:'Afastado'};
 const pill=(c,t)=>`<span class="pill ${c}">${esc(t)}</span>`;
@@ -14993,7 +15006,7 @@ function drawNav(){
  const pc=pendCr().length;
  $('#side').className='side'+(SMINI?' smin':'');
  $('#side').innerHTML=`<button class="sidetog" data-act="sidetog" aria-label="${SMINI?'Expandir menu':'Recolher menu'}" title="${SMINI?'Expandir menu':'Recolher menu'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${SMINI?'M9 6l6 6-6 6':'M15 6l-6 6 6 6'}"/></svg><span>Recolher</span></button>`+NAV.filter(n=>n[4]&&allowed(n[0])).map(n=>`<button data-act="go" data-r="${n[0]}" title="${n[1]}" ${UI.r===n[0]?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${n[3]}"/></svg><span>${n[1]}</span>${n[0]==='crachas'&&pc?`<span class="cnt">${pc}</span>`:''}</button>`).join('');
- const cn=NAV.find(n=>n[0]===UI.r),sb=$('#sub'),tt=$('#ttl'),m=innerWidth<900&&cn;if(sb)sb.textContent=m?'Encontro com Deus':(ROLE==='admin'?'Administrador':ROLE==='lider'?'Líder':'Consolidação');if(tt)tt.textContent=m?cn[1]:'Encontro com Deus';
+ const cn=NAV.find(n=>n[0]===UI.r),sb=$('#sub'),tt=$('#ttl'),m=innerWidth<900&&cn;if(sb)sb.textContent=m?'Encontro com Deus':(ROLE==='admin'?'Administrador':ROLE==='lider'?'Líder da Consolidação':'Equipe de Consolidação');if(tt)tt.textContent=m?cn[1]:'Encontro com Deus';
  const cur=TABS.includes(UI.r)?UI.r:'mais';
  $('#tabin').innerHTML=NAV.filter(n=>TABS.includes(n[0])).map(n=>`<button data-act="go" data-r="${n[0]}" ${cur===n[0]?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${n[3]}"/></svg>${n[2]}</button>`).join('');
 }
@@ -15046,8 +15059,8 @@ function vPainel(){
   ${tile(pag,'Confirmados (pagos)','var(--pg-bd)',gp('pessoas',{tab:'conf'}),S.p.filter(p=>isPago(p)&&p.sexo==='M').length+' homens · '+S.p.filter(p=>isPago(p)&&p.sexo==='F').length+' mulheres')}
   ${tile(c('np'),'Aguardando pagamento','#A8A29E',gp('pessoas',{tab:'np'}),'ainda não pagaram')}
   ${tile(ac,'Acolhidos','var(--ac-bg)',gp('pessoas',{tab:'ac'}),'chegaram no sábado')}
-  ${tile(S.anjos.length,'Anjos cadastrados','#7C3AED',gp('anjos',{}),S.anjos.filter(a=>a.sexo==='M').length+' homens · '+S.anjos.filter(a=>a.sexo==='F').length+' mulheres')}
   ${tile(c('ds'),'Desistentes','#DC2626',gp('pessoas',{tab:'ds'}),'cancelaram')}
+  ${tile(S.anjos.length,'Anjos cadastrados','#7C3AED',gp('anjos',{}),S.anjos.filter(a=>a.sexo==='M').length+' homens · '+S.anjos.filter(a=>a.sexo==='F').length+' mulheres')}
  </div>
  <div class="card stack"><div class="head"><h2>Chegada</h2><b class="num">${ac} de ${pag} (${pct}%) · ${c('pg')} pagos aguardando chegar</b></div><div class="bar" role="img" aria-label="${pct}% dos pagos já chegaram"><i style="width:${pct}%"></i></div></div>
  <div class="card stack"><h2>Decisões</h2><div class="grid3">
@@ -15259,9 +15272,10 @@ function filtP(){
  return a.sort(sorter(colsP(),f));
 }
 function rowP(p,chk){
+ const wxs=p.status!=='ds'&&sexoAviso(p)?' <span class="wx" title="Anjo de outro sexo" aria-label="Aviso: anjo de outro sexo">⚠</span>':'';
  const a=anjoOf(p),mut=p.status==='np'?' style="color:var(--muted)"':'';
  const sub=`<span class="l1">${sxPill(p.sexo)}<span>${esc(igNome(p))}</span></span><span class="l2"><span class="mono">Nº ${pad(p.mat)}</span> · <span ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?'Anjo '+esc(a.nome):'Sem anjo'}</span>${isPago(p)?` · <span>Crachá ${CRL[crState(p)][0].toLowerCase()}</span>`:''}</span>`;
- const inner=`<span class="mono dk">${pad(p.mat)}</span><span class="nm"${mut}>${esc(p.nome)}${p.status!=='ds'&&sexoAviso(p)?' <span class="wx" title="Anjo de outro sexo" aria-label="Aviso: anjo de outro sexo">⚠</span>':''}</span><span class="dk">${sxPill(p.sexo)}</span><span class="dk">${esc(igNome(p))}</span><span class="dk" ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?esc(a.nome):'Sem anjo'}</span><span class="dk">${stPill(p)}</span><span class="dk">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':crPill(p)}</span><span class="mb">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':stPill(p)}</span><span class="sub">${sub}</span>`;
+ const inner=`<span class="mono dk">${pad(p.mat)}</span><span class="nm"${mut}>${esc(p.nome)}<span class="wxm">${wxs}</span></span><span class="dk nw">${sxPill(p.sexo)}${wxs}</span><span class="dk">${esc(igNome(p))}</span><span class="dk" ${a?'':'style="color:var(--warn-fg);font-weight:700"'}>${a?esc(a.nome):'Sem anjo'}</span><span class="dk">${stPill(p)}</span><span class="dk">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':crPill(p)}</span><span class="mb">${UI.fp.tab==='ac'?'<b class="mono">'+hhmm(UI.fp.sub==='dom'?p.presDom:p.presSab)+'</b>':stPill(p)}</span><span class="sub">${sub}</span>`;
  if(chk)return `<div class="row chk"><input type="checkbox" data-act="sel" data-id="${p.id}" aria-label="Selecionar ${esc(p.nome)}" ${UI.sel.has(p.id)?'checked':''}>${inner}</div>`;
  return `<button class="row" data-act="open" data-id="${p.id}">${inner}</button>`;
 }
@@ -15276,7 +15290,7 @@ function vPessoas(){
  const nSab=S.p.filter(p=>p.status==='ac'||p.presSab).length,nDom=S.p.filter(p=>p.presDom).length;
  const stOpts=f.tab==='conf'?[['','Todos os pagos'],['pg','Pago · ainda não chegou'],['ac','Acolhido (já chegou)']]:f.tab==='all'?[['','Todos os status'],['np','Não pago'],['pg','Pago · ainda não chegou'],['ac','Acolhido (já chegou)'],['ds','Desistente']]:null;
  return `<div class="head"><h1>Participantes</h1><button class="btn p" data-act="newcad">Novo cadastro</button></div>
- <div class="seg" role="tablist">${tabs.map(t=>`<button role="tab" class="${t[0]==='ds'?'tabds':''}" aria-selected="${f.tab===t[0]}" data-act="ptab" data-t="${t[0]}">${t[1]}<span class="n">${t[2]}</span></button>`).join('')}</div>
+ <div class="seg" role="tablist">${tabs.map(t=>`<button role="tab" class="t-${t[0]}${t[0]==='ds'?' tabds':''}" aria-selected="${f.tab===t[0]}" data-act="ptab" data-t="${t[0]}">${t[1]}<span class="n">${t[2]}</span></button>`).join('')}</div>
 ${f.tab==='ac'?`<div class="seg sub" role="tablist"><button role="tab" aria-selected="${f.sub!=='dom'}" data-act="psub" data-t="sab">Sábado<span class="n">${nSab}</span></button><button role="tab" aria-selected="${f.sub==='dom'}" data-act="psub" data-t="dom">Domingo<span class="n">${nDom}</span></button></div>`:''}
 ${f.tab==='conf'?'<div class="help">Pago · ainda não chegou: pagou, mas não passou pela portaria. Acolhido: pagou e já foi acolhido no sábado.</div>':''}
  ${f.tab==='np'?'<div class="note info">Pré-cadastros ainda <b>não pagos</b>. Não contam para o encontro e não entram na fila de crachás.</div>':''}
@@ -15682,6 +15696,7 @@ function filtA(){
  if(f.sexo)a=a.filter(x=>x.sexo===f.sexo);
  if(f.igreja)a=a.filter(x=>f.igreja==='none'?!igById(x.igId):x.igId===f.igreja);
  if(f.sem)a=a.filter(x=>!x.tel);
+ if(f.sxm)a=a.filter(x=>sxOutros(x).length);
  if(f.q)a=a.filter(x=>norm(x.nome).includes(norm(f.q)));
  return a.sort(sorter(COLS_A,f));
 }
@@ -15689,7 +15704,7 @@ function listAnjos(){
  const a=filtA(),h=a.filter(x=>x.sexo==='M').length;
  if(!a.length)return '<div class="card">Nenhum anjo neste filtro.</div>';
  return `<div class="mut num">${a.length} anjo(s): ${h} homem(ns), ${a.length-h} mulher(es)</div>${headHTML(COLS_A,UI.fa,'an')}<div class="list">${a.map(x=>{const n=encontristas(x),i=igById(x.igId),pl=n>3?pill('cr-pend',n+' (máx. 3)'):pill('cr-no',String(n));
-  return `<div class="row an" style="cursor:default"><button class="lnk nm" data-act="anjoedit" data-id="${x.id}">${esc(x.nome)}</button><span class="dk">${sxPill(x.sexo)}</span><span class="dk mono">${x.tel?esc(fmtTel(x.tel)):'<span style="color:var(--warn-fg);font-weight:700">Sem telefone</span>'}</span><span class="dk">${i?esc(i.nome):'—'}</span><button class="lnk" data-act="anjoenc" data-id="${x.id}" aria-label="Ver ${n} encontrista(s) de ${esc(x.nome)}" ${n?'':'disabled'}>${pl}</button><span class="sub"><span class="l1">${sxPill(x.sexo)}<span>${x.tel?esc(fmtTel(x.tel)):'sem telefone'}</span></span><span class="l2">${i?esc(i.nome):'sem igreja'}</span></span></div>`}).join('')}</div>`;
+  return `<div class="row an" style="cursor:default"><button class="lnk nm" data-act="anjoedit" data-id="${x.id}">${esc(x.nome)}${sxOutros(x).length?' <span class="wx" title="Acompanha participante de outro sexo">⚠</span>':''}</button><span class="dk">${sxPill(x.sexo)}</span><span class="dk mono">${x.tel?esc(fmtTel(x.tel)):'<span style="color:var(--warn-fg);font-weight:700">Sem telefone</span>'}</span><span class="dk">${i?esc(i.nome):'—'}</span><button class="lnk" data-act="anjoenc" data-id="${x.id}" aria-label="Ver ${n} encontrista(s) de ${esc(x.nome)}" ${n?'':'disabled'}>${pl}</button><span class="sub"><span class="l1">${sxPill(x.sexo)}<span>${x.tel?esc(fmtTel(x.tel)):'sem telefone'}</span></span><span class="l2">${i?esc(i.nome):'sem igreja'}</span></span></div>`}).join('')}</div>`;
 }
 function vAnjos(){
  const t=S.anjos,H=t.filter(x=>x.sexo==='M').length;
@@ -15703,10 +15718,11 @@ function vAnjos(){
  <div class="card stack"><input type="search" data-f="q" placeholder="Buscar anjo por nome" value="${esc(f.q)}" aria-label="Buscar anjo">
   <div class="rowf"><select data-f="sexo" aria-label="Sexo" style="flex:1 1 130px;width:auto">${opts([['','Homens e mulheres'],['F','Mulheres'],['M','Homens']],f.sexo)}</select>
   <select data-f="igreja" aria-label="Igreja" style="flex:1 1 180px;width:auto">${opts([['','Todas as igrejas']].concat(S.igrejas.map(i=>[i.id,i.nome]),[['none','Sem igreja informada']]),f.igreja)}</select></div>
-  <div class="rowf"><button class="chip" data-act="anjosem" aria-pressed="${f.sem}">Sem telefone</button></div>${sortCtl(COLS_A,f)}</div>
+  <div class="rowf"><button class="chip" data-act="anjosem" aria-pressed="${f.sem}">Sem telefone</button><button class="chip" data-act="anjosxm" aria-pressed="${!!f.sxm}">⚠ Participante de outro sexo</button></div>${sortCtl(COLS_A,f)}</div>
  <div id="lst" class="stack">${listAnjos()}</div>`;
 }
 ACT.anjosem=()=>{UI.fa.sem=!UI.fa.sem;render()};
+ACT.anjosxm=()=>{UI.fa.sxm=!UI.fa.sxm;render()};
 function anjoForm(a){
  const n=a?encontristas(a):0;
  return `<div class="head"><h2>${a?'Editar anjo':'Novo anjo'}</h2><button class="btn s" data-act="close">Fechar</button></div><div class="stack" id="afm">
@@ -15715,7 +15731,7 @@ function anjoForm(a){
  <fieldset><legend class="req">Sexo</legend>${sxRadios('as',a?a.sexo:'')}</fieldset>
  <label class="lab">Telefone<input type="tel" id="an_t" data-mask="tel" inputmode="tel" value="${esc(a?fmtTel(a.tel):'')}" placeholder="(73) 99999-9999"></label>
  <label class="lab">IDERP / igreja<select id="an_i">${igSelOpts(a?a.igId:'')}</select></label>
- <div id="adup"></div>${a?`<div class="help">Acompanha ${n} encontrista(s).</div>`:''}
+ <div id="adup"></div>${a?`<div class="help">Acompanha ${n} encontrista(s).</div>`:''}${a&&sxOutros(a).length?`<div class="note warn">⚠ Este anjo (<u>${a.sexo==='M'?'homem':'mulher'}</u>) acompanha participante(s) de <u>${a.sexo==='M'?'mulher':'homem'}</u>: ${sxOutros(a).map(p=>esc(p.nome)).join(', ')}. Confira se está certo.</div>`:''}
  <div class="rowf"><button class="btn p big" data-act="anjosv">Salvar</button><button class="btn s" data-act="close">Cancelar</button>${a&&!n&&ROLE==='admin'?'<button class="btn d" data-act="anjodel" data-id="'+a.id+'">Excluir anjo</button>':''}</div></div>`;
 }
 function dupGroups(){
@@ -15888,41 +15904,53 @@ function readImport(f){
 /* ===== como usar ===== */
 ACT.ajtab=t=>{UI.ajuda=t.dataset.t;render()};
 function vAjuda(){
- const adm=ROLE==='admin'||!CLOUD_ON,t=adm&&UI.ajuda==='adm'?'adm':'cons';
+ const adm=ROLE==='admin'||!CLOUD_ON,lid=adm||ROLE==='lider';
+ let t=UI.ajuda||(ROLE==='lider'?'lider':'cons');if(t==='adm'&&!adm)t='cons';if(t==='lider'&&!lid)t='cons';
  const sec=(h,body)=>`<div class="card stack"><h2>${h}</h2>${body}</div>`;
  const ul=a=>'<ul class="gl">'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
  const ol=a=>'<ol class="gl">'+a.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
  const cons=
  sec('Como o acesso funciona',ul([
-  '<b>Um login só para todos os celulares.</b> Todos usam o usuário <b>consolidacao</b> e o mesmo PIN. Não precisa de um PIN por celular.',
-  'O <b>líder da consolidação</b> tem um login próprio (usuário <b>lider</b>). Faz tudo que a consolidação faz e também <b>imprime crachás</b> e tira os <b>relatórios completos</b>. O prazo dele é maior: da segunda-feira antes do encontro até 30 dias depois. Só o administrador mexe nessa conta.',
+  '<b>Um login só para todos os celulares da equipe.</b> Todos usam o usuário <b>consolidacao</b> e o mesmo PIN. Não precisa de um PIN por celular.',
+  'O <b>Líder da Consolidação</b> tem um login próprio (usuário <b>lider</b>), com permissões a mais (veja a aba dele). Quem cria e libera os acessos é o <b>administrador</b>, que é o dono do app.',
   'Na entrada, cada celular informa o <b>nome do aparelho</b> (ex.: "Portaria 1"). Ele aparece no histórico de quem registrou cada ação.',
   'O acesso só funciona no <b>prazo liberado pelo administrador</b> (padrão: sexta a domingo). Fora dele, o app desconecta sozinho.',
   'Todos os aparelhos ficam <b>sincronizados em tempo real</b>: o que um celular registra aparece nos outros e no computador. A etiqueta no topo mostra "Sincronizado", "Enviando…" ou "Offline".',
   'Sem internet, o app continua anotando e envia tudo quando a conexão voltar.']))+
- sec('O que a consolidação pode e não pode',ul([
+ sec('O que a equipe de consolidação pode e não pode',ul([
   '<b>Pode:</b> ler QR, ver e editar participantes, gerenciar anjos, registrar decisões e batismo, ver quais crachás já foram impressos e ver o resumo dos relatórios.',
-  '<b>Não pode:</b> confirmar pagamento (só o administrador e o líder; a consolidação avisa o financeiro), imprimir crachás, gerar listas de conferência, relatório para a liderança e planilhas (isso é do líder e do administrador). Também não mexe em igrejas, Pix, evento, backup e acesso, nem exclui anjos.']))+
+  '<b>Não pode:</b> confirmar pagamento (só o líder da consolidação e o administrador; a equipe avisa o líder ou o financeiro), imprimir crachás, gerar listas de conferência, relatório para a liderança e planilhas (isso é do líder e do administrador). Também não mexe em igrejas, Pix, evento, backup e acesso, nem exclui anjos.']))+
  sec('Resumo das telas',ul([
   '<b>Painel:</b> números gerais do encontro e atalhos.',
   '<b>Ler QR:</b> a tela principal durante o evento. Escolha o modo (Acolhimento, Domingo, Decisão, Batismo), abra a câmera ou digite o Nº/ID. Abre uma janela com os dados da pessoa: <b>confira e confirme</b>. A câmera continua aberta para a próxima leitura. Toca um som e a tela pisca (verde = ok, amarelo = atenção, vermelho = erro). "Desfazer" corrige a última ação.',
-  '<b>Participantes:</b> abas Todos, Confirmados, Aguardando, <b>Acolhidos</b> (sub-abas Sábado e Domingo, ordenados pela hora) e Desistentes. Abra uma pessoa para ver a ficha, o anjo, o pagamento e editar. Também cria cadastro novo.',
-  '<b>Anjos:</b> lista de anjos com telefone, igreja e participantes de cada um.',
+  '<b>Participantes:</b> abas Todos, Confirmados, Aguardando, <b>Acolhidos</b> (sub-abas Sábado e Domingo, ordenados pela hora) e Desistentes. Abra uma pessoa para ver a ficha, o anjo, o pagamento e editar. Também cria cadastro novo. O <b>⚠</b> ao lado do sexo avisa que o anjo é de outro sexo (só um aviso, não bloqueia).',
+  '<b>Anjos:</b> lista de anjos com telefone, igreja e participantes de cada um. O símbolo <b>⚠</b> avisa quando o anjo acompanha alguém de outro sexo.',
   '<b>Decisões:</b> quem decidiu (conversão, reconciliação) e quem foi batizado. Só acolhidos.',
-  '<b>Crachás:</b> o administrador e o líder geram o PDF (8 por folha A4) em lotes, só de quem ainda não imprimiu. A consolidação só vê quais já foram impressos.',
+  '<b>Crachás:</b> o líder e o administrador geram o PDF (8 por folha A4) em lotes, só de quem ainda não imprimiu. A equipe só vê quais já foram impressos.',
   '<b>Relatórios:</b> resumo geral, por igreja e registros por dia (todos veem). Listas de conferência, relatório para a liderança e planilhas: só líder e administrador.']))+
  sec('Fluxo durante o encontro',ol([
-  '<b>Antes (semana do evento):</b> receber as fichas e os pré-cadastros, conferir o Pix, marcar <b>pagamento confirmado</b> em Participantes. Cadastrar anjo de cada participante.',
-  '<b>Sexta ou sábado cedo:</b> o administrador ou o líder gera em Crachás o PDF dos pagos e imprime. Cada crachá tem o QR único da pessoa.',
+  '<b>Antes (semana do evento):</b> receber as fichas e os pré-cadastros, conferir o Pix, o <b>líder</b> (ou o administrador) marca o <b>pagamento confirmado</b> em Participantes. Cadastrar anjo de cada participante.',
+  '<b>Sexta ou sábado cedo:</b> o líder (ou o administrador) gera em Crachás o PDF dos pagos e imprime. Cada crachá tem o QR único da pessoa.',
   '<b>Sábado, recepção:</b> em Ler QR, modo <b>Acolhimento</b>. Leia o QR do crachá. A tela mostra o nome, o anjo e o aviso se faltar algo (ex.: pagamento). Confirme: a pessoa passa a ser <b>acolhida</b>. Errou? Na ficha use "Retirar acolhimento".',
   '<b>Sábado, durante:</b> acompanhe pelo Painel quantos já chegaram. Quem não veio fica sem acolhimento.',
   '<b>Decisão (escritório):</b> com o crachá recolhido, modo <b>Decisão</b>: leia o QR e registre <b>Conversão</b> ou <b>Reconciliação</b>. Os anjos recebem o contato pelo botão do WhatsApp.',
   '<b>Domingo:</b> modo <b>Domingo</b> para marcar a presença do dia. Para batismo, modo <b>Batismo</b> (já inclui a decisão).',
-  '<b>Depois:</b> em Relatórios, gere o relatório para a liderança e confira as listas. O administrador encerra o acesso da consolidação.']));
+  '<b>Depois:</b> em Relatórios, gere o relatório para a liderança e confira as listas. O administrador encerra o acesso da equipe.']));
+ const lid_=
+ sec('Seu papel como Líder da Consolidação',ul([
+  'Usuário <b>lider</b>, com PIN próprio. Você faz tudo que a equipe faz e <b>mais</b>: confirma pagamento, imprime crachás, gera listas de conferência, relatório para a liderança e planilhas.',
+  'Seu acesso vai da <b>segunda-feira antes do encontro até 30 dias depois do domingo</b>. Depois disso o acesso encerra até o administrador liberar de novo. Assim dá tempo de ver tudo e tirar os relatórios.',
+  'A conta do administrador (dono do app) é separada: você não mexe nela, nem em igrejas, Pix, backup e acessos. O administrador cria e troca o seu PIN.']))+
+ sec('Fluxo do líder',ol([
+  '<b>Semana do encontro:</b> confirme os pagamentos em Participantes (a equipe só avisa). Confira se todos os pagos têm anjo e se o anjo tem telefone: o Painel lista o que falta.',
+  '<b>Sexta ou sábado cedo:</b> em Crachás, gere o PDF dos pendentes e imprima (8 por folha A4). Quem se cadastrou depois entra em um novo lote; reimprima só o que mudou.',
+  '<b>Durante:</b> acompanhe o Painel (chegada, decisões, atenção). Os avisos <b>⚠</b> mostram anjo de outro sexo; acolhidos sem pagamento confirmado também aparecem no Painel.',
+  '<b>Depois:</b> em Relatórios, gere o relatório geral e por igreja para a liderança, as listas de conferência e as planilhas de participantes e decisões. Toque em qualquer número do resumo para abrir a lista.',
+  '<b>Decisões:</b> use os filtros Situação, Tipo e Combinados. <b>Já batizado (orientar)</b> mostra quem já foi batizado em igreja evangélica e decidiu se batizar de novo: a liderança conversa em particular.']));
  const adm_=
  sec('Seu papel como administrador',ul([
   'Usuário <b>admin</b> com PIN próprio e forte. Você vê tudo: Igrejas, Ajustes e as ações que a consolidação não tem.',
-  'Contas do app: <b>admin</b> (você), <b>consolidacao</b> (celulares da equipe) e <b>lider</b> (líder da consolidação, com crachás e relatórios completos). O líder e a consolidação não alteram a conta do admin.',
+  'Contas do app: <b>admin</b> (você, dono do app), <b>consolidacao</b> (Equipe de Consolidação, nos celulares) e <b>lider</b> (Líder da Consolidação, com pagamento, crachás e relatórios completos). Nenhuma delas altera a conta do admin.',
   'Criar, trocar o PIN ou desativar a conta do líder é feito por você no console do Firebase (Authentication → Usuários). O líder não consegue mexer na conta do admin.',
   'Só você cria e muda o acesso da consolidação. O PIN dela é criado ou trocado no <b>console do Firebase</b> (Authentication → Usuários → consolidacao → Redefinir senha).']))+
  sec('Preparar um novo encontro',ol([
@@ -15954,7 +15982,7 @@ function vAjuda(){
   '<b>Durante:</b> acompanhe Painel e Decisões. Resolva dúvidas de pagamento, anjos duplicados e fichas.',
   '<b>Segunda:</b> exporte o backup e as planilhas, gere o relatório da liderança.',
   '<b>Depois:</b> confirme que o acesso foi encerrado (ou clique em Bloquear agora).']));
- return `<div><h1>Como usar</h1></div>${adm?`<div class="rowf"><button class="chip" data-act="ajtab" data-t="cons" aria-pressed="${t==='cons'}">Consolidação</button><button class="chip" data-act="ajtab" data-t="adm" aria-pressed="${t==='adm'}">Administrador</button></div>`:''}${t==='adm'?adm_:cons}`;
+ return `<div><h1>Como usar</h1></div>${adm?`<div class="rowf"><button class="chip" data-act="ajtab" data-t="cons" aria-pressed="${t==='cons'}">Equipe de Consolidação</button><button class="chip" data-act="ajtab" data-t="lider" aria-pressed="${t==='lider'}">Líder da Consolidação</button><button class="chip" data-act="ajtab" data-t="adm" aria-pressed="${t==='adm'}">Administrador (dono do app)</button></div>`:lid?`<div class="rowf"><button class="chip" data-act="ajtab" data-t="cons" aria-pressed="${t==='cons'}">Equipe de Consolidação</button><button class="chip" data-act="ajtab" data-t="lider" aria-pressed="${t==='lider'}">Líder da Consolidação</button></div>`:''}${t==='adm'?adm_:t==='lider'?lid_:cons}`;
 }
 
 /* ===== relatórios e PDFs ===== */
@@ -15965,8 +15993,8 @@ function secoes(){
  const dec=pg.filter(p=>p.dec),conv=dec.filter(p=>tipoDec(p)==='Conversão'),rec=dec.filter(p=>tipoDec(p)==='Reconciliação');
  return [
   ['Cadastros',[['Pré-cadastros (total)',S.p.length,gp('pessoas',{tab:'all'})],['Homens',H(S.p),gp('pessoas',{tab:'all',sexo:'M'})],['Mulheres',S.p.length-H(S.p),gp('pessoas',{tab:'all',sexo:'F'})],['Desistentes',c('ds'),gp('pessoas',{tab:'ds'})]]],
-  ['Pagamentos',[['Confirmados (pagos)',pg.length,gp('pessoas',{tab:'conf'})],['Pagos: homens',H(pg),gp('pessoas',{tab:'conf',sexo:'M'})],['Pagos: mulheres',pg.length-H(pg),gp('pessoas',{tab:'conf',sexo:'F'})],['Aguardando pagamento',c('np'),gp('pessoas',{tab:'np'})],['Pix',pg.filter(p=>p.forma==='pix').length,gp('pessoas',{tab:'conf',forma:'pix'})],['Cartão',pg.filter(p=>p.forma==='cartao').length,gp('pessoas',{tab:'conf',forma:'cartao'})],['Dinheiro',pg.filter(p=>p.forma==='dinheiro').length,gp('pessoas',{tab:'conf',forma:'dinheiro'})],['Devoluções a fazer',S.p.filter(p=>p.status==='ds'&&p.desist&&p.desist.devol==='pendente').length,gp('pessoas',{tab:'ds'})]]],
   ['Acolhimentos',[['Sábado: acolhidos',S.p.filter(p=>p.presSab&&isPago(p)).length,gp('pessoas',{tab:'ac',sub:'sab'})],['Pagos que ainda não chegaram',c('pg'),gp('pessoas',{tab:'conf',status:'pg'})],['Domingo: presentes',S.p.filter(p=>p.presDom).length,gp('pessoas',{tab:'ac',sub:'dom'})]]],
+  ['Pagamentos',[['Confirmados (pagos)',pg.length,gp('pessoas',{tab:'conf'})],['Pagos: homens',H(pg),gp('pessoas',{tab:'conf',sexo:'M'})],['Pagos: mulheres',pg.length-H(pg),gp('pessoas',{tab:'conf',sexo:'F'})],['Aguardando pagamento',c('np'),gp('pessoas',{tab:'np'})],['Pix',pg.filter(p=>p.forma==='pix').length,gp('pessoas',{tab:'conf',forma:'pix'})],['Cartão',pg.filter(p=>p.forma==='cartao').length,gp('pessoas',{tab:'conf',forma:'cartao'})],['Dinheiro',pg.filter(p=>p.forma==='dinheiro').length,gp('pessoas',{tab:'conf',forma:'dinheiro'})],['Devoluções a fazer',S.p.filter(p=>p.status==='ds'&&p.desist&&p.desist.devol==='pendente').length,gp('pessoas',{tab:'ds'})]]],
   ['Decisões',[['Total de decisões',dec.length,gp('decisoes',{f:'dec'})],['Acolhidos sem decisão registrada',S.p.filter(p=>p.status==='ac'&&!p.dec).length,gp('decisoes',{f:'sem'})],['Conversões',conv.length,gp('decisoes',{f:'conv'})],['Reconciliações',rec.length,gp('decisoes',{f:'rec'})],['Batismos',dec.filter(p=>p.dec.batismo).length,gp('decisoes',{f:'bat'})],['Conversão + Batismo',conv.filter(p=>p.dec.batismo).length,gp('decisoes',{f:'cb'})],['Reconciliação + Batismo',rec.filter(p=>p.dec.batismo).length,gp('decisoes',{f:'rb'})]]]
  ];
 }
@@ -15986,7 +16014,7 @@ function diasHTML(){
 function vRelat(){
  const sc=secoes(),rows=porIderp(),adm=canRel();
  return `<div><h1>Relatórios</h1><div class="mut">${adm?'Resumo, listas para a portaria, relatório para a liderança e exportações.':'Resumo do encontro (somente visualização).'}</div></div>
- <div class="rel stack"><div class="card stack"><h2>Resumo geral</h2><div class="help">Toque em uma linha para abrir a lista correspondente.</div><div class="mini">${sc.map(s=>`<div><h3>${s[0]}</h3><table class="tbl"><tbody>${s[1].map(r=>`<tr class="lk" ${r[2]}><td>${r[0]}</td><td class="r"><b>${r[1]}</b> <span class="chev">›</span></td></tr>`).join('')}</tbody></table></div>`).join('')}</div></div>
+ <div class="rel stack"><div class="card stack"><h2>Resumo geral</h2><div class="help">Toque em uma linha para abrir a lista correspondente.</div><div class="mini">${sc.map(s=>`<div><h3>${s[0]}</h3><table class="tbl"><tbody>${s[1].map(r=>{const hm=s[0]==='Cadastros'&&(r[0]==='Homens'||r[0]==='Mulheres'),row=`<tr class="lk${hm?' mbo':''}" ${r[2]}><td>${r[0]}</td><td class="r"><b>${r[1]}</b> <span class="chev">›</span></td></tr>`;if(r[0]==='Homens'){const M=s[1].find(x=>x[0]==='Mulheres');return row+`<tr class="dko"><td colspan="2"><div class="hm"><span ${r[2]}><span>Homens</span><b>${r[1]} <span class="chev">›</span></b></span><span ${M[2]}><span>Mulheres</span><b>${M[1]} <span class="chev">›</span></b></span></div></td></tr>`}return row}).join('')}</tbody></table></div>`).join('')}</div></div>
  <div class="card stack"><h2>Por igreja</h2>${[[0,'IDERP – pastor'],[1,'Outras denominações'],[2,'Sem igreja']].map(G=>{const rs=rows.filter(o=>o.g===G[0]);return rs.length?`<div class="sec">${G[1]}</div><div class="scroll"><table class="tbl" style="table-layout:fixed"><colgroup><col style="width:34%"><col><col><col><col><col></colgroup><thead><tr><th>${G[0]===0?'IDERP – pastor':G[0]===1?'Igreja':'Grupo'}</th><th class="r" title="Cadastros">Cad.</th><th class="r">Pagos</th><th class="r" title="Acolhidos">Acolh.</th><th class="r" title="Decisões">Decis.</th><th class="r" title="Batismos">Bat.</th></tr></thead><tbody>${rs.map(o=>`<tr class="lk" ${gp('pessoas',{tab:'all',igreja:o.v})}><td>${esc(o.k)}</td><td class="r">${o.cad}</td><td class="r">${o.pg}</td><td class="r">${o.ac}</td><td class="r">${o.dec}</td><td class="r">${o.bat}</td></tr>`).join('')}</tbody></table></div>`:''}).join('')||'<div class="mut">Sem dados ainda.</div>'}</div>
  ${adm?`
  <div class="card stack"><h2>Listas de conferência (PDF)</h2><div class="help">Todos os pagos, com total, homens e mulheres. Mulheres e homens em folhas separadas, em ordem alfabética: duas filas na entrada. Serve para a portaria do sábado, para a chegada do domingo e para saber os nomes exatos do momento dos presentes. Se alguém desistir no domingo, marque no app e gere de novo.</div>
