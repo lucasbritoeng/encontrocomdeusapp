@@ -16728,7 +16728,7 @@ const FAKE={
   if(l.path==='alertas'){const w=this.who();if(w&&w.role==='fin')docs=docs.filter(d=>d.data.L===w.local)}
   if(l.path.endsWith('/log'))docs=docs.sort((a,b)=>b.data.t<a.data.t?-1:1).slice(0,40);l.cb(docs,{pending:false,cache:false})},
  fire(){this.L.forEach(l=>this.send(l))},
- async commit(ops){const w=this.who();if(ops.some(o=>o.col!=='cartas'&&!this.canWrite(w,o.col,!!o.del,o)))throw{code:'permission-denied'};
+ async commit(ops){const w=this.who();ops.forEach(o=>{const m=fsBad(o.data||o.fields,0);if(m)throw{code:'invalid-argument',message:m+' (documento '+o.col+'/'+o.id+')'}});if(ops.some(o=>o.col!=='cartas'&&!this.canWrite(w,o.col,!!o.del,o)))throw{code:'permission-denied'};
   const s=this.get();ops.forEach(o=>{const c=s[o.col]||(s[o.col]={});if(o.del)delete c[o.id];else if(o.fields&&c[o.id])Object.assign(c[o.id],o.fields);else c[o.id]=o.data});this.put(s);setTimeout(()=>this.fire(),5)},
  readLocal(L,name){const w=this.who();if(!w||(w.role!=='admin'&&w.role!=='pastor'))return [];if(w.role==='pastor'&&pastorOff())return [];const s=this.get()['locais/'+L+'/'+name]||{};return Object.keys(s).map(id=>Object.assign({id},s[id]))},
  async putCarta(igId,data){const s=this.get();(s.cartas||(s.cartas={}))[igId]=data;this.put(s);return 1},
@@ -16740,6 +16740,11 @@ const CLOUD=FBCFG==='fake'?FAKE:FBAD;
 const pubPix=x=>({valor:x.valor||'',tipo:x.tipo||'',chave:x.chave||'',favorecido:x.favorecido||'',banco:x.banco||'',obs:x.obs||''});
 function pubDocOf(){return{ev:{nome:S.evento.nome||'',inicio:S.evento.inicio||'',distLimite:S.evento.distLimite||''},cutoff:cutoffOf(S.evento),locs:(S.locais||[]).map(l=>({id:l.id,nome:l.nome,pix:pubPix(pixDe(l.id)),fin:l.finPub&&l.finTel?l.finTel:''})),pix:pubPix(S.pix||{}),vs:(S.pix&&S.pix.valorServo)||'30,00',ig:byOrd(S.igrejas||[]).map(i=>{const pr=liderById(i.pastorId);return{id:i.id,nome:i.nome,local:i.localId||'L1',label:i.nome+(pr?' · '+prefOf(pr)+' '+pr.nome:'')}}),sup:(S.lideres||[]).filter(l=>l.tipo==='lider').map(l=>({id:l.id,nome:l.nome,igId:l.igId||''}))}}
 function syncReady(){return SYNC.names.length>0&&SYNC.names.every(n=>SYNC.ready[n])}
+/* Firestore não aceita lista dentro de lista: o resumo guarda 'sec' como texto JSON */
+const resEnc=r=>{const o=Object.assign({},r,{at:nowISO()});if(o.sec){o.secj=JSON.stringify(o.sec);delete o.sec}return o};
+const resDec=r=>{if(r&&r.secj){const o=Object.assign({},r);try{o.sec=JSON.parse(o.secj)}catch(e){o.sec=[]}delete o.secj;return o}return r};
+/* simula as recusas do Firestore real (só no fake): lista dentro de lista, undefined, NaN, documento grande */
+const fsBad=(v,d)=>{if(v===undefined)return 'valor undefined';if(typeof v==='number'&&!isFinite(v))return 'número inválido';if(Array.isArray(v)){for(const x of v){if(Array.isArray(x))return 'Nested arrays are not supported';const m=fsBad(x,d+1);if(m)return m}return ''}if(v&&typeof v==='object'){for(const k of Object.keys(v)){const m=fsBad(v[k],d+1);if(m)return m}if(d===0&&JSON.stringify(v).length>1000000)return 'documento maior que 1 MB'}return ''};
 const DOCS=()=>[['config',cfgOf],['meta',metaOf],['resumo:'+LOC,()=>buildResumo()]];
 function syncPush(){
  if(!SYNC.started||!syncReady()||ROLE==='enc')return;
@@ -16754,7 +16759,7 @@ function syncPush(){
   Object.keys(sh).forEach(id=>{if(!cur.has(id)){if(ROLE!=='admin'&&col==='log')return;delete sh[id];ops.push({col:path,name:col,id,del:true})}});
  }
  if(SYNC.names.includes('participantes')&&ROLE!=='fin'&&ROLE!=='fing'&&LOC){const first=!SYNC.shadow.chaves,sh=SYNC.shadow.chaves||(SYNC.shadow.chaves={});S.p.concat(S.inscricoes||[],S.servos||[]).forEach(x=>{if(!x.nome||!x.cel)return;const k=compKey(x.nome,x.cel);if(sh[k]!==LOC){sh[k]=LOC;if(!(first&&ROLE!=='admin'))ops.push({col:'chaves',name:'chaves',id:k,data:{L:LOC}})}})}
- DOCS().forEach(([n,fn])=>{if(!SYNC.names.includes(n)&&!n.startsWith('resumo:'))return;const j=sj(fn());if(SYNC.shadow[n]!==j){SYNC.shadow[n]=j;ops.push({col:cpath(n),name:n,id:'main',data:Object.assign(JSON.parse(j),n.startsWith('resumo:')?{at:nowISO()}:{})})}});
+ DOCS().forEach(([n,fn])=>{if(!SYNC.names.includes(n)&&!n.startsWith('resumo:'))return;const j=sj(fn());if(SYNC.shadow[n]!==j){SYNC.shadow[n]=j;ops.push({col:cpath(n),name:n,id:'main',data:n.startsWith('resumo:')?resEnc(JSON.parse(j)):JSON.parse(j)})}});
  if(ROLE==='admin'&&CLOUD_ON){const pj=sj(pubDocOf());if(SYNC.shadow.publico!==pj){SYNC.shadow.publico=pj;ops.push({col:'publico',name:'publico',id:'main',data:JSON.parse(pj)})}}
  const send=ROLE==='admin'?ops:ROLE==='pastor'?ops.filter(o=>o.name==='config'):ROLE==='fing'?ops.filter(o=>['participantes','servos','inscricoes','comps','alertas'].includes(o.name)):ops.filter(o=>!ADMIN_COLS.includes(o.name));
  if(!send.length)return;
@@ -16765,7 +16770,7 @@ function syncPush(){
 function applyCol(col,docs){
  if(col==='config'||col==='meta'||col.startsWith('resumo:')){
   const before=SYNC.shadow[col],d=docs.find(x=>x.id==='main'),c=d?d.data:null;
-  if(col.startsWith('resumo:')){const id=col.slice(7);if(c)(S.resumos||(S.resumos={}))[id]=c;else if(S.resumos)delete S.resumos[id];return UI.r==='relat'||UI.r==='painel'}
+  if(col.startsWith('resumo:')){const id=col.slice(7);if(c)(S.resumos||(S.resumos={}))[id]=resDec(c);else if(S.resumos)delete S.resumos[id];return UI.r==='relat'||UI.r==='painel'}
   if(c){
    if(col==='config'){if(c.evento)S.evento=c.evento;if(c.pix)S.pix=c.pix;S.lastExport=c.lastExport||'';S.locais=c.locais||[];S.liberadoAte=c.liberadoAte||0}
    else{S.dupOk=c.dupOk||[];S.distDone=c.distDone||''}
